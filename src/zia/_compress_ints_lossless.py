@@ -1,7 +1,19 @@
 def compress_ints_lossless(x, *, method: str = "zstd") -> bytes:
-    import zstandard as zstd
+    """Compress integer data using various compression methods.
 
+    Args:
+        x: NumPy array of integers to compress
+        method: Compression method to use. One of:
+            - "zstd": Zstandard compression (default)
+            - "zlib": zlib compression
+            - "lzma": LZMA compression
+            - "simple_ans": Simple Asymmetric Numeral Systems
+
+    Returns:
+        Compressed bytes
+    """
     if method == "zstd":
+        import zstandard as zstd
         cctx = zstd.ZstdCompressor(level=22)
         return cctx.compress(x.tobytes())
     elif method == "zlib":
