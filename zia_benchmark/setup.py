@@ -9,7 +9,8 @@ setup(
         "numpy",
         "zstandard",
         "simple_ans",
-        "requests"
+        "requests",
+        "lindi"
     ],
     python_requires=">=3.8",
     author="Jeremy Magland",

@@ -56,9 +56,16 @@ def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) ->
 
             # First try local cache
             cached_data = None
-            if os.path.exists(metadata_file) and os.path.exists(compressed_file):
+            if os.path.exists(metadata_file):
                 with open(metadata_file, 'r') as f:
                     cached_data = json.load(f)
+                    # if versions do not match, then set to None
+                    if (
+                        cached_data['result']['algorithm_version'] != algorithm['version'] or
+                        cached_data['result']['dataset_version'] != dataset['version'] or
+                        cached_data['result'].get('system_version', '') != system_version
+                    ):
+                        cached_data = None
 
             # If not in local cache, try memobin
             if cached_data is None:

@@ -1,19 +1,23 @@
 # %%
 import numpy as np
 from zia_benchmark._filters import bandpass_filter, highpass_filter
+from zia_benchmark._compress_ints_lossless import compress_ints_lossless
+from zia_benchmark.datasets import datasets
+# %%
+import numpy as np
+
+# %%
+import numpy as np
+from zia_benchmark._filters import bandpass_filter, highpass_filter
 from zia_benchmark._data_loaders import load_real_000876, load_real_000409, load_real_001290
 from zia_benchmark._compress_ints_lossless import compress_ints_lossless
 from zia_benchmark._analysis import linear_fit, compute_entropy_per_sample, estimate_noise_level
 import matplotlib.pyplot as plt
 
 # %%
-N = 500_000
-
-channel_number = 101
-X = load_real_000409(num_samples=N, num_channels=1, start_channel=channel_number).flatten()
-
-# X = load_real_001290(num_samples=N, num_channels=1, start_channel=0).flatten()
-# X = load_real_000876(num_samples=N, num_channels=1, start_channel=45).flatten()
+# Find the real-000409-ch101 dataset
+real_dataset = next(d for d in datasets if d['name'] == 'real-000409-ch101')
+X = real_dataset['create']().flatten()
 
 X = X.astype(np.int16)
 
