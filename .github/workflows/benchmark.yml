@@ -1,0 +1,64 @@
+name: Run Benchmarks
+
+on:
+  workflow_dispatch:  # Manual trigger
+  push:
+    branches: [ main ]  # Run on main branch pushes
+
+permissions:
+  contents: write
+
+jobs:
+  benchmark:
+    name: Run Benchmarks
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install package and dependencies
+        run: |
+          python -m pip install -e zia_benchmark/
+
+      - name: Run benchmarks
+        env:
+          MEMOBIN_API_KEY: ${{ secrets.MEMOBIN_API_KEY }}
+        run: |
+          python zia_benchmark/src/zia_benchmark/run_benchmarks.py
+
+      - name: Configure Git
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+
+      - name: Create fresh results branch
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          git checkout --orphan benchmark-results
+          git rm -rf .
+          mkdir -p benchmark_results
+
+      - name: Move benchmark files
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          if [ -f benchmark_results/results.json ]; then
+            mv benchmark_results/results.json benchmark_results/
+          else
+            echo "No benchmark results found"
+            exit 1
+          fi
+
+      - name: Commit benchmark results
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git add benchmark_results/
+          git commit -m "Update benchmark results from $(date +'%Y-%m-%d %H:%M:%S') [skip ci]"
+          git push -f https://${GITHUB_TOKEN}@github.com/${{ github.repository }} benchmark-results
