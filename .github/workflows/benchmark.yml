@@ -29,6 +29,7 @@ jobs:
       - name: Run benchmarks
         env:
           MEMOBIN_API_KEY: ${{ secrets.MEMOBIN_API_KEY }}
+          UPLOAD_TO_MEMOBIN: '1'
         run: |
           python scripts/run_benchmarks.py
 

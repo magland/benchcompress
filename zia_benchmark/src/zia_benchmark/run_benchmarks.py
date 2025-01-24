@@ -9,7 +9,7 @@ from .datasets import datasets
 from ._memobin import construct_memobin_url, upload_to_memobin, download_from_memobin
 
 
-system_version = 'v3'
+system_version = 'v4'
 
 def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) -> Dict[str, Any]:
     """Run all benchmarks, with caching based on algorithm and dataset versions.
@@ -163,9 +163,10 @@ def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) ->
                 f.write(encoded)
             print(f"  Results saved to: {test_dir}")
 
-            # Upload to memobin if API key is set
+            # Upload to memobin if API key is set and upload is enabled
             memobin_api_key = os.environ.get('MEMOBIN_API_KEY')
-            if memobin_api_key:
+            upload_enabled = os.environ.get('UPLOAD_TO_MEMOBIN') == '1'
+            if memobin_api_key and upload_enabled:
                 if verbose:
                     print("  Uploading results to memobin...")
                 try:
