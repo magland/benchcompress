@@ -10,26 +10,31 @@ datasets = [
     {
         'name': 'gaussian-1',
         'version': '1',
-        'create': lambda: create_gaussian(n_samples=1_000_000, stddev=1, seed=0)
+        'create': lambda: create_gaussian(n_samples=1_000_000, stddev=1, seed=0),
+        'tags': []
     },
     {
         'name': 'gaussian-2',
         'version': '1',
-        'create': lambda: create_gaussian(n_samples=1_000_000, stddev=2, seed=0)
+        'create': lambda: create_gaussian(n_samples=1_000_000, stddev=2, seed=0),
+        'tags': []
     },
     {
         'name': 'gaussian-3',
         'version': '1',
-        'create': lambda: create_gaussian(n_samples=1_000_000, stddev=3, seed=0)
+        'create': lambda: create_gaussian(n_samples=1_000_000, stddev=3, seed=0),
+        'tags': []
     },
     {
         'name': 'gaussian-5',
         'version': '1',
-        'create': lambda: create_gaussian(n_samples=1_000_000, stddev=5, seed=0)
+        'create': lambda: create_gaussian(n_samples=1_000_000, stddev=5, seed=0),
+        'tags': []
     },
     {
         'name': 'gaussian-8',
         'version': '1',
-        'create': lambda: create_gaussian(n_samples=1_000_000, stddev=8, seed=0)
+        'create': lambda: create_gaussian(n_samples=1_000_000, stddev=8, seed=0),
+        'tags': []
     }
 ]

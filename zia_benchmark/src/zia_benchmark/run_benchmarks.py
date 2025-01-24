@@ -1,7 +1,7 @@
 import time
 import json
 import os
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, List
 import numpy as np
 from statistics import median
 from .algorithms import algorithms
@@ -10,6 +10,21 @@ from ._memobin import construct_memobin_url, upload_to_memobin, download_from_me
 
 
 system_version = 'v4'
+
+def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:
+    """Check if an algorithm is compatible with a dataset based on their tags.
+
+    Args:
+        algorithm_tags: List of tags for the algorithm
+        dataset_tags: List of tags for the dataset
+
+    Returns:
+        True if the algorithm should be applied to the dataset
+    """
+    # If algorithm has delta_encoding tag, dataset must have continuous tag
+    if 'delta_encoding' in algorithm_tags and 'continuous' not in dataset_tags:
+        return False
+    return True
 
 def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) -> Dict[str, Any]:
     """Run all benchmarks, with caching based on algorithm and dataset versions.
@@ -37,7 +52,8 @@ def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) ->
 
     # Run benchmarks for each dataset and algorithm combination
     for dataset in datasets:
-        print(f"\n--- Dataset: {dataset['name']} ---")
+        dataset_tags = dataset.get('tags', [])
+        print(f"\n--- Dataset: {dataset['name']} (tags: {dataset_tags}) ---")
         # Create dataset once for all algorithms
         data = dataset['create']()
         dtype = str(data.dtype)
@@ -47,7 +63,15 @@ def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) ->
 
         for algorithm in algorithms:
             alg_name = algorithm['name']
-            print(f"\nTesting algorithm: {alg_name}")
+            alg_tags = algorithm.get('tags', [])
+
+            # Skip if algorithm and dataset are not compatible based on tags
+            if not is_compatible(alg_tags, dataset_tags):
+                if verbose:
+                    print(f"\nSkipping algorithm {alg_name} (tags: {alg_tags}) - incompatible with dataset tags")
+                continue
+
+            print(f"\nTesting algorithm: {alg_name} (tags: {alg_tags})")
 
             # Check if we can use cached result
             test_dir = os.path.join(cache_dir, dataset['name'], alg_name)

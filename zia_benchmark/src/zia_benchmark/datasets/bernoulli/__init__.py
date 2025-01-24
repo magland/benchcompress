@@ -10,26 +10,31 @@ datasets = [
     {
         'name': 'bernoulli-0.1',
         'version': '1',
-        'create': lambda: create_bernoulli(n_samples=1_000_000, p=0.1, seed=0)
+        'create': lambda: create_bernoulli(n_samples=1_000_000, p=0.1, seed=0),
+        'tags': ['binary']
     },
     {
         'name': 'bernoulli-0.2',
         'version': '1',
-        'create': lambda: create_bernoulli(n_samples=1_000_000, p=0.2, seed=0)
+        'create': lambda: create_bernoulli(n_samples=1_000_000, p=0.2, seed=0),
+        'tags': ['binary']
     },
     {
         'name': 'bernoulli-0.3',
         'version': '1',
-        'create': lambda: create_bernoulli(n_samples=1_000_000, p=0.3, seed=0)
+        'create': lambda: create_bernoulli(n_samples=1_000_000, p=0.3, seed=0),
+        'tags': ['binary']
     },
     {
         'name': 'bernoulli-0.4',
         'version': '1',
-        'create': lambda: create_bernoulli(n_samples=1_000_000, p=0.4, seed=0)
+        'create': lambda: create_bernoulli(n_samples=1_000_000, p=0.4, seed=0),
+        'tags': ['binary']
     },
     {
         'name': 'bernoulli-0.5',
         'version': '1',
-        'create': lambda: create_bernoulli(n_samples=1_000_000, p=0.5, seed=0)
+        'create': lambda: create_bernoulli(n_samples=1_000_000, p=0.5, seed=0),
+        'tags': ['binary']
     }
 ]

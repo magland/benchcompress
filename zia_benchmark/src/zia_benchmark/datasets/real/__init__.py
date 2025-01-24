@@ -65,18 +65,21 @@ datasets = [
         'name': 'real-000876-ch45',
         'version': '1',
         'description': 'Real neurophysiology data from DANDI:000876, channel 45',
-        'create': lambda: _load_real_000876(num_samples=500_000, num_channels=1, start_channel=45).flatten()
+        'create': lambda: _load_real_000876(num_samples=500_000, num_channels=1, start_channel=45).flatten(),
+        'tags': ['continuous', 'neurophysiology']
     },
     {
         'name': 'real-000409-ch101',
         'version': '1',
         'description': 'Real neurophysiology data from DANDI:000409, channel 101',
-        'create': lambda: _load_real_000409(num_samples=500_000, num_channels=1, start_channel=101).flatten()
+        'create': lambda: _load_real_000409(num_samples=500_000, num_channels=1, start_channel=101).flatten(),
+        'tags': ['continuous', 'neurophysiology']
     },
     {
         'name': 'real-001290-ch0',
         'version': '1',
         'description': 'Real neurophysiology data from DANDI:001290, channel 0',
-        'create': lambda: _load_real_001290(num_samples=500_000, num_channels=1, start_channel=0).flatten()
+        'create': lambda: _load_real_001290(num_samples=500_000, num_channels=1, start_channel=0).flatten(),
+        'tags': ['continuous', 'neurophysiology']
     }
 ]
