@@ -1,3 +1,3 @@
 # zia
 
-Compression of integer arrays
+Benchmarking compression of integer arrays
