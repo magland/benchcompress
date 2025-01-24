@@ -3,7 +3,9 @@ import numpy as np
 from scipy.signal import butter, lfilter
 
 
-def bandpass_filter(array: np.ndarray, *, sampling_frequency: float, lowcut: float, highcut: float) -> np.ndarray:
+def bandpass_filter(
+    array: np.ndarray, *, sampling_frequency: float, lowcut: float, highcut: float
+) -> np.ndarray:
     """Apply a bandpass filter to the input array.
 
     Args:
@@ -22,7 +24,9 @@ def bandpass_filter(array: np.ndarray, *, sampling_frequency: float, lowcut: flo
     return cast(np.ndarray, lfilter(b, a, array, axis=0))
 
 
-def lowpass_filter(array: np.ndarray, *, sampling_frequency: float, highcut: float) -> np.ndarray:
+def lowpass_filter(
+    array: np.ndarray, *, sampling_frequency: float, highcut: float
+) -> np.ndarray:
     """Apply a lowpass filter to the input array.
 
     Args:
@@ -39,7 +43,9 @@ def lowpass_filter(array: np.ndarray, *, sampling_frequency: float, highcut: flo
     return cast(np.ndarray, lfilter(b, a, array, axis=0))
 
 
-def highpass_filter(array: np.ndarray, *, sampling_frequency: float, lowcut: float) -> np.ndarray:
+def highpass_filter(
+    array: np.ndarray, *, sampling_frequency: float, lowcut: float
+) -> np.ndarray:
     """Apply a highpass filter to the input array.
 
     Args:

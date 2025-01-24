@@ -1,1 +1,1 @@
-export { BenchmarkTable } from './benchmark/table/BenchmarkTable';
+export { BenchmarkTable } from "./benchmark/table/BenchmarkTable";

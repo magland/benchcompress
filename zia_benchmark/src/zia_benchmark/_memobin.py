@@ -2,7 +2,10 @@ import json
 import requests
 from typing import Optional
 
-def create_signed_upload_url(url: str, size: int, user_id: str, memobin_api_key: str) -> str:
+
+def create_signed_upload_url(
+    url: str, size: int, user_id: str, memobin_api_key: str
+) -> str:
     """Create a signed upload URL for memobin.
 
     Args:
@@ -22,21 +25,21 @@ def create_signed_upload_url(url: str, size: int, user_id: str, memobin_api_key:
     if not url.startswith(prefix):
         raise ValueError("Invalid url. Does not have proper prefix")
 
-    file_path = url[len(prefix):]
+    file_path = url[len(prefix) :]
     tempory_api_url = "https://hub.tempory.net/api/uploadFile"
 
     response = requests.post(
         tempory_api_url,
         headers={
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {memobin_api_key}"
+            "Authorization": f"Bearer {memobin_api_key}",
         },
         json={
             "appName": "memobin",
             "filePath": file_path,
             "size": size,
-            "userId": user_id
-        }
+            "userId": user_id,
+        },
     )
 
     if not response.ok:
@@ -51,8 +54,14 @@ def create_signed_upload_url(url: str, size: int, user_id: str, memobin_api_key:
 
     return upload_url
 
-def construct_memobin_url(alg_name: str, dataset_name: str, alg_version: str,
-                         dataset_version: str, system_version: str) -> str:
+
+def construct_memobin_url(
+    alg_name: str,
+    dataset_name: str,
+    alg_version: str,
+    dataset_version: str,
+    system_version: str,
+) -> str:
     """Construct the memobin URL for a specific benchmark result.
 
     Args:
@@ -68,7 +77,10 @@ def construct_memobin_url(alg_name: str, dataset_name: str, alg_version: str,
     path = f"{alg_name}/{dataset_name}/{alg_version}/{dataset_version}/{system_version}/metadata.json"
     return f"https://tempory.net/f/memobin/{path}"
 
-def upload_to_memobin(metadata: dict, url: str, user_id: str, memobin_api_key: str) -> None:
+
+def upload_to_memobin(
+    metadata: dict, url: str, user_id: str, memobin_api_key: str
+) -> None:
     """Upload metadata to memobin.
 
     Args:
@@ -80,19 +92,18 @@ def upload_to_memobin(metadata: dict, url: str, user_id: str, memobin_api_key: s
     Raises:
         requests.RequestException: If the upload fails
     """
-    metadata_bytes = json.dumps(metadata).encode('utf-8')
+    metadata_bytes = json.dumps(metadata).encode("utf-8")
     size = len(metadata_bytes)
 
     upload_url = create_signed_upload_url(url, size, user_id, memobin_api_key)
 
     response = requests.put(
-        upload_url,
-        data=metadata_bytes,
-        headers={"Content-Type": "application/json"}
+        upload_url, data=metadata_bytes, headers={"Content-Type": "application/json"}
     )
 
     if not response.ok:
         raise requests.RequestException("Failed to upload metadata to memobin")
+
 
 def download_from_memobin(url: str) -> Optional[dict]:
     """Download metadata from memobin.

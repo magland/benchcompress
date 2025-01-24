@@ -38,7 +38,10 @@ def compute_entropy_per_sample(array: np.ndarray) -> float:
 
 from typing import Callable
 
-def linear_fit(x: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, Callable[[np.ndarray], np.ndarray]]:
+
+def linear_fit(
+    x: np.ndarray, y: np.ndarray
+) -> tuple[np.ndarray, Callable[[np.ndarray], np.ndarray]]:
     """Perform linear fit with constant term.
 
     Args:
@@ -51,6 +54,7 @@ def linear_fit(x: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, Callable[[np.n
         - prediction function that takes x_new and returns predictions
     """
     from numpy.linalg import lstsq
+
     X = np.column_stack([x, np.ones(len(x))])
     coeffs = lstsq(X, y, rcond=None)[0]
 

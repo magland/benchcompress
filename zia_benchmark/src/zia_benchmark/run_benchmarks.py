@@ -9,7 +9,8 @@ from .datasets import datasets
 from ._memobin import construct_memobin_url, upload_to_memobin, download_from_memobin
 
 
-system_version = 'v4'
+system_version = "v4"
+
 
 def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:
     """Check if an algorithm is compatible with a dataset based on their tags.
@@ -22,11 +23,14 @@ def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:
         True if the algorithm should be applied to the dataset
     """
     # If algorithm has delta_encoding tag, dataset must have continuous tag
-    if 'delta_encoding' in algorithm_tags and 'continuous' not in dataset_tags:
+    if "delta_encoding" in algorithm_tags and "continuous" not in dataset_tags:
         return False
     return True
 
-def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) -> Dict[str, Any]:
+
+def run_benchmarks(
+    cache_dir: str = ".benchmark_cache", verbose: bool = True
+) -> Dict[str, Any]:
     """Run all benchmarks, with caching based on algorithm and dataset versions.
 
     Results are stored in separate directories for each dataset/algorithm combination:
@@ -52,51 +56,58 @@ def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) ->
 
     # Run benchmarks for each dataset and algorithm combination
     for dataset in datasets:
-        dataset_tags = dataset.get('tags', [])
+        dataset_tags = dataset.get("tags", [])
         print(f"\n--- Dataset: {dataset['name']} (tags: {dataset_tags}) ---")
         # Create dataset once for all algorithms
-        data = dataset['create']()
+        data = dataset["create"]()
         dtype = str(data.dtype)
         original_size = len(data.tobytes())
         print(f"Created dataset: shape={data.shape}, dtype={dtype}")
         print(f"Original size: {original_size:,} bytes")
 
         for algorithm in algorithms:
-            alg_name = algorithm['name']
-            alg_tags = algorithm.get('tags', [])
+            alg_name = algorithm["name"]
+            alg_tags = algorithm.get("tags", [])
 
             # Skip if algorithm and dataset are not compatible based on tags
             if not is_compatible(alg_tags, dataset_tags):
                 if verbose:
-                    print(f"\nSkipping algorithm {alg_name} (tags: {alg_tags}) - incompatible with dataset tags")
+                    print(
+                        f"\nSkipping algorithm {alg_name} (tags: {alg_tags}) - incompatible with dataset tags"
+                    )
                 continue
 
             print(f"\nTesting algorithm: {alg_name} (tags: {alg_tags})")
 
             # Check if we can use cached result
-            test_dir = os.path.join(cache_dir, dataset['name'], alg_name)
-            metadata_file = os.path.join(test_dir, 'metadata.json')
-            compressed_file = os.path.join(test_dir, 'compressed.dat')
+            test_dir = os.path.join(cache_dir, dataset["name"], alg_name)
+            metadata_file = os.path.join(test_dir, "metadata.json")
+            compressed_file = os.path.join(test_dir, "compressed.dat")
 
             # First try local cache
             cached_data = None
             if os.path.exists(metadata_file):
-                with open(metadata_file, 'r') as f:
+                with open(metadata_file, "r") as f:
                     cached_data = json.load(f)
                     # if versions do not match, then set to None
                     if (
-                        cached_data['result']['algorithm_version'] != algorithm['version'] or
-                        cached_data['result']['dataset_version'] != dataset['version'] or
-                        cached_data['result'].get('system_version', '') != system_version
+                        cached_data["result"]["algorithm_version"]
+                        != algorithm["version"]
+                        or cached_data["result"]["dataset_version"]
+                        != dataset["version"]
+                        or cached_data["result"].get("system_version", "")
+                        != system_version
                     ):
                         cached_data = None
 
             # If not in local cache, try memobin
             if cached_data is None:
                 memobin_url = construct_memobin_url(
-                    alg_name, dataset['name'],
-                    algorithm['version'], dataset['version'],
-                    system_version
+                    alg_name,
+                    dataset["name"],
+                    algorithm["version"],
+                    dataset["version"],
+                    system_version,
                 )
                 if verbose:
                     print("  Looking for cached result in memobin...")
@@ -106,16 +117,16 @@ def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) ->
                         print("  Found result in memobin, saving locally...")
                     # Save to local cache
                     os.makedirs(test_dir, exist_ok=True)
-                    with open(metadata_file, 'w') as f:
+                    with open(metadata_file, "w") as f:
                         json.dump(cached_data, f, indent=2)
 
             if cached_data is not None and (
-                cached_data['result']['algorithm_version'] == algorithm['version'] and
-                cached_data['result']['dataset_version'] == dataset['version'] and
-                cached_data['result'].get('system_version', '') == system_version
+                cached_data["result"]["algorithm_version"] == algorithm["version"]
+                and cached_data["result"]["dataset_version"] == dataset["version"]
+                and cached_data["result"].get("system_version", "") == system_version
             ):
                 print("  Using cached result:")
-                results.append(cached_data['result'])
+                results.append(cached_data["result"])
                 continue
 
             print("  Running new benchmark...")
@@ -139,8 +150,8 @@ def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) ->
                 return median_time, mb_per_sec
 
             # Measure encoding with multiple trials
-            encode_time, encode_mb_per_sec = run_timed_trials(algorithm['encode'], data)
-            encoded = algorithm['encode'](data)  # One final encode to get the result
+            encode_time, encode_mb_per_sec = run_timed_trials(algorithm["encode"], data)
+            encoded = algorithm["encode"](data)  # One final encode to get the result
             compressed_size = len(encoded)
             compression_ratio = original_size / compressed_size
             print("  Compression complete:")
@@ -151,8 +162,10 @@ def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) ->
 
             print("  Verifying decompression...")
             # Measure decoding with multiple trials
-            decode_time, decode_mb_per_sec = run_timed_trials(algorithm['decode'], encoded, dtype)
-            decoded = algorithm['decode'](encoded, dtype)  # One final decode to verify
+            decode_time, decode_mb_per_sec = run_timed_trials(
+                algorithm["decode"], encoded, dtype
+            )
+            decoded = algorithm["decode"](encoded, dtype)  # One final decode to verify
             print(f"    Decode time: {decode_time*1000:.2f}ms")
             print(f"    Decode throughput: {decode_mb_per_sec:.2f} MB/s")
 
@@ -165,52 +178,52 @@ def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) ->
 
             # Store result
             result = {
-                'dataset': dataset['name'],
-                'algorithm': alg_name,
-                'algorithm_version': algorithm['version'],
-                'dataset_version': dataset['version'],
-                'system_version': system_version,
-                'compression_ratio': compression_ratio,
-                'encode_time': encode_time,
-                'decode_time': decode_time,
-                'encode_mb_per_sec': encode_mb_per_sec,
-                'decode_mb_per_sec': decode_mb_per_sec,
-                'original_size': original_size,
-                'compressed_size': compressed_size,
-                'array_shape': data.shape,
-                'array_dtype': dtype,
-                'timestamp': time.time()
+                "dataset": dataset["name"],
+                "algorithm": alg_name,
+                "algorithm_version": algorithm["version"],
+                "dataset_version": dataset["version"],
+                "system_version": system_version,
+                "compression_ratio": compression_ratio,
+                "encode_time": encode_time,
+                "decode_time": decode_time,
+                "encode_mb_per_sec": encode_mb_per_sec,
+                "decode_mb_per_sec": decode_mb_per_sec,
+                "original_size": original_size,
+                "compressed_size": compressed_size,
+                "array_shape": data.shape,
+                "array_dtype": dtype,
+                "timestamp": time.time(),
             }
             results.append(result)
 
             # Save result and compressed data
             os.makedirs(test_dir, exist_ok=True)
-            cache_data = {
-                'result': result
-            }
-            with open(metadata_file, 'w') as f:
+            cache_data = {"result": result}
+            with open(metadata_file, "w") as f:
                 json.dump(cache_data, f, indent=2)
-            with open(compressed_file, 'wb') as f:
+            with open(compressed_file, "wb") as f:
                 f.write(encoded)
             print(f"  Results saved to: {test_dir}")
 
             # Upload to memobin if API key is set and upload is enabled
-            memobin_api_key = os.environ.get('MEMOBIN_API_KEY')
-            upload_enabled = os.environ.get('UPLOAD_TO_MEMOBIN') == '1'
+            memobin_api_key = os.environ.get("MEMOBIN_API_KEY")
+            upload_enabled = os.environ.get("UPLOAD_TO_MEMOBIN") == "1"
             if memobin_api_key and upload_enabled:
                 if verbose:
                     print("  Uploading results to memobin...")
                 try:
                     memobin_url = construct_memobin_url(
-                        alg_name, dataset['name'],
-                        algorithm['version'], dataset['version'],
-                        system_version
+                        alg_name,
+                        dataset["name"],
+                        algorithm["version"],
+                        dataset["version"],
+                        system_version,
                     )
                     upload_to_memobin(
                         cache_data,
                         memobin_url,
-                        os.environ.get('MEMOBIN_USER_ID', 'default'),
-                        memobin_api_key
+                        os.environ.get("MEMOBIN_USER_ID", "default"),
+                        memobin_api_key,
                     )
                     if verbose:
                         print("  Successfully uploaded to memobin")
@@ -218,4 +231,4 @@ def run_benchmarks(cache_dir: str = '.benchmark_cache', verbose: bool = True) ->
                     print(f"  Warning: Failed to upload to memobin: {str(e)}")
 
     print("\n=== Benchmark Run Complete ===\n")
-    return {'results': results}
+    return {"results": results}
