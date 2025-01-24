@@ -30,7 +30,7 @@ jobs:
         env:
           MEMOBIN_API_KEY: ${{ secrets.MEMOBIN_API_KEY }}
         run: |
-          python zia_benchmark/src/zia_benchmark/run_benchmarks.py
+          python scripts/run_benchmarks.py
 
       - name: Configure Git
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
