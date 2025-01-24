@@ -1,6 +1,8 @@
 import numpy as np
 import lindi
 from typing import cast
+from ..._filters import bandpass_filter
+from ..._analysis import estimate_noise_level
 
 
 def _load_real_000876(
@@ -20,7 +22,7 @@ def _load_real_000876(
     h5f = lindi.LindiH5pyFile.from_hdf5_file(nwb_url)
     ds = h5f["/acquisition/ElectricalSeriesAP/data"]
     assert isinstance(ds, lindi.LindiH5pyDataset)
-    ret = ds[:num_samples, start_channel : start_channel + num_channels]
+    ret = ds[:num_samples, start_channel:start_channel + num_channels]
     return cast(np.ndarray, ret)
 
 
@@ -41,7 +43,7 @@ def _load_real_000409(
     h5f = lindi.LindiH5pyFile.from_hdf5_file(nwb_url)
     ds = h5f["/acquisition/ElectricalSeriesAp/data"]
     assert isinstance(ds, lindi.LindiH5pyDataset)
-    ret = ds[:num_samples, start_channel : start_channel + num_channels]
+    ret = ds[:num_samples, start_channel:start_channel + num_channels]
     return cast(np.ndarray, ret)
 
 
@@ -62,9 +64,36 @@ def _load_real_001290(
     h5f = lindi.LindiH5pyFile.from_hdf5_file(nwb_url)
     ds = h5f["/acquisition/ElectricalSeriesAPImec/data"]
     assert isinstance(ds, lindi.LindiH5pyDataset)
-    ret = ds[:num_samples, start_channel : start_channel + num_channels]
+    ret = ds[:num_samples, start_channel:start_channel + num_channels]
     return cast(np.ndarray, ret)
 
+
+def _create_filtered_version(X: np.ndarray) -> np.ndarray:
+    """Create filtered version of a dataset using bandpass filtering and quantization.
+
+    Args:
+        X: Input signal array
+
+    Returns:
+        Filtered and quantized signal array
+    """
+    v = 0.25  # step size for quantization
+    lowcut = 300
+    highcut = 6000
+    sampling_frequency = 30000
+
+    # Bandpass filter
+    X_filt = bandpass_filter(X - np.median(X), sampling_frequency=sampling_frequency, lowcut=lowcut, highcut=highcut)
+
+    # Normalize by noise level
+    noise_level = estimate_noise_level(X_filt, sampling_frequency=sampling_frequency)
+    X_filt_normalized = X_filt / noise_level
+
+    # Quantize
+    X2b = X_filt_normalized / v
+    X2 = np.round(X2b).astype(np.int16)
+
+    return X2
 
 datasets = [
     {
@@ -93,5 +122,32 @@ datasets = [
             num_samples=500_000, num_channels=1, start_channel=0
         ).flatten(),
         "tags": ["continuous", "neurophysiology"],
+    },
+    {
+        "name": "real-000876-ch45-filtered",
+        "version": "1",
+        "description": "Filtered version of real-000876-ch45 with bandpass filtering (300-6000 Hz) and quantization",
+        "create": lambda: _create_filtered_version(_load_real_000876(
+            num_samples=500_000, num_channels=1, start_channel=45
+        ).flatten()),
+        "tags": ["continuous", "neurophysiology", "filtered"],
+    },
+    {
+        "name": "real-000409-ch101-filtered",
+        "version": "1",
+        "description": "Filtered version of real-000409-ch101 with bandpass filtering (300-6000 Hz) and quantization",
+        "create": lambda: _create_filtered_version(_load_real_000409(
+            num_samples=500_000, num_channels=1, start_channel=101
+        ).flatten()),
+        "tags": ["continuous", "neurophysiology", "filtered"],
+    },
+    {
+        "name": "real-001290-ch0-filtered",
+        "version": "1",
+        "description": "Filtered version of real-001290-ch0 with bandpass filtering (300-6000 Hz) and quantization",
+        "create": lambda: _create_filtered_version(_load_real_001290(
+            num_samples=500_000, num_channels=1, start_channel=0
+        ).flatten()),
+        "tags": ["continuous", "neurophysiology", "filtered"],
     },
 ]
