@@ -25,6 +25,8 @@ def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:
     # If algorithm has delta_encoding tag, dataset must have continuous tag
     if "delta_encoding" in algorithm_tags and "continuous" not in dataset_tags:
         return False
+    if "markov_prediction" in algorithm_tags and "continuous" not in dataset_tags:
+        return False
     return True
 
 
@@ -169,8 +171,18 @@ def run_benchmarks(
             print(f"    Decode time: {decode_time*1000:.2f}ms")
             print(f"    Decode throughput: {decode_mb_per_sec:.2f} MB/s")
 
+            if len(data) != len(decoded):
+                raise ValueError(
+                    f"Decompression failed: decoded length {len(decoded)} != original length {len(data)}"
+                )
+
             # Verify correctness
             if not np.array_equal(data, decoded):
+                print(data[:100])
+                print(decoded[:100])
+                for j in range(len(data)):
+                    if data[j] != decoded[j]:
+                        print(f"Error at index {j}: {data[j]} != {decoded[j]}")
                 raise ValueError(
                     f"Decompression verification failed for {alg_name} on {dataset['name']}"
                 )
