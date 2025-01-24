@@ -8,7 +8,8 @@ setup(
     install_requires=[
         "numpy",
         "zstandard",
-        "simple_ans"
+        "simple_ans",
+        "requests"
     ],
     python_requires=">=3.8",
     author="Jeremy Magland",
