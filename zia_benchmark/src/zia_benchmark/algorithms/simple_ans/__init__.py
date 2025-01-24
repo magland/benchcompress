@@ -73,12 +73,8 @@ def simple_ans_delta_decode(x: bytes, dtype: str) -> np.ndarray:
     )
     # Decode the differences
     diffs = ans_decode(encoded)
-    # Create output array starting with x0
-    result = np.empty(len(diffs) + 1, dtype=diffs.dtype)
-    result[0] = x0
-    # Compute cumulative sum of differences
-    np.cumsum(diffs, out=result[1:])
-    return result
+    # Insert x0 at the beginning and cumulatively sum the differences
+    return np.cumsum(np.insert(diffs, 0, x0))
 
 
 def simple_ans_encode(x: np.ndarray) -> bytes:
