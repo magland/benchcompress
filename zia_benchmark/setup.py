@@ -7,6 +7,7 @@ setup(
     package_dir={"": "src"},
     install_requires=[
         "numpy",
+        "scipy",
         "zstandard",
         "simple_ans",
         "requests",
