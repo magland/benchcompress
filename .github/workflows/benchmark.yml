@@ -1,5 +1,10 @@
 name: Run Benchmarks
 
+# Add concurrency to cancel in-progress jobs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   workflow_dispatch:  # Manual trigger
   push:
