@@ -81,7 +81,7 @@ export function BenchmarkTable() {
     <div className="table-container">
       <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <label htmlFor="dataset-select">Filter by Dataset:</label>
+          <label htmlFor="dataset-select">Dataset:</label>
           <select
             id="dataset-select"
             value={selectedDataset}

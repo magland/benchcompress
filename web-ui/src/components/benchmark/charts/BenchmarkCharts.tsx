@@ -1,4 +1,5 @@
 import Plot from 'react-plotly.js';
+import { useState } from 'react';
 
 interface ChartData {
   algorithm: string;
@@ -12,18 +13,35 @@ interface BenchmarkChartsProps {
 }
 
 export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
+  const [sortByRatio, setSortByRatio] = useState(true);
+
   if (!chartData.length) return null;
 
+  const sortedData = sortByRatio
+    ? [...chartData].sort((a, b) => a.compression_ratio - b.compression_ratio)
+    : chartData;
+
   return (
-    <div style={{ marginBottom: '30px' }}>
+    <div>
+      <div style={{ marginBottom: '10px' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <input
+            type="checkbox"
+            checked={sortByRatio}
+            onChange={(e) => setSortByRatio(e.target.checked)}
+          />
+          Sort by compression ratio
+        </label>
+      </div>
+      <div style={{ marginBottom: '30px' }}>
       <div style={{ marginBottom: '20px' }}>
         <h3 style={{ marginBottom: '10px' }}>Compression Ratio</h3>
         <Plot
           data={[{
             type: 'bar',
             orientation: 'h',
-            y: chartData.map(d => d.algorithm),
-            x: chartData.map(d => d.compression_ratio),
+            y: sortedData.map(d => d.algorithm),
+            x: sortedData.map(d => d.compression_ratio),
             marker: { color: '#8884d8' }
           }]}
           layout={{
@@ -42,8 +60,8 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
           data={[{
             type: 'bar',
             orientation: 'h',
-            y: chartData.map(d => d.algorithm),
-            x: chartData.map(d => d.encode_speed),
+            y: sortedData.map(d => d.algorithm),
+            x: sortedData.map(d => d.encode_speed),
             marker: { color: '#82ca9d' }
           }]}
           layout={{
@@ -62,8 +80,8 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
           data={[{
             type: 'bar',
             orientation: 'h',
-            y: chartData.map(d => d.algorithm),
-            x: chartData.map(d => d.decode_speed),
+            y: sortedData.map(d => d.algorithm),
+            x: sortedData.map(d => d.decode_speed),
             marker: { color: '#ff7300' }
           }]}
           layout={{
@@ -74,6 +92,7 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
           }}
           config={{ displayModeBar: false }}
         />
+      </div>
       </div>
     </div>
   );

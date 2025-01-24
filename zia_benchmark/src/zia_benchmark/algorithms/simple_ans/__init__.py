@@ -1,6 +1,77 @@
 import numpy as np
 
 
+def simple_ans_delta_encode(x: np.ndarray) -> bytes:
+    from simple_ans import ans_encode
+    assert x.ndim == 1
+    # Calculate differences without inserting x[0]
+    y = np.diff(x)
+    # Encode just the differences
+    encoded = ans_encode(y)
+    if x.dtype == np.uint8:
+        dtype_code = 0
+    elif x.dtype == np.uint16:
+        dtype_code = 1
+    elif x.dtype == np.uint32:
+        dtype_code = 2
+    elif x.dtype == np.int16:
+        dtype_code = 3
+    elif x.dtype == np.int32:
+        dtype_code = 4
+    else:
+        raise ValueError(f"Unsupported dtype: {x.dtype}")
+    # Include x[0] in the header
+    header = [
+        dtype_code,
+        encoded.num_bits,
+        encoded.signal_length,
+        encoded.state,
+        len(encoded.symbol_counts),
+        x[0]  # Store first value in header
+    ] + [c for c in encoded.symbol_counts] + [v for v in encoded.symbol_values]
+    header_bytes = np.array(header, dtype=np.int64).tobytes()
+    header_size = np.uint32(len(header_bytes))
+    return header_size.tobytes() + header_bytes + encoded.bitstream
+
+def simple_ans_delta_decode(x: bytes, dtype: str) -> np.ndarray:
+    from simple_ans import ans_decode, EncodedSignal
+    header_size = np.frombuffer(x[:4], dtype=np.uint32)[0]
+    header = np.frombuffer(x[4:4 + header_size], dtype=np.int64)
+    dtype_code, num_bits, signal_length, state, num_symbols, x0 = header[:6]  # Extract x0 from header
+    symbol_counts = header[6:6 + num_symbols]
+    symbol_values = header[6 + num_symbols:]
+    bitstream = x[4 + header_size:]
+    if dtype_code == 0:
+        assert dtype == 'uint8'
+    elif dtype_code == 1:
+        assert dtype == 'uint16'
+    elif dtype_code == 2:
+        assert dtype == 'uint32'
+    elif dtype_code == 3:
+        assert dtype == 'int16'
+    elif dtype_code == 4:
+        assert dtype == 'int32'
+    else:
+        raise ValueError(f"Unsupported dtype code: {dtype_code}")
+
+    encoded = EncodedSignal(
+        num_bits=int(num_bits),
+        signal_length=int(signal_length),
+        state=int(state),
+        symbol_counts=symbol_counts.astype(np.uint32),
+        symbol_values=symbol_values.astype(dtype),
+        bitstream=bitstream
+    )
+    # Decode the differences
+    diffs = ans_decode(encoded)
+    # Create output array starting with x0
+    result = np.empty(len(diffs) + 1, dtype=diffs.dtype)
+    result[0] = x0
+    # Compute cumulative sum of differences
+    np.cumsum(diffs, out=result[1:])
+    return result
+
+
 def simple_ans_encode(x: np.ndarray) -> bytes:
     from simple_ans import ans_encode
     assert x.ndim == 1
@@ -66,5 +137,12 @@ algorithms = [
         'version': '1',
         'encode': lambda x: simple_ans_encode(x),
         'decode': lambda x, dtype: simple_ans_decode(x, dtype)
+    },
+    {
+        'name': 'simple-ans-delta',
+        'version': '1',
+        'encode': lambda x: simple_ans_delta_encode(x),
+        'decode': lambda x, dtype: simple_ans_delta_decode(x, dtype),
+        'tags': ['delta_encoding']
     }
 ]

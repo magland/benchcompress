@@ -1,6 +1,24 @@
 import numpy as np
 
 
+def zstd_delta_encode(x: np.ndarray, level: int) -> bytes:
+    import zstandard as zstd
+    assert x.ndim == 1
+    y = np.diff(x)
+    y = np.insert(y, 0, x[0])
+    buf = y.tobytes()
+    compressor = zstd.ZstdCompressor(level=level)
+    compressed = compressor.compress(buf)
+    return compressed
+
+def zstd_delta_decode(x: bytes, dtype: str) -> np.ndarray:
+    import zstandard as zstd
+    decompressor = zstd.ZstdDecompressor()
+    buf = decompressor.decompress(x)
+    y = np.frombuffer(buf, dtype=dtype)
+    return np.cumsum(y)
+
+
 def zstd_encode(x: np.ndarray, level: int) -> bytes:
     import zstandard as zstd
     assert x.ndim == 1
@@ -58,5 +76,12 @@ algorithms = [
         'version': '1',
         'encode': lambda x: zstd_encode(x, level=22),
         'decode': lambda x, dtype: zstd_decode(x, dtype)
+    },
+    {
+        'name': 'zstd-22-delta',
+        'version': '1',
+        'encode': lambda x: zstd_delta_encode(x, level=22),
+        'decode': lambda x, dtype: zstd_delta_decode(x, dtype),
+        'tags': ['delta_encoding']
     }
 ]
