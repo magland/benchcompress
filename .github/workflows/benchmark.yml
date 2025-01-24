@@ -23,7 +23,8 @@ jobs:
 
       - name: Install package and dependencies
         run: |
-          python -m pip install -e zia_benchmark/
+          cd zia_benchmark
+          pip install -e .
 
       - name: Run benchmarks
         env:

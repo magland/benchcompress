@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-import zia_benchmark
+from zia_benchmark import run_benchmarks
 
 def format_size(size_bytes: float) -> str:
     """Format size in bytes to human readable string"""
@@ -23,7 +23,7 @@ def format_time(seconds: float) -> str:
 def main():
     # Run benchmarks
     print("Running benchmarks...")
-    results = zia_benchmark.run_benchmarks()
+    results = run_benchmarks()
 
     # Group results by dataset
     datasets = {}
