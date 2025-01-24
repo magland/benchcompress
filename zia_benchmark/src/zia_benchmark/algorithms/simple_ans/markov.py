@@ -56,7 +56,7 @@ def markov_reconstruct(
         # Get previous M-1 values to make prediction
         prev_values = output[i : i + M - 1]
         # Make prediction using coefficients
-        prediction = np.sum(coeffs[1:] * prev_values) + coeffs[0]
+        prediction = np.sum(coeffs[:-1] * prev_values) + coeffs[-1]
         prediction = np.round(prediction)
         # Add residual to get actual value
         output[i + M - 1] = prediction + resid[i]
