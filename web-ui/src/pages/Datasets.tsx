@@ -1,4 +1,5 @@
 import { Dataset } from "../types";
+import { Link } from "react-router-dom";
 
 interface DatasetsProps {
   datasets: Dataset[];
@@ -68,7 +69,16 @@ function Datasets({ datasets }: DatasetsProps) {
                 }}
               >
                 <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                  {dataset.name}
+                  <Link
+                    to={`/home?dataset=${encodeURIComponent(dataset.name)}`}
+                    style={{
+                      color: "#0066cc",
+                      textDecoration: "none",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {dataset.name}
+                  </Link>
                 </td>
                 <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
                   {dataset.version}

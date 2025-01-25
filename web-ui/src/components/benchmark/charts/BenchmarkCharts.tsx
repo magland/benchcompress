@@ -49,7 +49,7 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
             layout={{
               width: 800,
               height: 400,
-              margin: { t: 5, r: 30, l: 120, b: 30 },
+              margin: { t: 5, r: 30, l: 250, b: 30 },
               xaxis: { title: "Ratio" },
             }}
             config={{ displayModeBar: false }}
@@ -71,7 +71,7 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
             layout={{
               width: 800,
               height: 400,
-              margin: { t: 5, r: 30, l: 120, b: 30 },
+              margin: { t: 5, r: 30, l: 250, b: 30 },
               xaxis: { title: "MB/s" },
             }}
             config={{ displayModeBar: false }}
@@ -93,7 +93,7 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
             layout={{
               width: 800,
               height: 400,
-              margin: { t: 5, r: 30, l: 120, b: 30 },
+              margin: { t: 5, r: 30, l: 250, b: 30 },
               xaxis: { title: "MB/s" },
             }}
             config={{ displayModeBar: false }}

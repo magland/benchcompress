@@ -18,15 +18,29 @@ interface BenchmarkTableProps {
 export function BenchmarkTable({ results }: BenchmarkTableProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedDataset = searchParams.get("dataset") || "";
+  const selectedAlgorithm = searchParams.get("algorithm") || "";
+
   const availableDatasets = useMemo(() => {
     return Array.from(new Set(results.map((result) => result.dataset))).sort();
   }, [results]);
 
+  const availableAlgorithms = useMemo(() => {
+    return Array.from(
+      new Set(results.map((result) => result.algorithm)),
+    ).sort();
+  }, [results]);
+
   // Memoize filtered data to prevent unnecessary recalculations
   const filteredData = useMemo(() => {
-    if (!selectedDataset) return results;
-    return results.filter((row) => row.dataset === selectedDataset);
-  }, [results, selectedDataset]);
+    let filtered = results;
+    if (selectedDataset) {
+      filtered = filtered.filter((row) => row.dataset === selectedDataset);
+    }
+    if (selectedAlgorithm) {
+      filtered = filtered.filter((row) => row.algorithm === selectedAlgorithm);
+    }
+    return filtered;
+  }, [results, selectedDataset, selectedAlgorithm]);
 
   const table = useReactTable({
     data: filteredData || [],
@@ -35,18 +49,29 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  // Prepare data for bar charts when a dataset is selected
+  // Prepare data for bar charts when either dataset or algorithm is selected
   const chartData = useMemo(() => {
-    if (!selectedDataset) return [];
-    return results
-      .filter((row: BenchmarkResult) => row.dataset === selectedDataset)
-      .map((row: BenchmarkResult) => ({
-        algorithm: row.algorithm,
-        compression_ratio: row.compression_ratio,
-        encode_speed: row.encode_mb_per_sec,
-        decode_speed: row.decode_mb_per_sec,
-      }));
-  }, [results, selectedDataset]);
+    if (selectedDataset) {
+      return results
+        .filter((row: BenchmarkResult) => row.dataset === selectedDataset)
+        .map((row: BenchmarkResult) => ({
+          algorithm: row.algorithm,
+          compression_ratio: row.compression_ratio,
+          encode_speed: row.encode_mb_per_sec,
+          decode_speed: row.decode_mb_per_sec,
+        }));
+    } else if (selectedAlgorithm) {
+      return results
+        .filter((row: BenchmarkResult) => row.algorithm === selectedAlgorithm)
+        .map((row: BenchmarkResult) => ({
+          algorithm: row.dataset, // Use dataset as the x-axis label when algorithm is selected
+          compression_ratio: row.compression_ratio,
+          encode_speed: row.encode_mb_per_sec,
+          decode_speed: row.decode_mb_per_sec,
+        }));
+    }
+    return [];
+  }, [results, selectedDataset, selectedAlgorithm]);
 
   return (
     <div className="table-container">
@@ -59,36 +84,72 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
           justifyContent: "space-between",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <label htmlFor="dataset-select">Dataset:</label>
-          <select
-            id="dataset-select"
-            value={selectedDataset}
-            onChange={(e) => {
-              if (e.target.value) {
-                setSearchParams({ dataset: e.target.value });
-              } else {
-                setSearchParams({});
-              }
-            }}
-            style={{
-              padding: "8px",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              minWidth: "200px",
-              backgroundColor: "#fff",
-            }}
-          >
-            <option value="">All Datasets</option>
-            {availableDatasets.map((dataset) => (
-              <option key={dataset} value={dataset}>
-                {dataset}
-              </option>
-            ))}
-          </select>
+        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <label htmlFor="dataset-select">Dataset:</label>
+            <select
+              id="dataset-select"
+              value={selectedDataset}
+              onChange={(e) => {
+                if (e.target.value) {
+                  setSearchParams({ dataset: e.target.value });
+                } else {
+                  setSearchParams(
+                    selectedAlgorithm ? { algorithm: selectedAlgorithm } : {},
+                  );
+                }
+              }}
+              style={{
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+                minWidth: "200px",
+                backgroundColor: "#fff",
+              }}
+            >
+              <option value="">All Datasets</option>
+              {availableDatasets.map((dataset) => (
+                <option key={dataset} value={dataset}>
+                  {dataset}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <label htmlFor="algorithm-select">Algorithm:</label>
+            <select
+              id="algorithm-select"
+              value={selectedAlgorithm}
+              onChange={(e) => {
+                if (e.target.value) {
+                  setSearchParams({ algorithm: e.target.value });
+                } else {
+                  setSearchParams(
+                    selectedDataset ? { dataset: selectedDataset } : {},
+                  );
+                }
+              }}
+              style={{
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+                minWidth: "200px",
+                backgroundColor: "#fff",
+              }}
+            >
+              <option value="">All Algorithms</option>
+              {availableAlgorithms.map((algorithm) => (
+                <option key={algorithm} value={algorithm}>
+                  {algorithm}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <button
-          onClick={() => exportToCsv(filteredData, selectedDataset)}
+          onClick={() =>
+            exportToCsv(filteredData, selectedDataset || selectedAlgorithm)
+          }
           style={{
             padding: "8px 16px",
             backgroundColor: "#4CAF50",
@@ -115,7 +176,7 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
         </button>
       </div>
 
-      {selectedDataset && chartData.length > 0 && (
+      {(selectedDataset || selectedAlgorithm) && chartData.length > 0 && (
         <BenchmarkCharts chartData={chartData} />
       )}
 

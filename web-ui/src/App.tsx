@@ -4,6 +4,7 @@ import axios from "axios";
 import Home from "./pages/Home";
 import Datasets from "./pages/Datasets";
 import Algorithms from "./pages/Algorithms";
+import About from "./pages/About";
 import { BenchmarkData } from "./types";
 
 function App() {
@@ -84,6 +85,18 @@ function App() {
                 Algorithms
               </Link>
             </li>
+            <li>
+              <Link
+                to="/about"
+                style={{
+                  color: "#0066cc",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+              >
+                About
+              </Link>
+            </li>
           </ul>
         </nav>
         <main>
@@ -111,6 +124,7 @@ function App() {
                   <Algorithms algorithms={benchmarkData?.algorithms || []} />
                 }
               />
+              <Route path="/about" element={<About />} />
             </Routes>
           )}
         </main>
