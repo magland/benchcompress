@@ -63,13 +63,12 @@ def run_benchmarks(
     # Run benchmarks for each dataset and algorithm combination
     for dataset in datasets:
         dataset_tags = dataset.get("tags", [])
-        print(f"\n--- Dataset: {dataset['name']} (tags: {dataset_tags}) ---")
-        # Create dataset once for all algorithms
-        data = dataset["create"]()
-        dtype = str(data.dtype)
-        original_size = len(data.tobytes())
-        print(f"Created dataset: shape={data.shape}, dtype={dtype}")
-        print(f"Original size: {original_size:,} bytes")
+        print(f"\n*** Dataset: {dataset['name']} (tags: {dataset_tags}) ***")
+
+        # data will only be created if needed
+        data = None
+        original_size = None
+        dtype = None
 
         for algorithm in algorithms:
             alg_name = algorithm["name"]
@@ -136,10 +135,24 @@ def run_benchmarks(
                 continue
 
             print("  Running new benchmark...")
+            if data is None:
+                # only create data if needed
+                data = dataset["create"]()
+                dtype = str(data.dtype)
+                original_size = len(data.tobytes())
+                print(f"Created dataset: shape={data.shape}, dtype={dtype}")
+                print(f"Original size: {original_size:,} bytes")
+
+            assert data is not None
+            assert isinstance(data, np.ndarray)
+            assert isinstance(original_size, int)
+            assert isinstance(dtype, str)
 
             def run_timed_trials(operation, *args) -> Tuple[float, float]:
                 """Run multiple trials of an operation until total time exceeds 1 second.
                 Returns (median_time, mb_per_sec)"""
+                assert data is not None
+                assert isinstance(data, np.ndarray)
                 times = []
                 total_time = 0
                 array_size_mb = data.nbytes / (1024 * 1024)  # Convert to MB
