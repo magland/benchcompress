@@ -1,2 +1,4 @@
-benchmark_resuts
+*.out
+benchmark_results
 .benchmark_cache
+__pycache__
