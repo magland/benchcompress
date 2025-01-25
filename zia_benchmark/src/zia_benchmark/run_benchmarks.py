@@ -15,7 +15,7 @@ from ._memobin import (
 )
 
 
-system_version = "v4"
+system_version = "v5"
 GITHUB_ALGORITHMS_PREFIX = "https://github.com/magland/zia/blob/main/zia_benchmark/src/zia_benchmark/algorithms/"
 GITHUB_DATASETS_PREFIX = (
     "https://github.com/magland/zia/blob/main/zia_benchmark/src/zia_benchmark/datasets/"
