@@ -243,4 +243,28 @@ def run_benchmarks(
                     print(f"  Warning: Failed to upload to memobin: {str(e)}")
 
     print("\n=== Benchmark Run Complete ===\n")
-    return {"results": results}
+
+    # Collect algorithm and dataset information as lists
+    algorithm_info = []
+    for algorithm in algorithms:
+        algorithm_info.append({
+            "name": algorithm["name"],
+            "description": algorithm.get("description", ""),
+            "version": algorithm["version"],
+            "tags": algorithm.get("tags", [])
+        })
+
+    dataset_info = []
+    for dataset in datasets:
+        dataset_info.append({
+            "name": dataset["name"],
+            "description": dataset.get("description", ""),
+            "version": dataset["version"],
+            "tags": dataset.get("tags", [])
+        })
+
+    return {
+        "results": results,
+        "algorithms": algorithm_info,
+        "datasets": dataset_info
+    }

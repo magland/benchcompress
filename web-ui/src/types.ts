@@ -16,6 +16,22 @@ export interface BenchmarkResult {
   timestamp: number;
 }
 
+export interface Algorithm {
+  name: string;
+  description: string;
+  version: string;
+  tags: string[];
+}
+
+export interface Dataset {
+  name: string;
+  description: string;
+  version: string;
+  tags: string[];
+}
+
 export interface BenchmarkData {
   results: BenchmarkResult[];
+  algorithms: Algorithm[];
+  datasets: Dataset[];
 }

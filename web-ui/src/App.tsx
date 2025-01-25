@@ -1,45 +1,67 @@
-import { BenchmarkTable } from "./components/BenchmarkTable";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import Datasets from "./pages/Datasets";
+import Algorithms from "./pages/Algorithms";
 
 function App() {
   return (
-    <div style={{ padding: "2rem" }}>
-      <header style={{ marginBottom: "2rem" }}>
-        <h1
-          style={{
-            fontSize: "2rem",
-            fontWeight: "bold",
-            color: "#333",
-          }}
-        >
-          ZIA Integer Compression Benchmark
-        </h1>
-        <p
-          style={{
-            color: "#666",
-            marginTop: "0.5rem",
-          }}
-        >
-          Comparing different integer array compression algorithms and their
-          performance
-        </p>
-        <a
-          href="https://github.com/magland/zia"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            color: "#0066cc",
-            textDecoration: "none",
-            display: "inline-block",
-            marginTop: "0.5rem",
-          }}
-        >
-          View source on GitHub
-        </a>
-      </header>
-      <main>
-        <BenchmarkTable />
-      </main>
-    </div>
+    <BrowserRouter>
+      <div style={{ padding: "2rem" }}>
+        <nav style={{ marginBottom: "2rem" }}>
+          <ul style={{
+            listStyle: "none",
+            padding: 0,
+            margin: 0,
+            display: "flex",
+            gap: "1.5rem"
+          }}>
+            <li>
+              <Link
+                to="/"
+                style={{
+                  color: "#0066cc",
+                  textDecoration: "none",
+                  fontWeight: "500"
+                }}
+              >
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/datasets"
+                style={{
+                  color: "#0066cc",
+                  textDecoration: "none",
+                  fontWeight: "500"
+                }}
+              >
+                Datasets
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/algorithms"
+                style={{
+                  color: "#0066cc",
+                  textDecoration: "none",
+                  fontWeight: "500"
+                }}
+              >
+                Algorithms
+              </Link>
+            </li>
+          </ul>
+        </nav>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/datasets" element={<Datasets />} />
+            <Route path="/algorithms" element={<Algorithms />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
   );
 }
 

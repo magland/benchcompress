@@ -105,7 +105,7 @@ datasets = [
     {
         "name": "real-000876-ch45",
         "version": "1",
-        "description": "Real neurophysiology data from DANDI:000876, channel 45",
+        "description": "Raw extracellular electrophysiology recording from DANDI:000876.",
         "create": lambda: _load_real_000876(
             num_samples=500_000, num_channels=1, start_channel=45
         ).flatten(),
@@ -114,7 +114,7 @@ datasets = [
     {
         "name": "real-000409-ch101",
         "version": "1",
-        "description": "Real neurophysiology data from DANDI:000409, channel 101",
+        "description": "Raw extracellular electrophysiology recording from DANDI:000409.",
         "create": lambda: _load_real_000409(
             num_samples=500_000, num_channels=1, start_channel=101
         ).flatten(),
@@ -123,7 +123,7 @@ datasets = [
     {
         "name": "real-001290-ch0",
         "version": "1",
-        "description": "Real neurophysiology data from DANDI:001290, channel 0",
+        "description": "Raw extracellular electrophysiology recording from DANDI:001290.",
         "create": lambda: _load_real_001290(
             num_samples=500_000, num_channels=1, start_channel=0
         ).flatten(),
@@ -132,7 +132,7 @@ datasets = [
     {
         "name": "real-000876-ch45-filtered",
         "version": "1",
-        "description": "Filtered version of real-000876-ch45 with bandpass filtering (300-6000 Hz) and quantization",
+        "description": "Preprocessed version of real-000876-ch45. Bandpass filtered (300-6000 Hz).",
         "create": lambda: _create_filtered_version(
             _load_real_000876(
                 num_samples=500_000, num_channels=1, start_channel=45
@@ -143,7 +143,7 @@ datasets = [
     {
         "name": "real-000409-ch101-filtered",
         "version": "1",
-        "description": "Filtered version of real-000409-ch101 with bandpass filtering (300-6000 Hz) and quantization",
+        "description": "Preprocessed version of real-000409-ch101. Bandpass filtered (300-6000 Hz).",
         "create": lambda: _create_filtered_version(
             _load_real_000409(
                 num_samples=500_000, num_channels=1, start_channel=101
@@ -154,7 +154,7 @@ datasets = [
     {
         "name": "real-001290-ch0-filtered",
         "version": "1",
-        "description": "Filtered version of real-001290-ch0 with bandpass filtering (300-6000 Hz) and quantization",
+        "description": "Preprocessed version of real-001290-ch0. Bandpass filtered (300-6000 Hz).",
         "create": lambda: _create_filtered_version(
             _load_real_001290(
                 num_samples=500_000, num_channels=1, start_channel=0
