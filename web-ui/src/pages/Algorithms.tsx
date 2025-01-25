@@ -24,45 +24,55 @@ function Algorithms({ algorithms }: AlgorithmsProps) {
             <tr style={{ backgroundColor: "#f5f5f5" }}>
               <th
                 style={{
-                  padding: "12px",
+                  padding: "8px 12px",
                   textAlign: "left",
-                  borderBottom: "2px solid #ddd",
+                  borderBottom: "1px solid #ddd",
+                  fontSize: "0.9rem",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Name
               </th>
               <th
                 style={{
-                  padding: "12px",
+                  padding: "8px 12px",
                   textAlign: "left",
-                  borderBottom: "2px solid #ddd",
+                  borderBottom: "1px solid #ddd",
+                  fontSize: "0.9rem",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Version
               </th>
               <th
                 style={{
-                  padding: "12px",
+                  padding: "8px 12px",
                   textAlign: "left",
-                  borderBottom: "2px solid #ddd",
+                  borderBottom: "1px solid #ddd",
+                  fontSize: "0.9rem",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Description
               </th>
               <th
                 style={{
-                  padding: "12px",
+                  padding: "8px 12px",
                   textAlign: "left",
-                  borderBottom: "2px solid #ddd",
+                  borderBottom: "1px solid #ddd",
+                  fontSize: "0.9rem",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Tags
               </th>
               <th
                 style={{
-                  padding: "12px",
+                  padding: "8px 12px",
                   textAlign: "left",
-                  borderBottom: "2px solid #ddd",
+                  borderBottom: "1px solid #ddd",
+                  fontSize: "0.9rem",
+                  whiteSpace: "nowrap",
                 }}
               >
                 Source
@@ -77,7 +87,13 @@ function Algorithms({ algorithms }: AlgorithmsProps) {
                   backgroundColor: index % 2 === 0 ? "white" : "#fafafa",
                 }}
               >
-                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+                <td
+                  style={{
+                    padding: "6px 12px",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "0.9rem",
+                  }}
+                >
                   <Link
                     to={`/home?algorithm=${encodeURIComponent(algorithm.name)}`}
                     style={{
@@ -89,30 +105,54 @@ function Algorithms({ algorithms }: AlgorithmsProps) {
                     {algorithm.name}
                   </Link>
                 </td>
-                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+                <td
+                  style={{
+                    padding: "6px 12px",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "0.9rem",
+                  }}
+                >
                   {algorithm.version}
                 </td>
-                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+                <td
+                  style={{
+                    padding: "6px 12px",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "0.9rem",
+                  }}
+                >
                   {algorithm.description}
                 </td>
-                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+                <td
+                  style={{
+                    padding: "6px 12px",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "0.9rem",
+                  }}
+                >
                   {algorithm.tags.map((tag) => (
                     <span
                       key={tag}
                       style={{
                         display: "inline-block",
                         backgroundColor: "#e1e1e1",
-                        padding: "4px 8px",
-                        borderRadius: "4px",
-                        margin: "2px",
-                        fontSize: "0.9em",
+                        padding: "2px 6px",
+                        borderRadius: "3px",
+                        margin: "1px",
+                        fontSize: "0.8rem",
                       }}
                     >
                       {tag}
                     </span>
                   ))}
                 </td>
-                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+                <td
+                  style={{
+                    padding: "6px 12px",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "0.9rem",
+                  }}
+                >
                   {algorithm.source_file && (
                     <a
                       href={algorithm.source_file}

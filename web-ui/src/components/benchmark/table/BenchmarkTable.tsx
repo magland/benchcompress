@@ -77,15 +77,15 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
     <div className="table-container">
       <div
         style={{
-          marginBottom: "20px",
+          marginBottom: "12px",
           display: "flex",
           alignItems: "center",
-          gap: "10px",
+          gap: "8px",
           justifyContent: "space-between",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <label htmlFor="dataset-select">Dataset:</label>
             <select
               id="dataset-select"
@@ -100,11 +100,12 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
                 }
               }}
               style={{
-                padding: "8px",
+                padding: "4px 8px",
                 borderRadius: "4px",
                 border: "1px solid #ccc",
-                minWidth: "200px",
+                minWidth: "150px",
                 backgroundColor: "#fff",
+                fontSize: "0.9rem",
               }}
             >
               <option value="">All Datasets</option>
@@ -130,11 +131,12 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
                 }
               }}
               style={{
-                padding: "8px",
+                padding: "4px 8px",
                 borderRadius: "4px",
                 border: "1px solid #ccc",
-                minWidth: "200px",
+                minWidth: "150px",
                 backgroundColor: "#fff",
+                fontSize: "0.9rem",
               }}
             >
               <option value="">All Algorithms</option>
@@ -189,7 +191,13 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
         </tbody>
       </table>
 
-      <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+      <div
+        style={{
+          marginTop: "12px",
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
         <button
           onClick={() =>
             exportToCsv(filteredData, selectedDataset || selectedAlgorithm)

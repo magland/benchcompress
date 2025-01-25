@@ -24,22 +24,8 @@ function Home({ benchmarkData }: HomeProps) {
             marginTop: "0.5rem",
           }}
         >
-          Comparing different integer array compression algorithms and their
-          performance
+          Comparing integer array compression algorithms
         </p>
-        <a
-          href="https://github.com/magland/zia"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            color: "#0066cc",
-            textDecoration: "none",
-            display: "inline-block",
-            marginTop: "0.5rem",
-          }}
-        >
-          View source on GitHub
-        </a>
       </header>
       <main>
         {benchmarkData && <BenchmarkTable results={benchmarkData.results} />}
