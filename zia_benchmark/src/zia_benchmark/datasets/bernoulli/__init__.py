@@ -13,7 +13,7 @@ def create_bernoulli(*, n_samples: int, p: float, seed: int) -> np.ndarray:
 datasets = [
     {
         "name": "bernoulli-0.1",
-        "version": "1",
+        "version": "2",
         "create": lambda: create_bernoulli(n_samples=1_000_000, p=0.1, seed=0),
         "description": "Binary sequence with 10% probability of ones.",
         "tags": ["binary"],

@@ -77,6 +77,17 @@ function Datasets({ datasets }: DatasetsProps) {
               >
                 Source
               </th>
+              <th
+                style={{
+                  padding: "8px 12px",
+                  textAlign: "left",
+                  borderBottom: "1px solid #ddd",
+                  fontSize: "0.9rem",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Data
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -164,6 +175,26 @@ function Datasets({ datasets }: DatasetsProps) {
                       }}
                     >
                       View Source
+                    </a>
+                  )}
+                </td>
+                <td
+                  style={{
+                    padding: "6px 12px",
+                    borderBottom: "1px solid #ddd",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  {dataset.data_url && (
+                    <a
+                      href={dataset.data_url}
+                      download={`${dataset.name}-${dataset.version}.bin`}
+                      style={{
+                        color: "#0066cc",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Download
                     </a>
                   )}
                 </td>

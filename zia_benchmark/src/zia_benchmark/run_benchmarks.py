@@ -6,7 +6,13 @@ import numpy as np
 from statistics import median
 from .algorithms import algorithms
 from .datasets import datasets
-from ._memobin import construct_memobin_url, upload_to_memobin, download_from_memobin
+from ._memobin import (
+    construct_memobin_url,
+    construct_dataset_url,
+    upload_to_memobin,
+    download_from_memobin,
+    exists_in_memobin,
+)
 
 
 system_version = "v4"
@@ -95,15 +101,14 @@ def run_benchmarks(
                 with open(metadata_file, "r") as f:
                     cached_data = json.load(f)
                     # if versions do not match, then set to None
-                    if (
-                        cached_data["result"]["algorithm_version"]
-                        != algorithm["version"]
-                        or cached_data["result"]["dataset_version"]
-                        != dataset["version"]
-                        or cached_data["result"].get("system_version", "")
-                        != system_version
-                    ):
-                        cached_data = None
+                    if isinstance(cached_data, dict) and "result" in cached_data:
+                        result = cached_data["result"]
+                        if (
+                            result["algorithm_version"] != algorithm["version"]
+                            or result["dataset_version"] != dataset["version"]
+                            or result.get("system_version", "") != system_version
+                        ):
+                            cached_data = None
 
             # If not in local cache, try memobin
             if cached_data is None:
@@ -113,6 +118,7 @@ def run_benchmarks(
                     algorithm["version"],
                     dataset["version"],
                     system_version,
+                    "metadata.json",
                 )
                 if verbose:
                     print("  Looking for cached result in memobin...")
@@ -125,14 +131,21 @@ def run_benchmarks(
                     with open(metadata_file, "w") as f:
                         json.dump(cached_data, f, indent=2)
 
-            if cached_data is not None and (
-                cached_data["result"]["algorithm_version"] == algorithm["version"]
-                and cached_data["result"]["dataset_version"] == dataset["version"]
-                and cached_data["result"].get("system_version", "") == system_version
+            if (
+                cached_data is not None
+                and isinstance(cached_data, dict)
+                and "result" in cached_data
             ):
-                print("  Using cached result:")
-                results.append(cached_data["result"])
-                continue
+                result = cached_data["result"]
+                if (
+                    isinstance(result, dict)
+                    and result.get("algorithm_version") == algorithm["version"]
+                    and result.get("dataset_version") == dataset["version"]
+                    and result.get("system_version", "") == system_version
+                ):
+                    print("  Using cached result:")
+                    results.append(result)
+                    continue
 
             print("  Running new benchmark...")
             if data is None:
@@ -142,6 +155,31 @@ def run_benchmarks(
                 original_size = len(data.tobytes())
                 print(f"Created dataset: shape={data.shape}, dtype={dtype}")
                 print(f"Original size: {original_size:,} bytes")
+
+                # Upload dataset to memobin if enabled
+                memobin_api_key = os.environ.get("MEMOBIN_API_KEY")
+                upload_enabled = os.environ.get("UPLOAD_TO_MEMOBIN") == "1"
+                if memobin_api_key and upload_enabled:
+                    try:
+                        dataset_url = construct_dataset_url(
+                            dataset["name"], dataset["version"]
+                        )
+                        if not exists_in_memobin(dataset_url):
+                            if verbose:
+                                print("  Uploading dataset to memobin...")
+                            upload_to_memobin(
+                                data.tobytes(),
+                                dataset_url,
+                                os.environ.get("MEMOBIN_USER_ID", "default"),
+                                memobin_api_key,
+                                content_type="application/octet-stream",
+                            )
+                            if verbose:
+                                print("  Successfully uploaded dataset")
+                    except Exception as e:
+                        print(
+                            f"  Warning: Failed to upload dataset to memobin: {str(e)}"
+                        )
 
             assert data is not None
             assert isinstance(data, np.ndarray)
@@ -281,6 +319,7 @@ def run_benchmarks(
             "description": dataset.get("description", ""),
             "version": dataset["version"],
             "tags": dataset.get("tags", []),
+            "data_url": construct_dataset_url(dataset["name"], dataset["version"]),
         }
         if "source_file" in dataset:
             info["source_file"] = GITHUB_DATASETS_PREFIX + dataset["source_file"]

@@ -30,6 +30,7 @@ export interface Dataset {
   version: string;
   tags: string[];
   source_file?: string;
+  data_url?: string; // URL to download the raw dataset
 }
 
 export interface BenchmarkData {
