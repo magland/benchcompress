@@ -67,6 +67,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git add benchmark_results/
+          # need to force add because it's in the .gitignore
+          git add -f benchmark_results/
           git commit -m "Update benchmark results from $(date +'%Y-%m-%d %H:%M:%S') [skip ci]"
           git push -f https://${GITHUB_TOKEN}@github.com/${{ github.repository }} benchmark-results
