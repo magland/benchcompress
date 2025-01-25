@@ -5,6 +5,9 @@ from ..._filters import bandpass_filter
 from ..._analysis import estimate_noise_level
 
 
+SOURCE_FILE = "real/__init__.py"
+
+
 def _load_real_000876(
     *, num_samples: int, num_channels: int, start_channel: int
 ) -> np.ndarray:
@@ -110,6 +113,7 @@ datasets = [
             num_samples=500_000, num_channels=1, start_channel=45
         ).flatten(),
         "tags": ["continuous", "neurophysiology"],
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "real-000409-ch101",
@@ -119,6 +123,7 @@ datasets = [
             num_samples=500_000, num_channels=1, start_channel=101
         ).flatten(),
         "tags": ["continuous", "neurophysiology"],
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "real-001290-ch0",
@@ -128,6 +133,7 @@ datasets = [
             num_samples=500_000, num_channels=1, start_channel=0
         ).flatten(),
         "tags": ["continuous", "neurophysiology"],
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "real-000876-ch45-filtered",
@@ -139,6 +145,7 @@ datasets = [
             ).flatten()
         ),
         "tags": ["continuous", "neurophysiology", "filtered"],
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "real-000409-ch101-filtered",
@@ -150,6 +157,7 @@ datasets = [
             ).flatten()
         ),
         "tags": ["continuous", "neurophysiology", "filtered"],
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "real-001290-ch0-filtered",
@@ -161,5 +169,6 @@ datasets = [
             ).flatten()
         ),
         "tags": ["continuous", "neurophysiology", "filtered"],
+        "source_file": SOURCE_FILE,
     },
 ]

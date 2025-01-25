@@ -2,6 +2,9 @@ import numpy as np
 from .markov import markov_predict, markov_reconstruct
 
 
+SOURCE_FILE = "simple_ans/__init__.py"
+
+
 def simple_ans_encode(x: np.ndarray) -> bytes:
     from simple_ans import ans_encode
 
@@ -240,6 +243,7 @@ algorithms = [
         "version": "1",
         "encode": lambda x: simple_ans_encode(x),
         "decode": lambda x, dtype: simple_ans_decode(x, dtype),
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "simple-ans-delta",
@@ -247,6 +251,7 @@ algorithms = [
         "encode": lambda x: simple_ans_delta_encode(x),
         "decode": lambda x, dtype: simple_ans_delta_decode(x, dtype),
         "tags": ["delta_encoding"],
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "simple-ans-markov",
@@ -254,5 +259,6 @@ algorithms = [
         "encode": lambda x: simple_ans_markov_encode(x),
         "decode": lambda x, dtype: simple_ans_markov_decode(x, dtype),
         "tags": ["markov_prediction"],
+        "source_file": SOURCE_FILE,
     },
 ]

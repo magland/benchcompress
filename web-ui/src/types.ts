@@ -21,6 +21,7 @@ export interface Algorithm {
   description: string;
   version: string;
   tags: string[];
+  source_file?: string;
 }
 
 export interface Dataset {
@@ -28,6 +29,7 @@ export interface Dataset {
   description: string;
   version: string;
   tags: string[];
+  source_file?: string;
 }
 
 export interface BenchmarkData {

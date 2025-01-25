@@ -1,6 +1,9 @@
 import numpy as np
 
 
+SOURCE_FILE = "zlib/__init__.py"
+
+
 def zlib_encode(x: np.ndarray, level: int) -> bytes:
     import zlib
 
@@ -45,6 +48,7 @@ algorithms = [
         "decode": lambda x, dtype: zlib_decode(x, dtype),
         "description": "Zlib DEFLATE compression at level 1 (fastest).",
         "tags": [],
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "zlib-3",
@@ -53,6 +57,7 @@ algorithms = [
         "decode": lambda x, dtype: zlib_decode(x, dtype),
         "description": "Zlib DEFLATE compression at level 3.",
         "tags": [],
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "zlib-5",
@@ -61,6 +66,7 @@ algorithms = [
         "decode": lambda x, dtype: zlib_decode(x, dtype),
         "description": "Zlib DEFLATE compression at level 5 (medium).",
         "tags": [],
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "zlib-7",
@@ -69,6 +75,7 @@ algorithms = [
         "decode": lambda x, dtype: zlib_decode(x, dtype),
         "description": "Zlib DEFLATE compression at level 7.",
         "tags": [],
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "zlib-9",
@@ -77,6 +84,7 @@ algorithms = [
         "decode": lambda x, dtype: zlib_decode(x, dtype),
         "description": "Zlib DEFLATE compression at maximum level 9.",
         "tags": [],
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "zlib-9-delta",
@@ -85,5 +93,6 @@ algorithms = [
         "decode": lambda x, dtype: zlib_delta_decode(x, dtype),
         "description": "Zlib DEFLATE compression at level 9 with delta encoding.",
         "tags": ["delta_encoding"],
+        "source_file": SOURCE_FILE,
     },
 ]

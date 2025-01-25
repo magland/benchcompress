@@ -1,6 +1,9 @@
 import numpy as np
 
 
+SOURCE_FILE = "lzma/__init__.py"
+
+
 def lzma_delta_encode(x: np.ndarray, preset: int) -> bytes:
     import lzma
 
@@ -43,6 +46,7 @@ algorithms = [
         "version": "1",
         "encode": lambda x: lzma_encode(x, preset=9),
         "decode": lambda x, dtype: lzma_decode(x, dtype),
+        "source_file": SOURCE_FILE,
     },
     {
         "name": "lzma-9-delta",
@@ -50,5 +54,6 @@ algorithms = [
         "encode": lambda x: lzma_delta_encode(x, preset=9),
         "decode": lambda x, dtype: lzma_delta_decode(x, dtype),
         "tags": ["delta_encoding"],
+        "source_file": SOURCE_FILE,
     },
 ]

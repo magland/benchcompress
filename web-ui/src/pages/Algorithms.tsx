@@ -1,4 +1,5 @@
 import { Algorithm } from "../types";
+import { Link } from "react-router-dom";
 
 interface AlgorithmsProps {
   algorithms: Algorithm[];
@@ -57,6 +58,15 @@ function Algorithms({ algorithms }: AlgorithmsProps) {
               >
                 Tags
               </th>
+              <th
+                style={{
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "2px solid #ddd",
+                }}
+              >
+                Source
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -68,7 +78,16 @@ function Algorithms({ algorithms }: AlgorithmsProps) {
                 }}
               >
                 <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
-                  {algorithm.name}
+                  <Link
+                    to={`/home?algorithm=${encodeURIComponent(algorithm.name)}`}
+                    style={{
+                      color: "#0066cc",
+                      textDecoration: "none",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {algorithm.name}
+                  </Link>
                 </td>
                 <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
                   {algorithm.version}
@@ -92,6 +111,21 @@ function Algorithms({ algorithms }: AlgorithmsProps) {
                       {tag}
                     </span>
                   ))}
+                </td>
+                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+                  {algorithm.source_file && (
+                    <a
+                      href={algorithm.source_file}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: "#0066cc",
+                        textDecoration: "none",
+                      }}
+                    >
+                      View Source
+                    </a>
+                  )}
                 </td>
               </tr>
             ))}

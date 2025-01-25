@@ -10,6 +10,10 @@ from ._memobin import construct_memobin_url, upload_to_memobin, download_from_me
 
 
 system_version = "v4"
+GITHUB_ALGORITHMS_PREFIX = "https://github.com/magland/zia/blob/main/zia_benchmark/src/zia_benchmark/algorithms/"
+GITHUB_DATASETS_PREFIX = (
+    "https://github.com/magland/zia/blob/main/zia_benchmark/src/zia_benchmark/datasets/"
+)
 
 
 def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:
@@ -247,24 +251,26 @@ def run_benchmarks(
     # Collect algorithm and dataset information as lists
     algorithm_info = []
     for algorithm in algorithms:
-        algorithm_info.append(
-            {
-                "name": algorithm["name"],
-                "description": algorithm.get("description", ""),
-                "version": algorithm["version"],
-                "tags": algorithm.get("tags", []),
-            }
-        )
+        info = {
+            "name": algorithm["name"],
+            "description": algorithm.get("description", ""),
+            "version": algorithm["version"],
+            "tags": algorithm.get("tags", []),
+        }
+        if "source_file" in algorithm:
+            info["source_file"] = GITHUB_ALGORITHMS_PREFIX + algorithm["source_file"]
+        algorithm_info.append(info)
 
     dataset_info = []
     for dataset in datasets:
-        dataset_info.append(
-            {
-                "name": dataset["name"],
-                "description": dataset.get("description", ""),
-                "version": dataset["version"],
-                "tags": dataset.get("tags", []),
-            }
-        )
+        info = {
+            "name": dataset["name"],
+            "description": dataset.get("description", ""),
+            "version": dataset["version"],
+            "tags": dataset.get("tags", []),
+        }
+        if "source_file" in dataset:
+            info["source_file"] = GITHUB_DATASETS_PREFIX + dataset["source_file"]
+        dataset_info.append(info)
 
     return {"results": results, "algorithms": algorithm_info, "datasets": dataset_info}

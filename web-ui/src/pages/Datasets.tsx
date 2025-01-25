@@ -58,6 +58,15 @@ function Datasets({ datasets }: DatasetsProps) {
               >
                 Tags
               </th>
+              <th
+                style={{
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "2px solid #ddd",
+                }}
+              >
+                Source
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -102,6 +111,21 @@ function Datasets({ datasets }: DatasetsProps) {
                       {tag}
                     </span>
                   ))}
+                </td>
+                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+                  {dataset.source_file && (
+                    <a
+                      href={dataset.source_file}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: "#0066cc",
+                        textDecoration: "none",
+                      }}
+                    >
+                      View Source
+                    </a>
+                  )}
                 </td>
               </tr>
             ))}
