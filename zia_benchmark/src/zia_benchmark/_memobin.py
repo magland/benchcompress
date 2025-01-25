@@ -93,7 +93,7 @@ def construct_dataset_url(
     Returns:
         The constructed memobin URL for the dataset
     """
-    path = f"datasets/{dataset_name}/{dataset_version}/data.{format}"
+    path = f"datasets/{dataset_name}/{dataset_version}/{dataset_name}-{dataset_version}.{format}"
     return f"https://tempory.net/f/memobin/{path}"
 
 
