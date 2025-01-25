@@ -38,8 +38,18 @@ function App() {
 
   return (
     <BrowserRouter basename="/zia">
-      <div style={{ padding: "2rem" }}>
-        <nav style={{ marginBottom: "2rem" }}>
+      <div style={{ paddingTop: "5rem", paddingLeft: "2rem", paddingRight: "2rem", paddingBottom: "2rem" }}>
+        <nav style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          padding: "1rem 2rem",
+          backgroundColor: "white",
+          borderBottom: "1px solid #eaeaea",
+          zIndex: 1000,
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+        }}>
           <ul
             style={{
               listStyle: "none",

@@ -15,7 +15,7 @@ export const columns = [
   }),
   columnHelper.accessor("compression_ratio", {
     header: "Compression Ratio",
-    cell: (info) => `${formatNumber(info.getValue())}x`,
+    cell: (info) => `${formatNumber(info.getValue())}`,
     sortingFn: (rowA, rowB) => {
       const a = rowA.original.compression_ratio;
       const b = rowB.original.compression_ratio;

@@ -146,34 +146,6 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
             </select>
           </div>
         </div>
-        <button
-          onClick={() =>
-            exportToCsv(filteredData, selectedDataset || selectedAlgorithm)
-          }
-          style={{
-            padding: "8px 16px",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M8 12L3 7H6V1H10V7H13L8 12Z" fill="currentColor" />
-            <path d="M2 14V15H14V14H2Z" fill="currentColor" />
-          </svg>
-          Download CSV
-        </button>
       </div>
 
       {(selectedDataset || selectedAlgorithm) && chartData.length > 0 && (
@@ -216,6 +188,37 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
           ))}
         </tbody>
       </table>
+
+      <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+        <button
+          onClick={() =>
+            exportToCsv(filteredData, selectedDataset || selectedAlgorithm)
+          }
+          style={{
+            padding: "8px 16px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M8 12L3 7H6V1H10V7H13L8 12Z" fill="currentColor" />
+            <path d="M2 14V15H14V14H2Z" fill="currentColor" />
+          </svg>
+          Download CSV
+        </button>
+      </div>
     </div>
   );
 }
