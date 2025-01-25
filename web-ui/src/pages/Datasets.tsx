@@ -1,4 +1,10 @@
-function Datasets() {
+import { Dataset } from "../types";
+
+interface DatasetsProps {
+  datasets: Dataset[];
+}
+
+function Datasets({ datasets }: DatasetsProps) {
   return (
     <div>
       <h1
@@ -11,38 +17,86 @@ function Datasets() {
       >
         Benchmark Datasets
       </h1>
-      <div className="dataset-types">
-        <section style={{ marginBottom: "2rem" }}>
-          <h2 style={{ fontSize: "1.5rem", color: "#444", marginBottom: "1rem" }}>
-            Bernoulli Datasets
-          </h2>
-          <p style={{ color: "#666", marginBottom: "1rem" }}>
-            [Dataset description will be loaded from results.json]
-          </p>
-          <div style={{ color: "#666", marginLeft: "1rem" }}>
-            <div>• bernoulli-0.1</div>
-            <div>• bernoulli-0.2</div>
-            <div>• bernoulli-0.3</div>
-            <div>• bernoulli-0.4</div>
-            <div>• bernoulli-0.5</div>
-          </div>
-        </section>
-
-        <section style={{ marginBottom: "2rem" }}>
-          <h2 style={{ fontSize: "1.5rem", color: "#444", marginBottom: "1rem" }}>
-            Gaussian Datasets
-          </h2>
-          <p style={{ color: "#666", marginBottom: "1rem" }}>
-            [Dataset description will be loaded from results.json]
-          </p>
-          <div style={{ color: "#666", marginLeft: "1rem" }}>
-            <div>• gaussian-1</div>
-            <div>• gaussian-2</div>
-            <div>• gaussian-3</div>
-            <div>• gaussian-5</div>
-            <div>• gaussian-8</div>
-          </div>
-        </section>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr style={{ backgroundColor: "#f5f5f5" }}>
+              <th
+                style={{
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "2px solid #ddd",
+                }}
+              >
+                Name
+              </th>
+              <th
+                style={{
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "2px solid #ddd",
+                }}
+              >
+                Version
+              </th>
+              <th
+                style={{
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "2px solid #ddd",
+                }}
+              >
+                Description
+              </th>
+              <th
+                style={{
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "2px solid #ddd",
+                }}
+              >
+                Tags
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {datasets.map((dataset, index) => (
+              <tr
+                key={`${dataset.name}-${dataset.version}`}
+                style={{
+                  backgroundColor: index % 2 === 0 ? "white" : "#fafafa",
+                }}
+              >
+                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+                  {dataset.name}
+                </td>
+                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+                  {dataset.version}
+                </td>
+                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+                  {dataset.description}
+                </td>
+                <td style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
+                  {dataset.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      style={{
+                        display: "inline-block",
+                        backgroundColor: "#e1e1e1",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        margin: "2px",
+                        fontSize: "0.9em",
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

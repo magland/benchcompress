@@ -1,6 +1,11 @@
-import { BenchmarkTable } from "../components/BenchmarkTable";
+import { BenchmarkTable } from "../components/benchmark/table/BenchmarkTable";
+import { BenchmarkData } from "../types";
 
-function Home() {
+interface HomeProps {
+  benchmarkData: BenchmarkData | null;
+}
+
+function Home({ benchmarkData }: HomeProps) {
   return (
     <div>
       <header style={{ marginBottom: "2rem" }}>
@@ -37,7 +42,7 @@ function Home() {
         </a>
       </header>
       <main>
-        <BenchmarkTable />
+        {benchmarkData && <BenchmarkTable results={benchmarkData.results} />}
       </main>
     </div>
   );

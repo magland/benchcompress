@@ -1,5 +1,5 @@
-import { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   flexRender,
   getCoreRowModel,
@@ -11,46 +11,22 @@ import { columns } from "./columns";
 import { BenchmarkCharts } from "../charts/BenchmarkCharts";
 import { exportToCsv } from "../export/csvExport";
 
-export function BenchmarkTable() {
-  const [data, setData] = useState<BenchmarkResult[]>([]);
-  const [selectedDataset, setSelectedDataset] = useState<string>("");
-  const [availableDatasets, setAvailableDatasets] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface BenchmarkTableProps {
+  results: BenchmarkResult[];
+}
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const response = await axios.get(
-          "https://raw.githubusercontent.com/magland/zia/benchmark-results/benchmark_results/results.json",
-        );
-        const results = response.data.results;
-        setData(results);
-        // Extract unique dataset names with proper typing
-        const datasets = Array.from(
-          new Set(results.map((result: BenchmarkResult) => result.dataset)),
-        ).sort() as string[];
-        setAvailableDatasets(datasets);
-      } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Failed to fetch data";
-        setError(message);
-        console.error("Error fetching benchmark data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+export function BenchmarkTable({ results }: BenchmarkTableProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedDataset = searchParams.get("dataset") || "";
+  const availableDatasets = useMemo(() => {
+    return Array.from(new Set(results.map((result) => result.dataset))).sort();
+  }, [results]);
 
   // Memoize filtered data to prevent unnecessary recalculations
   const filteredData = useMemo(() => {
-    if (!selectedDataset) return data;
-    return data.filter((row) => row.dataset === selectedDataset);
-  }, [data, selectedDataset]);
+    if (!selectedDataset) return results;
+    return results.filter((row) => row.dataset === selectedDataset);
+  }, [results, selectedDataset]);
 
   const table = useReactTable({
     data: filteredData || [],
@@ -62,23 +38,15 @@ export function BenchmarkTable() {
   // Prepare data for bar charts when a dataset is selected
   const chartData = useMemo(() => {
     if (!selectedDataset) return [];
-    return data
-      .filter((row) => row.dataset === selectedDataset)
-      .map((row) => ({
+    return results
+      .filter((row: BenchmarkResult) => row.dataset === selectedDataset)
+      .map((row: BenchmarkResult) => ({
         algorithm: row.algorithm,
         compression_ratio: row.compression_ratio,
         encode_speed: row.encode_mb_per_sec,
         decode_speed: row.decode_mb_per_sec,
       }));
-  }, [data, selectedDataset]);
-
-  if (isLoading) {
-    return <div>Loading benchmark data...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  }, [results, selectedDataset]);
 
   return (
     <div className="table-container">
@@ -96,7 +64,13 @@ export function BenchmarkTable() {
           <select
             id="dataset-select"
             value={selectedDataset}
-            onChange={(e) => setSelectedDataset(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value) {
+                setSearchParams({ dataset: e.target.value });
+              } else {
+                setSearchParams({});
+              }
+            }}
             style={{
               padding: "8px",
               borderRadius: "4px",
