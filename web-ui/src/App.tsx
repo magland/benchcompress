@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Home from "./pages/Home";
 import Datasets from "./pages/Datasets";
+import Dataset from "./pages/Dataset";
 import Algorithms from "./pages/Algorithms";
 import About from "./pages/About";
 import { BenchmarkData } from "./types";
@@ -142,6 +143,10 @@ function App() {
                 element={
                   <Algorithms algorithms={benchmarkData?.algorithms || []} />
                 }
+              />
+              <Route
+                path="/dataset/:datasetName"
+                element={<Dataset datasets={benchmarkData?.datasets || []} />}
               />
               <Route path="/about" element={<About />} />
             </Routes>

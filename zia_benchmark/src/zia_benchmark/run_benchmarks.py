@@ -161,6 +161,26 @@ def run_benchmarks(
                 upload_enabled = os.environ.get("UPLOAD_TO_MEMOBIN") == "1"
                 if memobin_api_key and upload_enabled:
                     try:
+                        # Upload array metadata as JSON
+                        dataset_url_json = construct_dataset_url(
+                            dataset["name"], dataset["version"], "json"
+                        )
+                        if not exists_in_memobin(dataset_url_json):
+                            if verbose:
+                                print("  Uploading dataset metadata to memobin...")
+                            metadata = {
+                                "dtype": str(data.dtype),
+                                "shape": data.shape
+                            }
+                            upload_to_memobin(
+                                metadata,
+                                dataset_url_json,
+                                memobin_api_key,
+                                content_type="application/json",
+                            )
+                            if verbose:
+                                print("  Successfully uploaded metadata")
+
                         # Upload raw .dat format
                         dataset_url_raw = construct_dataset_url(
                             dataset["name"], dataset["version"], "dat"
@@ -171,7 +191,6 @@ def run_benchmarks(
                             upload_to_memobin(
                                 data.tobytes(),
                                 dataset_url_raw,
-                                os.environ.get("MEMOBIN_USER_ID", "default"),
                                 memobin_api_key,
                                 content_type="application/octet-stream",
                             )
@@ -195,7 +214,6 @@ def run_benchmarks(
                             upload_to_memobin(
                                 npy_bytes,
                                 dataset_url_npy,
-                                os.environ.get("MEMOBIN_USER_ID", "default"),
                                 memobin_api_key,
                                 content_type="application/octet-stream",
                             )
@@ -314,7 +332,6 @@ def run_benchmarks(
                     upload_to_memobin(
                         cache_data,
                         memobin_url,
-                        os.environ.get("MEMOBIN_USER_ID", "default"),
                         memobin_api_key,
                     )
                     if verbose:
@@ -349,6 +366,9 @@ def run_benchmarks(
             ),
             "data_url_npy": construct_dataset_url(
                 dataset["name"], dataset["version"], "npy"
+            ),
+            "data_url_json": construct_dataset_url(
+                dataset["name"], dataset["version"], "json"
             ),
         }
         if "source_file" in dataset:

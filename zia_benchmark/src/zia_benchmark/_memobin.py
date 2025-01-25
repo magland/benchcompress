@@ -88,7 +88,7 @@ def construct_dataset_url(
     Args:
         dataset_name: Name of the dataset
         dataset_version: Version of the dataset
-        format: File format ("dat" or "npy")
+        format: File format ("dat", "npy", or "json")
 
     Returns:
         The constructed memobin URL for the dataset
@@ -100,7 +100,6 @@ def construct_dataset_url(
 def upload_to_memobin(
     data: dict | bytes,
     url: str,
-    user_id: str,
     memobin_api_key: str,
     content_type: str = "application/json",
 ) -> None:
@@ -109,7 +108,6 @@ def upload_to_memobin(
     Args:
         data: The data to upload (dict for JSON or bytes for binary)
         url: The target URL for the file
-        user_id: User ID for memobin
         memobin_api_key: API key for memobin authentication
         content_type: Content type of the data
 
@@ -122,7 +120,7 @@ def upload_to_memobin(
         data_bytes = data
     size = len(data_bytes)
 
-    upload_url = create_signed_upload_url(url, size, user_id, memobin_api_key)
+    upload_url = create_signed_upload_url(url, size, 'zia', memobin_api_key)
 
     response = requests.put(
         upload_url, data=data_bytes, headers={"Content-Type": content_type}

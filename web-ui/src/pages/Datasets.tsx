@@ -106,7 +106,7 @@ function Datasets({ datasets }: DatasetsProps) {
                   }}
                 >
                   <Link
-                    to={`/home?dataset=${encodeURIComponent(dataset.name)}`}
+                    to={`/dataset/${encodeURIComponent(dataset.name)}`}
                     style={{
                       color: "#0066cc",
                       textDecoration: "none",

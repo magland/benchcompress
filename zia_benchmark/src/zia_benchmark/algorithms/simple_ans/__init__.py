@@ -240,14 +240,14 @@ def simple_ans_markov_decode(x: bytes, dtype: str) -> np.ndarray:
 algorithms = [
     {
         "name": "simple-ans",
-        "version": "2",
+        "version": "3",
         "encode": lambda x: simple_ans_encode(x),
         "decode": lambda x, dtype: simple_ans_decode(x, dtype),
         "source_file": SOURCE_FILE,
     },
     {
         "name": "simple-ans-delta",
-        "version": "2",
+        "version": "3",
         "encode": lambda x: simple_ans_delta_encode(x),
         "decode": lambda x, dtype: simple_ans_delta_decode(x, dtype),
         "tags": ["delta_encoding"],
@@ -255,7 +255,7 @@ algorithms = [
     },
     {
         "name": "simple-ans-markov",
-        "version": "2",
+        "version": "3",
         "encode": lambda x: simple_ans_markov_encode(x),
         "decode": lambda x, dtype: simple_ans_markov_decode(x, dtype),
         "tags": ["markov_prediction"],
