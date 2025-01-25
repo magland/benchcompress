@@ -185,10 +185,10 @@ function Datasets({ datasets }: DatasetsProps) {
                     fontSize: "0.9rem",
                   }}
                 >
-                  {dataset.data_url && (
+                  {dataset.data_url_npy && (
                     <a
-                      href={dataset.data_url}
-                      download={`${dataset.name}-${dataset.version}.bin`}
+                      href={dataset.data_url_npy}
+                      download={`${dataset.name}-${dataset.version}.npy`}
                       style={{
                         color: "#0066cc",
                         textDecoration: "none",

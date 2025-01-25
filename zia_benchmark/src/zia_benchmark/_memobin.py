@@ -80,17 +80,20 @@ def construct_memobin_url(
     return f"https://tempory.net/f/memobin/{path}"
 
 
-def construct_dataset_url(dataset_name: str, dataset_version: str) -> str:
+def construct_dataset_url(
+    dataset_name: str, dataset_version: str, format: str = "dat"
+) -> str:
     """Construct the memobin URL for a dataset.
 
     Args:
         dataset_name: Name of the dataset
         dataset_version: Version of the dataset
+        format: File format ("dat" or "npy")
 
     Returns:
         The constructed memobin URL for the dataset
     """
-    path = f"datasets/{dataset_name}/{dataset_version}/data.bin"
+    path = f"datasets/{dataset_name}/{dataset_version}/data.{format}"
     return f"https://tempory.net/f/memobin/{path}"
 
 

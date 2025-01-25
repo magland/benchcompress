@@ -161,21 +161,46 @@ def run_benchmarks(
                 upload_enabled = os.environ.get("UPLOAD_TO_MEMOBIN") == "1"
                 if memobin_api_key and upload_enabled:
                     try:
-                        dataset_url = construct_dataset_url(
-                            dataset["name"], dataset["version"]
+                        # Upload raw .dat format
+                        dataset_url_raw = construct_dataset_url(
+                            dataset["name"], dataset["version"], "dat"
                         )
-                        if not exists_in_memobin(dataset_url):
+                        if not exists_in_memobin(dataset_url_raw):
                             if verbose:
-                                print("  Uploading dataset to memobin...")
+                                print("  Uploading dataset (raw) to memobin...")
                             upload_to_memobin(
                                 data.tobytes(),
-                                dataset_url,
+                                dataset_url_raw,
                                 os.environ.get("MEMOBIN_USER_ID", "default"),
                                 memobin_api_key,
                                 content_type="application/octet-stream",
                             )
                             if verbose:
-                                print("  Successfully uploaded dataset")
+                                print("  Successfully uploaded raw dataset")
+
+                        # Upload .npy format
+                        dataset_url_npy = construct_dataset_url(
+                            dataset["name"], dataset["version"], "npy"
+                        )
+                        if not exists_in_memobin(dataset_url_npy):
+                            if verbose:
+                                print("  Uploading dataset (npy) to memobin...")
+                            # Save array to a temporary .npy file
+                            temp_npy = os.path.join(cache_dir, "temp.npy")
+                            np.save(temp_npy, data)
+                            with open(temp_npy, "rb") as f:
+                                npy_bytes = f.read()
+                            os.remove(temp_npy)  # Clean up temp file
+
+                            upload_to_memobin(
+                                npy_bytes,
+                                dataset_url_npy,
+                                os.environ.get("MEMOBIN_USER_ID", "default"),
+                                memobin_api_key,
+                                content_type="application/octet-stream",
+                            )
+                            if verbose:
+                                print("  Successfully uploaded npy dataset")
                     except Exception as e:
                         print(
                             f"  Warning: Failed to upload dataset to memobin: {str(e)}"
@@ -319,7 +344,12 @@ def run_benchmarks(
             "description": dataset.get("description", ""),
             "version": dataset["version"],
             "tags": dataset.get("tags", []),
-            "data_url": construct_dataset_url(dataset["name"], dataset["version"]),
+            "data_url_raw": construct_dataset_url(
+                dataset["name"], dataset["version"], "dat"
+            ),
+            "data_url_npy": construct_dataset_url(
+                dataset["name"], dataset["version"], "npy"
+            ),
         }
         if "source_file" in dataset:
             info["source_file"] = GITHUB_DATASETS_PREFIX + dataset["source_file"]
