@@ -32,6 +32,7 @@ export interface Dataset {
   source_file?: string;
   data_url_npy?: string; // URL to download the dataset as .npy
   data_url_raw?: string; // URL to download the raw dataset as .dat
+  data_url_json?: string; // URL to download the dataset info as .json (dtype and shape)
 }
 
 export interface BenchmarkData {

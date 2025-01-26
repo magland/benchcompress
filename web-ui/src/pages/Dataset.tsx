@@ -1,5 +1,6 @@
-import { useParams } from 'react-router-dom';
-import { Dataset as DatasetType } from '../types';
+import { useParams } from "react-router-dom";
+import { Dataset as DatasetType } from "../types";
+import TimeseriesView from "../components/dataset/TimeseriesView";
 
 interface DatasetProps {
   datasets: DatasetType[];
@@ -7,7 +8,7 @@ interface DatasetProps {
 
 function Dataset({ datasets }: DatasetProps) {
   const { datasetName } = useParams<{ datasetName: string }>();
-  const dataset = datasets.find(d => d.name === datasetName);
+  const dataset = datasets.find((d) => d.name === datasetName);
 
   if (!dataset) {
     return <div>Dataset not found</div>;
@@ -27,15 +28,54 @@ function Dataset({ datasets }: DatasetProps) {
       </h1>
       <div style={{ maxWidth: "800px", margin: "0 auto" }}>
         <div style={{ marginBottom: "1.5rem" }}>
-          <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", marginBottom: "0.5rem" }}>Description</h2>
-          <p style={{ fontSize: "0.9rem", lineHeight: "1.5" }}>{dataset.description}</p>
+          <h2
+            style={{
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+              marginBottom: "0.5rem",
+            }}
+          >
+            Description
+          </h2>
+          <p style={{ fontSize: "0.9rem", lineHeight: "1.5" }}>
+            {dataset.description}
+          </p>
         </div>
         <div style={{ marginBottom: "1.5rem" }}>
-          <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", marginBottom: "0.5rem" }}>Version</h2>
+          <div
+            style={{
+              width: "100%",
+              height: "300px",
+              backgroundColor: "#f5f5f5",
+              borderRadius: "4px",
+              padding: "1rem",
+            }}
+          >
+            <TimeseriesView width={700} height={250} dataset={dataset} />
+          </div>
+        </div>
+        <div style={{ marginBottom: "1.5rem" }}>
+          <h2
+            style={{
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+              marginBottom: "0.5rem",
+            }}
+          >
+            Version
+          </h2>
           <p style={{ fontSize: "0.9rem" }}>{dataset.version}</p>
         </div>
         <div style={{ marginBottom: "1.5rem" }}>
-          <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", marginBottom: "0.5rem" }}>Tags</h2>
+          <h2
+            style={{
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+              marginBottom: "0.5rem",
+            }}
+          >
+            Tags
+          </h2>
           <div>
             {dataset.tags.map((tag) => (
               <span
@@ -55,7 +95,15 @@ function Dataset({ datasets }: DatasetProps) {
           </div>
         </div>
         <div style={{ marginBottom: "1.5rem" }}>
-          <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", marginBottom: "0.5rem" }}>Downloads</h2>
+          <h2
+            style={{
+              fontSize: "1.2rem",
+              fontWeight: "bold",
+              marginBottom: "0.5rem",
+            }}
+          >
+            Downloads
+          </h2>
           <div style={{ display: "flex", gap: "1rem" }}>
             {dataset.data_url_npy && (
               <a
@@ -93,7 +141,15 @@ function Dataset({ datasets }: DatasetProps) {
         </div>
         {dataset.source_file && (
           <div style={{ marginBottom: "1.5rem" }}>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", marginBottom: "0.5rem" }}>Source</h2>
+            <h2
+              style={{
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Source
+            </h2>
             <a
               href={dataset.source_file}
               target="_blank"

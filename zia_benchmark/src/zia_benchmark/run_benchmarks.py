@@ -168,10 +168,7 @@ def run_benchmarks(
                         if not exists_in_memobin(dataset_url_json):
                             if verbose:
                                 print("  Uploading dataset metadata to memobin...")
-                            metadata = {
-                                "dtype": str(data.dtype),
-                                "shape": data.shape
-                            }
+                            metadata = {"dtype": str(data.dtype), "shape": data.shape}
                             upload_to_memobin(
                                 metadata,
                                 dataset_url_json,

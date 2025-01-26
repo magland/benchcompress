@@ -120,7 +120,7 @@ def upload_to_memobin(
         data_bytes = data
     size = len(data_bytes)
 
-    upload_url = create_signed_upload_url(url, size, 'zia', memobin_api_key)
+    upload_url = create_signed_upload_url(url, size, "zia", memobin_api_key)
 
     response = requests.put(
         upload_url, data=data_bytes, headers={"Content-Type": content_type}
