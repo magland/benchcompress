@@ -10,7 +10,7 @@ interface HomeProps {
 }
 
 function Home({ benchmarkData }: HomeProps) {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const selectedDataset = searchParams.get("dataset") || "";
   const selectedAlgorithm = searchParams.get("algorithm") || "";
 
@@ -82,7 +82,7 @@ function Home({ benchmarkData }: HomeProps) {
             color: "#333",
           }}
         >
-          Integer Compression Benchmark
+          Benchmark Results
         </h1>
         <p
           style={{
@@ -90,44 +90,107 @@ function Home({ benchmarkData }: HomeProps) {
             marginTop: "0.5rem",
           }}
         >
-          Comparing numeric array compression algorithms
+          Comparing compression algorithms for numeric arrays
         </p>
       </header>
       <main>
-        <div
-          style={{
-            marginBottom: "2rem",
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-          }}
-        >
-          {!selectedDataset && (
-            <TagFilter
-              availableTags={availableDatasetTags}
-              selectedTags={selectedDatasetTags}
-              onTagToggle={toggleDatasetTag}
-              label="Filter datasets"
-            />
-          )}
+        <div style={{ marginBottom: "2rem" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              marginBottom: "1rem",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <label htmlFor="dataset-select">Dataset:</label>
+              <select
+                id="dataset-select"
+                value={selectedDataset}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setSearchParams({ dataset: e.target.value });
+                  } else {
+                    setSearchParams(
+                      selectedAlgorithm ? { algorithm: selectedAlgorithm } : {},
+                    );
+                  }
+                }}
+                style={{
+                  padding: "4px 8px",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                  minWidth: "150px",
+                  backgroundColor: "#fff",
+                  fontSize: "0.9rem",
+                }}
+              >
+                <option value="">All Datasets</option>
+                {filteredDatasets.map((dataset) => (
+                  <option key={dataset.name} value={dataset.name}>
+                    {dataset.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <label htmlFor="algorithm-select">Algorithm:</label>
+              <select
+                id="algorithm-select"
+                value={selectedAlgorithm}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setSearchParams({ algorithm: e.target.value });
+                  } else {
+                    setSearchParams(
+                      selectedDataset ? { dataset: selectedDataset } : {},
+                    );
+                  }
+                }}
+                style={{
+                  padding: "4px 8px",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                  minWidth: "150px",
+                  backgroundColor: "#fff",
+                  fontSize: "0.9rem",
+                }}
+              >
+                <option value="">All Algorithms</option>
+                {filteredAlgorithms.map((algorithm) => (
+                  <option key={algorithm.name} value={algorithm.name}>
+                    {algorithm.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-          {!selectedAlgorithm && (
-            <TagFilter
-              availableTags={availableAlgorithmTags}
-              selectedTags={selectedAlgorithmTags}
-              onTagToggle={toggleAlgorithmTag}
-              label="Filter algorithms"
-            />
-          )}
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+          >
+            {!selectedDataset && (
+              <TagFilter
+                availableTags={availableDatasetTags}
+                selectedTags={selectedDatasetTags}
+                onTagToggle={toggleDatasetTag}
+                label="Filter datasets"
+              />
+            )}
+
+            {!selectedAlgorithm && (
+              <TagFilter
+                availableTags={availableAlgorithmTags}
+                selectedTags={selectedAlgorithmTags}
+                onTagToggle={toggleAlgorithmTag}
+                label="Filter algorithms"
+              />
+            )}
+          </div>
         </div>
 
-        {benchmarkData && (
-          <BenchmarkTable
-            results={filteredResults}
-            availableDatasets={filteredDatasets.map((d) => d.name)}
-            availableAlgorithms={filteredAlgorithms.map((a) => a.name)}
-          />
-        )}
+        {benchmarkData && <BenchmarkTable results={filteredResults} />}
       </main>
     </div>
   );

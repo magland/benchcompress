@@ -1,17 +1,40 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { BenchmarkResult } from "../../../types";
 import { formatNumber, formatSize } from "../utils/formatters";
+import { Link } from "react-router-dom";
 
 const columnHelper = createColumnHelper<BenchmarkResult>();
 
 export const columns = [
   columnHelper.accessor("dataset", {
     header: "Dataset",
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <Link
+        to={`/dataset/${info.getValue()}`}
+        style={{ color: "#2563eb", textDecoration: "none" }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.textDecoration = "underline")
+        }
+        onMouseLeave={(e) => (e.currentTarget.style.textDecoration = "none")}
+      >
+        {info.getValue()}
+      </Link>
+    ),
   }),
   columnHelper.accessor("algorithm", {
     header: "Algorithm",
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <Link
+        to={`/algorithm/${info.getValue()}`}
+        style={{ color: "#2563eb", textDecoration: "none" }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.textDecoration = "underline")
+        }
+        onMouseLeave={(e) => (e.currentTarget.style.textDecoration = "none")}
+      >
+        {info.getValue()}
+      </Link>
+    ),
   }),
   columnHelper.accessor("compression_ratio", {
     header: "Compression Ratio",

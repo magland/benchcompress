@@ -147,12 +147,20 @@ function App() {
               />
               <Route
                 path="/dataset/:datasetName"
-                element={<Dataset datasets={benchmarkData?.datasets || []} />}
+                element={
+                  <Dataset
+                    datasets={benchmarkData?.datasets || []}
+                    benchmarkData={benchmarkData}
+                  />
+                }
               />
               <Route
                 path="/algorithm/:algorithmName"
                 element={
-                  <Algorithm algorithms={benchmarkData?.algorithms || []} />
+                  <Algorithm
+                    algorithms={benchmarkData?.algorithms || []}
+                    benchmarkData={benchmarkData}
+                  />
                 }
               />
               <Route path="/about" element={<About />} />
