@@ -14,7 +14,8 @@ export type WorkerMessage =
   | { type: "initialize"; canvas: OffscreenCanvas }
   | {
       type: "render";
-      timeseries: number[];
+      timeseriesT: number[];
+      timeseriesY: number[];
       width: number;
       height: number;
       margins: Margins;

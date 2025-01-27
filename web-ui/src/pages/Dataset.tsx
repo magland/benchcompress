@@ -1,12 +1,33 @@
 import { useParams } from "react-router-dom";
 import { Dataset as DatasetType } from "../types";
 import TimeseriesView from "../components/dataset/TimeseriesView";
+import { useEffect, useRef, useState } from "react";
 
 interface DatasetProps {
   datasets: DatasetType[];
 }
 
 function Dataset({ datasets }: DatasetProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(1200);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        // Account for padding by subtracting 32px (2rem)
+        setContainerWidth(entry.contentRect.width - 32);
+      }
+    });
+
+    resizeObserver.observe(containerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   const { datasetName } = useParams<{ datasetName: string }>();
   const dataset = datasets.find((d) => d.name === datasetName);
 
@@ -26,23 +47,15 @@ function Dataset({ datasets }: DatasetProps) {
       >
         {dataset.name}
       </h1>
-      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+      <div>
         <div style={{ marginBottom: "1.5rem" }}>
-          <h2
-            style={{
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-              marginBottom: "0.5rem",
-            }}
-          >
-            Description
-          </h2>
           <p style={{ fontSize: "0.9rem", lineHeight: "1.5" }}>
             {dataset.description}
           </p>
         </div>
         <div style={{ marginBottom: "1.5rem" }}>
           <div
+            ref={containerRef}
             style={{
               width: "100%",
               height: "300px",
@@ -51,7 +64,11 @@ function Dataset({ datasets }: DatasetProps) {
               padding: "1rem",
             }}
           >
-            <TimeseriesView width={700} height={250} dataset={dataset} />
+            <TimeseriesView
+              width={containerWidth}
+              height={250}
+              dataset={dataset}
+            />
           </div>
         </div>
         <div style={{ marginBottom: "1.5rem" }}>

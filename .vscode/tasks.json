@@ -14,6 +14,20 @@
         "panel": "shared"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Web UI Dev Server",
+      "type": "shell",
+      "command": "cd web-ui && npm run dev",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
     }
   ]
 }

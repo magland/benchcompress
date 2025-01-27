@@ -19,16 +19,33 @@ function getNiceTickInterval(range: number, maxTicks: number): number {
   return Math.ceil(niceIntervals[niceIntervals.length - 1] * magnitude * 10);
 }
 
+// Helper function to estimate the width of a number in pixels
+// This is an approximation since we can't measure text width directly in a worker
+function estimateNumberWidth(num: number): number {
+  const numStr = Math.abs(num).toString();
+  const digitWidth = 8; // Approximate width of a digit in pixels
+  const padding = 4; // Padding between numbers
+  return (numStr.length + (num < 0 ? 1 : 0)) * digitWidth + padding;
+}
+
 // Helper function to get tick positions
 function getTickPositions(
   range: Range,
   width: number,
+  considerNumberWidth = false, // Only true for x-axis where we need to handle large integers
 ): { value: number; x: number }[] {
-  const pixelsPerTick = 20; // Minimum pixels between ticks
+  let pixelsPerTick = 20; // Default minimum pixels between ticks
+
+  if (considerNumberWidth) {
+    // For x-axis, calculate spacing based on largest number width
+    const maxAbsValue = Math.max(Math.abs(range.min), Math.abs(range.max));
+    const maxNumberWidth = estimateNumberWidth(maxAbsValue);
+    pixelsPerTick = Math.max(maxNumberWidth, 20); // Use the larger of estimated width or minimum spacing
+  }
   const maxTicks = Math.floor(width / pixelsPerTick);
   const tickInterval = getNiceTickInterval(range.max - range.min, maxTicks);
 
-  const firstTick = Math.ceil(range.min);
+  const firstTick = Math.ceil(range.min / tickInterval) * tickInterval;
   const lastTick = Math.floor(range.max);
 
   const ticks: { value: number; x: number }[] = [];
@@ -46,7 +63,8 @@ let canvas: OffscreenCanvas | null = null;
 let ctx: OffscreenCanvasRenderingContext2D | null = null;
 
 function renderTimeseries(
-  timeseries: number[],
+  timeseriesT: number[],
+  timeseriesY: number[],
   width: number,
   height: number,
   margins: Margins,
@@ -96,11 +114,10 @@ function renderTimeseries(
 
   // Draw the path
   let isFirst = true;
-  for (let i = Math.floor(xRange.min); i <= Math.ceil(xRange.max); i++) {
-    if (i < 0 || i >= timeseries.length) continue;
-    const value = timeseries[i];
-    const x = margins.left + (i - xRange.min) * xScale;
-    const y = margins.top + drawingHeight - (value - yRange.min) * yScale;
+  for (let i = 0; i < timeseriesT.length; i++) {
+    const x = margins.left + (timeseriesT[i] - xRange.min) * xScale;
+    const y =
+      margins.top + drawingHeight - (timeseriesY[i] - yRange.min) * yScale;
     if (isFirst) {
       context.moveTo(x, y);
       isFirst = false;
@@ -136,7 +153,7 @@ function renderTimeseries(
   });
 
   // Draw X-axis ticks and labels
-  const ticks = getTickPositions(xRange, drawingWidth);
+  const ticks = getTickPositions(xRange, drawingWidth, true); // Consider number width for x-axis
 
   context.textAlign = "center";
   context.textBaseline = "top";
@@ -175,11 +192,48 @@ self.onmessage = (evt: MessageEvent) => {
   }
 
   if (message.type === "render") {
-    const { timeseries, width, height, margins, xRange, yRange } = message;
-    renderTimeseries(timeseries, width, height, margins, xRange, yRange);
-    self.postMessage({ type: "render_complete" });
+    throttleRender(() => {
+      const {
+        timeseriesT,
+        timeseriesY,
+        width,
+        height,
+        margins,
+        xRange,
+        yRange,
+      } = message;
+      renderTimeseries(
+        timeseriesT,
+        timeseriesY,
+        width,
+        height,
+        margins,
+        xRange,
+        yRange,
+      );
+      self.postMessage({ type: "render_complete" });
+    });
     return;
   }
+};
+
+let renderStack: (() => void)[] = [];
+let lastRenderTime = 0;
+
+const throttleRender = (callback: () => void) => {
+  renderStack.push(callback);
+  const checkRender = () => {
+    if (renderStack.length === 0) return;
+    const elapsed = Date.now() - lastRenderTime;
+    if (elapsed > 100) {
+      lastRenderTime = Date.now();
+      renderStack[renderStack.length - 1]();
+      renderStack = [];
+    } else {
+      setTimeout(checkRender, 150);
+    }
+  };
+  checkRender();
 };
 
 export {}; // Needed for TypeScript modules

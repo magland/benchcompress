@@ -1,8 +1,9 @@
-import { useEffect, useState, useMemo, useRef, useReducer } from "react";
-import { useTimeseriesData } from "../../hooks/useTimeseriesData";
+import { useEffect, useMemo, useReducer, useState } from "react";
+import { SupportedTypedArray } from "../../hooks/TimeseriesDataClient";
+import { useTimeseriesDataClient } from "../../hooks/useTimeseriesDataClient";
 import { Dataset } from "../../types";
 import { Margins, Range, WorkerMessage } from "./WorkerTypes";
-import { timeseriesViewReducer, initialState } from "./timeseriesViewReducer";
+import { initialState, timeseriesViewReducer } from "./timeseriesViewReducer";
 
 interface TimeseriesViewProps {
   width: number;
@@ -15,7 +16,11 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
   height,
   dataset,
 }) => {
-  const { data, error } = useTimeseriesData(dataset);
+  const { client, error: clientError } = useTimeseriesDataClient(dataset);
+  const [dataT, setDataT] = useState<number[] | null>(null);
+  const [dataY, setDataY] = useState<SupportedTypedArray | null>(null);
+  const [error, setError] = useState<string | null>(clientError);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [canvasElement, setCanvasElement] = useState<HTMLCanvasElement | null>(
     null,
@@ -25,7 +30,7 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
   const [state, dispatch] = useReducer(timeseriesViewReducer, initialState);
   const { selectedIndex, isDragging, lastDragX, xRange } = state;
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [worker, setWorker] = useState<Worker | null>(null);
   const [margins] = useState<Margins>({
     left: 50,
@@ -34,23 +39,51 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
     bottom: 50,
   });
 
-  // Update xRange when data changes
+  // Load data for current range
   useEffect(() => {
-    if (data) {
+    if (!client || !xRange) return;
+
+    const loadRangeData = async () => {
+      try {
+        setIsLoading(true);
+        const start = Math.floor(xRange.min);
+        const end = Math.ceil(xRange.max) + 1;
+        const rangeData = await client.fetchRange(start, end);
+        setDataY(rangeData);
+        const dT = Array.from(
+          { length: rangeData.length },
+          (_, i) => i + start,
+        );
+        setDataT(dT);
+        setError(null);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to load data range",
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadRangeData();
+  }, [client, xRange]);
+
+  // Update xRange when client is initialized
+  useEffect(() => {
+    if (client) {
+      const shape = client.getShape();
       dispatch({
         type: "SET_X_RANGE",
-        range: { min: 0, max: data.length - 1 },
+        range: { min: 0, max: Math.min(999, shape - 1) },
       });
     }
-  }, [data]);
+  }, [client]);
 
   // Set up wheel event listener
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    if (!container || !client) return;
 
     const handleWheel = (e: WheelEvent) => {
-      if (!data) return;
       e.preventDefault();
 
       const rect = container.getBoundingClientRect();
@@ -62,7 +95,8 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
       const zoomCenter = xRange.min + (xRange.max - xRange.min) * xRatio;
 
       // Calculate new range
-      const zoomFactor = e.deltaY > 0 ? 1.1 : 0.9;
+      const zoomFactor = e.deltaY > 0 ? 1.02 : 1 / 1.02;
+      const shape = client.getShape();
 
       // Ensure we don't zoom out beyond data bounds
       const newMin = Math.max(
@@ -70,7 +104,7 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
         zoomCenter - (zoomCenter - xRange.min) * zoomFactor,
       );
       const newMax = Math.min(
-        data.length - 1,
+        shape - 1,
         zoomCenter + (xRange.max - zoomCenter) * zoomFactor,
       );
 
@@ -81,12 +115,11 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
     return () => {
       container.removeEventListener("wheel", handleWheel);
     };
-  }, [data, width, margins, xRange]);
+  }, [container, client, width, margins, xRange]);
 
   // Set up mouse event listeners for panning
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    if (!container || !client) return;
 
     const handleMouseDown = (e: MouseEvent) => {
       dispatch({ type: "SET_IS_DRAGGING", isDragging: true });
@@ -94,20 +127,21 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isDragging || lastDragX === 0 || !data) return;
+      if (!isDragging || lastDragX === 0) return;
 
       const deltaX = e.clientX - lastDragX;
       const xRatio = deltaX / (width - margins.left - margins.right);
       const dataDelta = (xRange.max - xRange.min) * xRatio;
+      const shape = client.getShape();
 
       if (xRange.min - dataDelta < 0) return;
-      if (xRange.max - dataDelta > data.length - 1) return;
+      if (xRange.max - dataDelta > shape - 1) return;
 
       const newMin = xRange.min - dataDelta;
       const newMax = xRange.max - dataDelta;
 
       // Only update if we're still within bounds
-      if (newMin >= 0 && newMax <= data.length - 1) {
+      if (newMin >= 0 && newMax <= shape - 1) {
         dispatch({ type: "SET_X_RANGE", range: { min: newMin, max: newMax } });
       }
 
@@ -128,7 +162,7 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [data, width, margins, xRange, isDragging, lastDragX]);
+  }, [container, client, width, margins, xRange, isDragging, lastDragX]);
 
   // Set worker
   useEffect(() => {
@@ -164,33 +198,37 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
 
   // Calculate yRange from data
   const yRange = useMemo<Range>(() => {
-    if (!data) return { min: 0, max: 1 };
+    if (!dataY) return { min: 0, max: 1 };
+    const values = Array.from(dataY);
     return {
-      min: Math.min(...data),
-      max: Math.max(...data),
+      min: Math.min(...values),
+      max: Math.max(...values),
     };
-  }, [data]);
+  }, [dataY]);
 
   // Handle dimension changes
   useEffect(() => {
     if (!worker) return;
-    if (!data) return;
+    if (!dataY) return;
+    if (!dataT) return;
 
     const msg: WorkerMessage = {
       type: "render",
-      timeseries: data,
+      timeseriesT: dataT,
+      timeseriesY: Array.from(dataY),
       width,
       height,
       margins,
       xRange,
       yRange,
     };
+    console.log("--- posting message to worker", msg);
     worker.postMessage(msg);
-  }, [width, height, data, worker, margins, xRange, yRange]);
+  }, [width, height, dataT, dataY, worker, margins, xRange, yRange]);
 
   // Render cursor on overlay canvas
   useEffect(() => {
-    if (!overlayCanvasElement || selectedIndex === null || !data) return;
+    if (!overlayCanvasElement || selectedIndex === null || !dataY) return;
     const ctx = overlayCanvasElement.getContext("2d");
     if (!ctx) return;
 
@@ -213,21 +251,36 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
     width,
     height,
     margins,
-    data,
+    dataT,
+    dataY,
     xRange,
   ]);
 
-  if (error) {
-    return <div>Error loading data: {error}</div>;
+  const selectedValue = useMemo(() => {
+    if (selectedIndex === -1 || !dataT || !dataY) return null;
+    for (let i = 0; i < dataT.length; i++) {
+      if (dataT[i] === selectedIndex) {
+        return dataY[i];
+      }
+    }
+    return null;
+  }, [selectedIndex, dataT, dataY]);
+
+  if (error || clientError) {
+    return <div>Error loading data: {error || clientError}</div>;
+  }
+
+  if (isLoading && !dataY) {
+    return <div>Loading...</div>;
   }
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!overlayCanvasElement || !data || isDragging) return;
+    if (!overlayCanvasElement || !dataY || isDragging) return;
     const rect = overlayCanvasElement.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const xRatio = (x - margins.left) / (width - margins.left - margins.right);
     const index = Math.round(xRange.min + xRatio * (xRange.max - xRange.min));
-    if (index >= 0 && index < data.length) {
+    if (index >= 0) {
       dispatch({ type: "SET_SELECTED_INDEX", index });
     }
   };
@@ -235,12 +288,13 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
   return (
     <div style={{ position: "relative", width, height: height + 30 }}>
       <div
-        ref={containerRef}
+        ref={setContainer}
         style={{ position: "relative", width, height }}
         onClick={handleCanvasClick}
       >
         <canvas
           ref={setCanvasElement}
+          key={`canvas-${width}-${height}`}
           width={width}
           height={height}
           style={{
@@ -261,9 +315,9 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
           }}
         />
       </div>
-      {selectedIndex !== -1 && data && (
+      {selectedIndex !== -1 && dataY && (
         <div style={{ height: 30, padding: "5px 0", color: "#666" }}>
-          Index: {selectedIndex}, Value: {data[selectedIndex].toFixed(3)}
+          Index: {selectedIndex}, Value: {selectedValue?.toFixed(3)}
         </div>
       )}
     </div>
