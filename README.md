@@ -1,10 +1,10 @@
 # zia
 
-A benchmarking framework for evaluating compression algorithms on integer array datasets, with a focus on scientific data.
+A benchmarking framework for evaluating compression algorithms on numeric array datasets, with a focus on scientific data.
 
 ## Overview
 
-Zia provides systematic benchmarking of compression methods for integer arrays, measuring:
+Zia provides systematic benchmarking of compression methods for numeric arrays, measuring:
 - Compression ratio
 - Encoding throughput (MB/s)
 - Decoding throughput (MB/s)

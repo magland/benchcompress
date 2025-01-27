@@ -24,7 +24,7 @@ function Home({ benchmarkData }: HomeProps) {
             marginTop: "0.5rem",
           }}
         >
-          Comparing integer array compression algorithms
+          Comparing numeric array compression algorithms
         </p>
       </header>
       <main>

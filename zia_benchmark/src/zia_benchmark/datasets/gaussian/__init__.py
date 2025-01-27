@@ -10,13 +10,15 @@ def create_gaussian(*, n_samples: int, stddev: float, seed: int) -> np.ndarray:
     return x
 
 
+tags = ["integer", "discrete", "synthetic"]
+
 datasets = [
     {
         "name": "gaussian-1",
         "version": "1",
         "create": lambda: create_gaussian(n_samples=1_000_000, stddev=1, seed=0),
         "description": "Rounded Gaussian integers with σ=1.",
-        "tags": [],
+        "tags": tags,
         "source_file": SOURCE_FILE,
     },
     {
@@ -24,7 +26,7 @@ datasets = [
         "version": "1",
         "create": lambda: create_gaussian(n_samples=1_000_000, stddev=2, seed=0),
         "description": "Rounded Gaussian integers with σ=2.",
-        "tags": [],
+        "tags": tags,
         "source_file": SOURCE_FILE,
     },
     {
@@ -32,7 +34,7 @@ datasets = [
         "version": "1",
         "create": lambda: create_gaussian(n_samples=1_000_000, stddev=3, seed=0),
         "description": "Rounded Gaussian integers with σ=3.",
-        "tags": [],
+        "tags": tags,
         "source_file": SOURCE_FILE,
     },
     {
@@ -40,7 +42,7 @@ datasets = [
         "version": "1",
         "create": lambda: create_gaussian(n_samples=1_000_000, stddev=5, seed=0),
         "description": "Rounded Gaussian integers with σ=5.",
-        "tags": [],
+        "tags": tags,
         "source_file": SOURCE_FILE,
     },
     {
@@ -48,7 +50,7 @@ datasets = [
         "version": "1",
         "create": lambda: create_gaussian(n_samples=1_000_000, stddev=8, seed=0),
         "description": "Rounded Gaussian integers with σ=8.",
-        "tags": [],
+        "tags": tags,
         "source_file": SOURCE_FILE,
     },
 ]

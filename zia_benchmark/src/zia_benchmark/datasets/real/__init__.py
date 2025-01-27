@@ -7,6 +7,8 @@ from ..._analysis import estimate_noise_level
 
 SOURCE_FILE = "real/__init__.py"
 
+tags = ["integer", "continuous", "neurophysiology", "real"]
+
 
 def _load_real_000876(
     *, num_samples: int, num_channels: int, start_channel: int
@@ -112,7 +114,7 @@ datasets = [
         "create": lambda: _load_real_000876(
             num_samples=500_000, num_channels=1, start_channel=45
         ).flatten(),
-        "tags": ["continuous", "neurophysiology"],
+        "tags": tags,
         "source_file": SOURCE_FILE,
     },
     {
@@ -122,7 +124,7 @@ datasets = [
         "create": lambda: _load_real_000409(
             num_samples=500_000, num_channels=1, start_channel=101
         ).flatten(),
-        "tags": ["continuous", "neurophysiology"],
+        "tags": tags,
         "source_file": SOURCE_FILE,
     },
     {
@@ -132,7 +134,7 @@ datasets = [
         "create": lambda: _load_real_001290(
             num_samples=500_000, num_channels=1, start_channel=0
         ).flatten(),
-        "tags": ["continuous", "neurophysiology"],
+        "tags": tags,
         "source_file": SOURCE_FILE,
     },
     {

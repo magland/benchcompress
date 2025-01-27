@@ -9,7 +9,7 @@ const About: React.FC = () => {
         style={{ fontSize: "1.1rem", lineHeight: "1.6", marginBottom: "2rem" }}
       >
         Zia is a benchmarking framework for evaluating compression algorithms on
-        integer array datasets, with a focus on scientific data. It measures
+        numeric array datasets, with a focus on scientific data. It measures
         compression ratios and performance metrics across various algorithms and
         datasets.
       </p>

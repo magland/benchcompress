@@ -22,7 +22,7 @@ setup(
         ],
     },
     author="Jeremy Magland",
-    description="Benchmarking compression methods for integer arrays",
+    description="Benchmarking compression methods for numeric arrays",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     keywords="compression, signal processing",
