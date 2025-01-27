@@ -13,34 +13,20 @@ import { exportToCsv } from "../export/csvExport";
 
 interface BenchmarkTableProps {
   results: BenchmarkResult[];
+  availableDatasets: string[];
+  availableAlgorithms: string[];
 }
 
-export function BenchmarkTable({ results }: BenchmarkTableProps) {
+export function BenchmarkTable({
+  results,
+  availableDatasets,
+  availableAlgorithms,
+}: BenchmarkTableProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedDataset = searchParams.get("dataset") || "";
   const selectedAlgorithm = searchParams.get("algorithm") || "";
 
-  const availableDatasets = useMemo(() => {
-    return Array.from(new Set(results.map((result) => result.dataset))).sort();
-  }, [results]);
-
-  const availableAlgorithms = useMemo(() => {
-    return Array.from(
-      new Set(results.map((result) => result.algorithm)),
-    ).sort();
-  }, [results]);
-
-  // Memoize filtered data to prevent unnecessary recalculations
-  const filteredData = useMemo(() => {
-    let filtered = results;
-    if (selectedDataset) {
-      filtered = filtered.filter((row) => row.dataset === selectedDataset);
-    }
-    if (selectedAlgorithm) {
-      filtered = filtered.filter((row) => row.algorithm === selectedAlgorithm);
-    }
-    return filtered;
-  }, [results, selectedDataset, selectedAlgorithm]);
+  const filteredData = results;
 
   const table = useReactTable({
     data: filteredData || [],
@@ -49,10 +35,9 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  // Prepare data for bar charts when either dataset or algorithm is selected
   const chartData = useMemo(() => {
     if (selectedDataset) {
-      return results
+      return filteredData
         .filter((row: BenchmarkResult) => row.dataset === selectedDataset)
         .map((row: BenchmarkResult) => ({
           algorithm: row.algorithm,
@@ -61,17 +46,17 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
           decode_speed: row.decode_mb_per_sec,
         }));
     } else if (selectedAlgorithm) {
-      return results
+      return filteredData
         .filter((row: BenchmarkResult) => row.algorithm === selectedAlgorithm)
         .map((row: BenchmarkResult) => ({
-          algorithm: row.dataset, // Use dataset as the x-axis label when algorithm is selected
+          algorithm: row.dataset,
           compression_ratio: row.compression_ratio,
           encode_speed: row.encode_mb_per_sec,
           decode_speed: row.decode_mb_per_sec,
         }));
     }
     return [];
-  }, [results, selectedDataset, selectedAlgorithm]);
+  }, [filteredData, selectedDataset, selectedAlgorithm]);
 
   return (
     <div className="table-container">

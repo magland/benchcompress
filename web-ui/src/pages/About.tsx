@@ -1,6 +1,10 @@
 import React from "react";
+import ReactMarkdown from "react-markdown";
+import { useMarkdownPosts } from "../hooks/useMarkdownPosts";
 
 const About: React.FC = () => {
+  const { posts, error, loading } = useMarkdownPosts("posts");
+
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto" }}>
       <h1>About Zia</h1>
@@ -24,6 +28,34 @@ const About: React.FC = () => {
           View on GitHub
         </a>
       </p>
+
+      <hr />
+
+      {error ? (
+        <div style={{ color: "red" }}>Error loading content: {error}</div>
+      ) : loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div>
+          {posts.map((post) => (
+            <div
+              key={post.path}
+              className="markdown-content"
+              style={{ marginBottom: "2rem" }}
+            >
+              <div style={{ color: "#666", marginBottom: "1rem" }}>
+                {post.date.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </div>
+              <ReactMarkdown>{post.content}</ReactMarkdown>
+              {post.path !== posts[posts.length - 1].path && <hr />}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

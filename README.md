@@ -2,6 +2,8 @@
 
 A benchmarking framework for evaluating compression algorithms on numeric array datasets, with a focus on scientific data.
 
+Latest benchmark results: https://magland.github.io/zia/
+
 ## Overview
 
 Zia provides systematic benchmarking of compression methods for numeric arrays, measuring:
@@ -52,6 +54,3 @@ pre-commit install
 
 After this setup, code will be automatically formatted when you make a commit.
 
-## Results
-
-Latest benchmark results: https://magland.github.io/zia/

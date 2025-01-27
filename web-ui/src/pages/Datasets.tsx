@@ -1,23 +1,40 @@
 import { Dataset } from "../types";
 import { Link } from "react-router-dom";
+import { TagFilter } from "../components/TagFilter";
+import { useTagFilter } from "../hooks/useTagFilter";
 
 interface DatasetsProps {
   datasets: Dataset[];
 }
 
 function Datasets({ datasets }: DatasetsProps) {
+  const {
+    selectedTags,
+    availableTags,
+    filteredItems: filteredDatasets,
+    toggleTag,
+  } = useTagFilter(datasets);
+
   return (
     <div>
-      <h1
-        style={{
-          fontSize: "2rem",
-          fontWeight: "bold",
-          color: "#333",
-          marginBottom: "1rem",
-        }}
-      >
-        Benchmark Datasets
-      </h1>
+      <div style={{ marginBottom: "2rem" }}>
+        <h1
+          style={{
+            fontSize: "2rem",
+            fontWeight: "bold",
+            color: "#333",
+            marginBottom: "1rem",
+          }}
+        >
+          Benchmark Datasets
+        </h1>
+        <TagFilter
+          availableTags={availableTags}
+          selectedTags={selectedTags}
+          onTagToggle={toggleTag}
+          label="Filter datasets"
+        />
+      </div>
       <div style={{ overflowX: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
@@ -91,7 +108,7 @@ function Datasets({ datasets }: DatasetsProps) {
             </tr>
           </thead>
           <tbody>
-            {datasets.map((dataset, index) => (
+            {filteredDatasets.map((dataset, index) => (
               <tr
                 key={`${dataset.name}-${dataset.version}`}
                 style={{

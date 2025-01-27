@@ -1,23 +1,40 @@
 import { Algorithm } from "../types";
 import { Link } from "react-router-dom";
+import { TagFilter } from "../components/TagFilter";
+import { useTagFilter } from "../hooks/useTagFilter";
 
 interface AlgorithmsProps {
   algorithms: Algorithm[];
 }
 
 function Algorithms({ algorithms }: AlgorithmsProps) {
+  const {
+    selectedTags,
+    availableTags,
+    filteredItems: filteredAlgorithms,
+    toggleTag,
+  } = useTagFilter(algorithms);
+
   return (
     <div>
-      <h1
-        style={{
-          fontSize: "2rem",
-          fontWeight: "bold",
-          color: "#333",
-          marginBottom: "1rem",
-        }}
-      >
-        Compression Algorithms
-      </h1>
+      <div style={{ marginBottom: "2rem" }}>
+        <h1
+          style={{
+            fontSize: "2rem",
+            fontWeight: "bold",
+            color: "#333",
+            marginBottom: "1rem",
+          }}
+        >
+          Compression Algorithms
+        </h1>
+        <TagFilter
+          availableTags={availableTags}
+          selectedTags={selectedTags}
+          onTagToggle={toggleTag}
+          label="Filter algorithms"
+        />
+      </div>
       <div style={{ overflowX: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
@@ -80,7 +97,7 @@ function Algorithms({ algorithms }: AlgorithmsProps) {
             </tr>
           </thead>
           <tbody>
-            {algorithms.map((algorithm, index) => (
+            {filteredAlgorithms.map((algorithm, index) => (
               <tr
                 key={`${algorithm.name}-${algorithm.version}`}
                 style={{
@@ -95,7 +112,7 @@ function Algorithms({ algorithms }: AlgorithmsProps) {
                   }}
                 >
                   <Link
-                    to={`/home?algorithm=${encodeURIComponent(algorithm.name)}`}
+                    to={`/algorithm/${encodeURIComponent(algorithm.name)}`}
                     style={{
                       color: "#0066cc",
                       textDecoration: "none",

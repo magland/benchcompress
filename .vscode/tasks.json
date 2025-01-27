@@ -2,6 +2,17 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Generate Posts Index",
+      "type": "shell",
+      "command": "./devel/generate_posts_index.sh",
+      "group": "build",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Format Code",
       "type": "shell",
       "command": "./devel/format_code.sh",

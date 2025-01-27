@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Datasets from "./pages/Datasets";
 import Dataset from "./pages/Dataset";
 import Algorithms from "./pages/Algorithms";
+import Algorithm from "./pages/Algorithm";
 import About from "./pages/About";
 import { BenchmarkData } from "./types";
 
@@ -147,6 +148,12 @@ function App() {
               <Route
                 path="/dataset/:datasetName"
                 element={<Dataset datasets={benchmarkData?.datasets || []} />}
+              />
+              <Route
+                path="/algorithm/:algorithmName"
+                element={
+                  <Algorithm algorithms={benchmarkData?.algorithms || []} />
+                }
               />
               <Route path="/about" element={<About />} />
             </Routes>
