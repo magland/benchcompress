@@ -13,10 +13,6 @@ from ._memobin import (
     download_from_memobin,
     exists_in_memobin,
 )
-from .algorithms.simple_ans.markov import markov_reconstruct
-
-# warm up the JIT
-markov_reconstruct(np.array([1, 2, 3]), np.array([1, 2]), np.array([1]))
 
 
 system_version = "v5"

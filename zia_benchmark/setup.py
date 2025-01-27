@@ -1,4 +1,31 @@
 from setuptools import setup, find_packages
+from setuptools.command.build_ext import build_ext
+from setuptools import Extension
+import os
+import sys
+import subprocess
+
+class CMakeExtension(Extension):
+    def __init__(self, name, sourcedir=""):
+        Extension.__init__(self, name, sources=[])
+        self.sourcedir = os.path.abspath(sourcedir)
+
+class CMakeBuild(build_ext):
+    def build_extension(self, ext):
+        extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
+
+        cmake_args = [
+            f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}",
+            f"-DPYTHON_EXECUTABLE={sys.executable}"
+        ]
+
+        build_args = []
+
+        if not os.path.exists(self.build_temp):
+            os.makedirs(self.build_temp)
+
+        subprocess.check_call(["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp)
+        subprocess.check_call(["cmake", "--build", "."] + build_args, cwd=self.build_temp)
 
 setup(
     name="zia_benchmark",
@@ -14,8 +41,15 @@ setup(
         "lindi",
         "brotli",
         "click",
-        "numba"
+        "pybind11>=2.11.1"
     ],
+    ext_modules=[
+        CMakeExtension("zia_benchmark.algorithms.simple_ans.markov_reconstruct_cpp_ext",
+                      sourcedir="src/zia_benchmark/algorithms/simple_ans")
+    ],
+    cmdclass={
+        "build_ext": CMakeBuild,
+    },
     python_requires=">=3.8",
     entry_points={
         "console_scripts": [

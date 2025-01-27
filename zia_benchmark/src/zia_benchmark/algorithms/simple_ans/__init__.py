@@ -1,6 +1,8 @@
 import numpy as np
-from .markov import markov_predict, markov_reconstruct
-
+from zia_benchmark.algorithms.simple_ans.markov_reconstruct_wrapper import (
+    markov_reconstruct as markov_reconstruct_cpp,
+)
+from .markov import markov_predict
 
 SOURCE_FILE = "simple_ans/__init__.py"
 
@@ -150,7 +152,7 @@ def simple_ans_markov_encode(x: np.ndarray) -> bytes:
     from simple_ans import ans_encode
 
     assert x.ndim == 1
-    coeffs, initial, resid = markov_predict(x, M=6)
+    coeffs, initial, resid = markov_predict(x, M=10)
     # Encode just the differences
     encoded = ans_encode(resid)
     if x.dtype == np.uint8:
@@ -233,8 +235,11 @@ def simple_ans_markov_decode(x: bytes, dtype: str) -> np.ndarray:
         symbol_values=symbol_values.astype(dtype),
         bitstream=bitstream,
     )
+    import time
+
     resid = ans_decode(encoded)
-    return markov_reconstruct(coeffs, initial, resid)
+    output = markov_reconstruct_cpp(coeffs, initial, resid)
+    return output
 
 
 algorithms = [
@@ -257,7 +262,7 @@ algorithms = [
     },
     {
         "name": "simple-ans-markov",
-        "version": "4",
+        "version": "5",
         "encode": lambda x: simple_ans_markov_encode(x),
         "decode": lambda x, dtype: simple_ans_markov_decode(x, dtype),
         "description": "ANS compression with Markov prediction for exploiting temporal correlations in the data.",

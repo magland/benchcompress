@@ -1,5 +1,4 @@
 import numpy as np
-import numba
 from zia_benchmark._analysis import linear_fit
 
 
@@ -35,32 +34,33 @@ def markov_predict(x: np.ndarray, M: int) -> tuple:
     return coeffs, initial, residuals
 
 
-@numba.jit(nopython=True)
-def markov_reconstruct(
-    coeffs: np.ndarray, initial: np.ndarray, resid: np.ndarray
-) -> np.ndarray:
-    """Reconstruct signal from Markov model parameters and residuals.
+# C++/pybind11 implementation is a lot faster than the Numba implementation
+# @numba.jit(nopython=True)
+# def markov_reconstruct(
+#     coeffs: np.ndarray, initial: np.ndarray, resid: np.ndarray
+# ) -> np.ndarray:
+#     """Reconstruct signal from Markov model parameters and residuals.
 
-    Args:
-        coeffs: Model coefficients from linear regression
-        initial: Initial values needed for prediction
-        resid: Prediction residuals
+#     Args:
+#         coeffs: Model coefficients from linear regression
+#         initial: Initial values needed for prediction
+#         resid: Prediction residuals
 
-    Returns:
-        np.ndarray: Reconstructed signal
-    """
-    M = len(initial) + 1  # Number of samples used in prediction
-    output = np.zeros(len(resid) + len(initial), dtype=resid.dtype)
-    output[: len(initial)] = initial  # Set initial values
+#     Returns:
+#         np.ndarray: Reconstructed signal
+#     """
+#     M = len(initial) + 1  # Number of samples used in prediction
+#     output = np.zeros(len(resid) + len(initial), dtype=resid.dtype)
+#     output[: len(initial)] = initial  # Set initial values
 
-    # Reconstruct signal iteratively
-    for i in range(len(resid)):
-        # Get previous M-1 values to make prediction
-        prev_values = output[i : i + M - 1]
-        # Make prediction using coefficients
-        prediction = np.sum(coeffs[:-1] * prev_values) + coeffs[-1]
-        prediction = np.round(prediction)
-        # Add residual to get actual value
-        output[i + M - 1] = prediction + resid[i]
+#     # Reconstruct signal iteratively
+#     for i in range(len(resid)):
+#         # Get previous M-1 values to make prediction
+#         prev_values = output[i : i + M - 1]
+#         # Make prediction using coefficients
+#         prediction = np.sum(coeffs[:-1] * prev_values) + coeffs[-1]
+#         prediction = np.round(prediction)
+#         # Add residual to get actual value
+#         output[i + M - 1] = prediction + resid[i]
 
-    return output
+#     return output
