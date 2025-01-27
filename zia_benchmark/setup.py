@@ -45,6 +45,8 @@ setup(
     ],
     ext_modules=[
         CMakeExtension("zia_benchmark.algorithms.simple_ans.markov_reconstruct_cpp_ext",
+                      sourcedir="src/zia_benchmark/algorithms/simple_ans"),
+        CMakeExtension("zia_benchmark.algorithms.simple_ans.markov_predict_cpp_ext",
                       sourcedir="src/zia_benchmark/algorithms/simple_ans")
     ],
     cmdclass={

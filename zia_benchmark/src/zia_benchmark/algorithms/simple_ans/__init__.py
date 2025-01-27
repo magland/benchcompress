@@ -1,8 +1,10 @@
 import numpy as np
-from zia_benchmark.algorithms.simple_ans.markov_reconstruct_wrapper import (
+from zia_benchmark.algorithms.simple_ans.markov_reconstruct import (
     markov_reconstruct as markov_reconstruct_cpp,
 )
-from .markov import markov_predict
+from zia_benchmark.algorithms.simple_ans.markov_predict import (
+    markov_predict as markov_predict_cpp,
+)
 
 SOURCE_FILE = "simple_ans/__init__.py"
 
@@ -152,7 +154,7 @@ def simple_ans_markov_encode(x: np.ndarray) -> bytes:
     from simple_ans import ans_encode
 
     assert x.ndim == 1
-    coeffs, initial, resid = markov_predict(x, M=10)
+    coeffs, initial, resid = markov_predict_cpp(x, M=6, num_training_samples=10000)
     # Encode just the differences
     encoded = ans_encode(resid)
     if x.dtype == np.uint8:
