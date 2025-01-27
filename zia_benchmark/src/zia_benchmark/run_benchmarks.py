@@ -13,6 +13,10 @@ from ._memobin import (
     download_from_memobin,
     exists_in_memobin,
 )
+from .algorithms.simple_ans.markov import markov_reconstruct
+
+# warm up the JIT
+markov_reconstruct(np.array([1, 2, 3]), np.array([1, 2]), np.array([1]))
 
 
 system_version = "v5"
@@ -45,6 +49,7 @@ def run_benchmarks(
     verbose: bool = True,
     selected_algorithms: Optional[List[dict]] = None,
     selected_datasets: Optional[List[dict]] = None,
+    force: bool = False,
 ) -> Dict[str, Any]:
     """Run all benchmarks, with caching based on algorithm and dataset versions.
 
@@ -99,14 +104,14 @@ def run_benchmarks(
 
             print(f"\nTesting algorithm: {alg_name} (tags: {alg_tags})")
 
-            # Check if we can use cached result
+            # Check if we can use cached result (unless force flag is set)
             test_dir = os.path.join(cache_dir, dataset["name"], alg_name)
             metadata_file = os.path.join(test_dir, "metadata.json")
             compressed_file = os.path.join(test_dir, "compressed.dat")
 
-            # First try local cache
+            # First try local cache (unless force flag is set)
             cached_data = None
-            if os.path.exists(metadata_file):
+            if not force and os.path.exists(metadata_file):
                 with open(metadata_file, "r") as f:
                     cached_data = json.load(f)
                     # if versions do not match, then set to None
@@ -119,8 +124,8 @@ def run_benchmarks(
                         ):
                             cached_data = None
 
-            # If not in local cache, try memobin
-            if cached_data is None:
+            # If not in local cache, try memobin (unless force flag is set)
+            if cached_data is None and not force:
                 memobin_url = construct_memobin_url(
                     alg_name,
                     dataset["name"],

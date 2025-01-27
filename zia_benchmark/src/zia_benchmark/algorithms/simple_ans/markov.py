@@ -1,4 +1,5 @@
 import numpy as np
+import numba
 from zia_benchmark._analysis import linear_fit
 
 
@@ -34,6 +35,7 @@ def markov_predict(x: np.ndarray, M: int) -> tuple:
     return coeffs, initial, residuals
 
 
+@numba.jit(nopython=True)
 def markov_reconstruct(
     coeffs: np.ndarray, initial: np.ndarray, resid: np.ndarray
 ) -> np.ndarray:

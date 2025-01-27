@@ -13,7 +13,8 @@ setup(
         "requests",
         "lindi",
         "brotli",
-        "click"
+        "click",
+        "numba"
     ],
     python_requires=">=3.8",
     entry_points={

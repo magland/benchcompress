@@ -99,7 +99,8 @@ def list():
     type=click.Path(),
 )
 @click.option("--quiet", "-q", is_flag=True, help="Reduce output verbosity")
-def run(algorithm, dataset, cache_dir, quiet):
+@click.option("--force", "-f", is_flag=True, help="Force re-run without using cache")
+def run(algorithm, dataset, cache_dir, quiet, force):
     """Run benchmarks with specified options"""
     # Filter algorithms and datasets
     filtered_algorithms = filter_algorithms(algorithm)
@@ -120,6 +121,7 @@ def run(algorithm, dataset, cache_dir, quiet):
         verbose=not quiet,
         selected_algorithms=filtered_algorithms,
         selected_datasets=filtered_datasets,
+        force=force,
     )
 
     # Print summary

@@ -243,7 +243,9 @@ def benchmark_markov_model(N=1_000_000, M=5, seed=0):
     print("\n--- Prediction (Naive) ---")
     print(f"  Predict: {dt_pred_naive:.3f}s, ~{throughput_pred_naive:.2f} MB/s")
 
-    # 2) Numba-Accelerated Prediction
+    # Warm up Numba
+    _ = predict_numba(c_vec, seed_vals, len(seed_vals) + 1)
+
     t0 = time.perf_counter()
     pred_numba = predict_numba(c_vec, seed_vals, N)
     dt_pred_numba = time.perf_counter() - t0
