@@ -219,10 +219,9 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
   // Calculate yRange from data
   const yRange = useMemo<Range>(() => {
     if (!dataY) return { min: 0, max: 1 };
-    const values = Array.from(dataY);
     return {
-      min: Math.min(...values),
-      max: Math.max(...values),
+      min: computeMin(dataY),
+      max: computeMax(dataY),
     };
   }, [dataY]);
 
@@ -242,7 +241,6 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
       xRange,
       yRange,
     };
-    console.log("--- posting message to worker", msg);
     worker.postMessage(msg);
   }, [width, height, dataT, dataY, worker, margins, xRange, yRange]);
 
@@ -402,6 +400,26 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
       )}
     </div>
   );
+};
+
+const computeMin = (data: SupportedTypedArray) => {
+  let min = Infinity;
+  for (let i = 0; i < data.length; i++) {
+    if (data[i] < min) {
+      min = data[i];
+    }
+  }
+  return min;
+};
+
+const computeMax = (data: SupportedTypedArray) => {
+  let max = -Infinity;
+  for (let i = 0; i < data.length; i++) {
+    if (data[i] > max) {
+      max = data[i];
+    }
+  }
+  return max;
 };
 
 export default TimeseriesView;

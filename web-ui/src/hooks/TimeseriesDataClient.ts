@@ -24,6 +24,8 @@ export class TimeseriesDataClient {
   private dtype: DType | null = null;
   private chunkSize: number;
   private cache: ChunkCache = {};
+  private inProgressFetches: { [key: number]: Promise<SupportedTypedArray> } =
+    {};
   private datasetJsonUrl: string;
   private datasetDataUrl: string;
 
@@ -81,36 +83,54 @@ export class TimeseriesDataClient {
   }
 
   private async fetchChunk(chunkIndex: number): Promise<SupportedTypedArray> {
+    // Return cached chunk if available
     if (this.cache[chunkIndex]) {
       return this.cache[chunkIndex];
     }
 
-    if (!this.dtype) {
-      throw new Error("Data type not initialized");
+    // If this chunk is already being fetched, wait for it to complete
+    const inProgressFetch = this.inProgressFetches[chunkIndex];
+    if (inProgressFetch !== undefined) {
+      return inProgressFetch;
     }
 
-    const start = chunkIndex * this.chunkSize;
-    const end = Math.min(start + this.chunkSize, this.shape);
-    const url = this.datasetDataUrl;
-    const itemSize = TypedArrayConstructors[this.dtype].BYTES_PER_ELEMENT;
-    const byteStart = start * itemSize;
-    const byteEnd = end * itemSize;
+    // Start new fetch and track it
+    const fetchPromise = (async () => {
+      if (!this.dtype) {
+        throw new Error("Data type not initialized");
+      }
 
-    const response = await fetch(url, {
-      headers: {
-        Range: `bytes=${byteStart}-${byteEnd - 1}`,
-      },
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to fetch chunk: ${response.statusText}`);
-    }
+      const start = chunkIndex * this.chunkSize;
+      const end = Math.min(start + this.chunkSize, this.shape);
+      const url = this.datasetDataUrl;
+      const itemSize = TypedArrayConstructors[this.dtype].BYTES_PER_ELEMENT;
+      const byteStart = start * itemSize;
+      const byteEnd = end * itemSize;
 
-    const buffer = await response.arrayBuffer();
-    const ArrayConstructor = TypedArrayConstructors[this.dtype];
-    const data = new ArrayConstructor(buffer);
-    this.cache[chunkIndex] = data;
+      try {
+        const response = await fetch(url, {
+          headers: {
+            Range: `bytes=${byteStart}-${byteEnd - 1}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to fetch chunk: ${response.statusText}`);
+        }
 
-    return data;
+        const buffer = await response.arrayBuffer();
+        const ArrayConstructor = TypedArrayConstructors[this.dtype];
+        const data = new ArrayConstructor(buffer);
+        this.cache[chunkIndex] = data;
+        return data;
+      } finally {
+        // Clean up the in-progress fetch regardless of success/failure
+        delete this.inProgressFetches[chunkIndex];
+      }
+    })();
+
+    // Store the promise for other requests to wait on
+    this.inProgressFetches[chunkIndex] = fetchPromise;
+    return fetchPromise;
   }
 
   async fetchRange(start: number, end: number): Promise<SupportedTypedArray> {
