@@ -46,6 +46,7 @@ algorithms = [
         "version": "1",
         "encode": lambda x: lzma_encode(x, preset=9),
         "decode": lambda x, dtype: lzma_decode(x, dtype),
+        "description": "LZMA compression at maximum preset 9 for highest compression ratio.",
         "source_file": SOURCE_FILE,
     },
     {
@@ -53,6 +54,7 @@ algorithms = [
         "version": "1",
         "encode": lambda x: lzma_delta_encode(x, preset=9),
         "decode": lambda x, dtype: lzma_delta_decode(x, dtype),
+        "description": "LZMA compression at preset 9 with delta encoding for improved compression of sequential data.",
         "tags": ["delta_encoding"],
         "source_file": SOURCE_FILE,
     },

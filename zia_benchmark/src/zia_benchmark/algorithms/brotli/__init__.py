@@ -39,6 +39,7 @@ algorithms = [
         "version": "1",
         "encode": lambda x: brotli_encode(x, level=4),
         "decode": lambda x, dtype: brotli_decode(x, dtype),
+        "description": "Brotli compression at level 4 (faster).",
         "source_file": SOURCE_FILE,
     },
     {
@@ -46,6 +47,7 @@ algorithms = [
         "version": "1",
         "encode": lambda x: brotli_encode(x, level=6),
         "decode": lambda x, dtype: brotli_decode(x, dtype),
+        "description": "Brotli compression at level 6 (balanced).",
         "source_file": SOURCE_FILE,
     },
     {
@@ -53,6 +55,7 @@ algorithms = [
         "version": "1",
         "encode": lambda x: brotli_encode(x, level=8),
         "decode": lambda x, dtype: brotli_decode(x, dtype),
+        "description": "Brotli compression at level 8 (better compression).",
         "source_file": SOURCE_FILE,
     },
     {
@@ -60,6 +63,7 @@ algorithms = [
         "version": "1",
         "encode": lambda x: brotli_encode(x, level=11),
         "decode": lambda x, dtype: brotli_decode(x, dtype),
+        "description": "Brotli compression at maximum level 11.",
         "source_file": SOURCE_FILE,
     },
     {
@@ -67,6 +71,7 @@ algorithms = [
         "version": "1",
         "encode": lambda x: brotli_delta_encode(x, level=11),
         "decode": lambda x, dtype: brotli_delta_decode(x, dtype),
+        "description": "Brotli compression at level 11 with delta encoding.",
         "tags": ["delta_encoding"],
         "source_file": SOURCE_FILE,
     },
