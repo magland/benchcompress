@@ -1,8 +1,8 @@
 import numpy as np
-from zia_benchmark.algorithms.simple_ans.markov_reconstruct import (
+from .markov_reconstruct import (
     markov_reconstruct as markov_reconstruct_cpp,
 )
-from zia_benchmark.algorithms.simple_ans.markov_predict import (
+from .markov_predict import (
     markov_predict as markov_predict_cpp,
 )
 
