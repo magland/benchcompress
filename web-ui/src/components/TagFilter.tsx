@@ -1,5 +1,3 @@
-import React from "react";
-
 interface TagFilterProps {
   availableTags: string[];
   selectedTags: string[];
