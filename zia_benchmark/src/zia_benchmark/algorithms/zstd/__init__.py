@@ -79,7 +79,7 @@ def zstd_markov_decode(x: bytes, dtype: str) -> np.ndarray:
 
     # Extract coefficients and initial values
     pos = header_size
-    coeffs = np.frombuffer(x[pos : pos + coeffs_len], dtype=np.float64)
+    coeffs = np.frombuffer(x[pos : pos + coeffs_len], dtype=np.float32)
     pos += coeffs_len
     initial = np.frombuffer(x[pos : pos + initial_len], dtype=dtype)
     pos += initial_len
