@@ -1,7 +1,7 @@
 import time
 import json
 import os
-from typing import Dict, Any, Tuple, List
+from typing import Dict, Any, Tuple, List, Optional
 import numpy as np
 from statistics import median
 from .algorithms import algorithms
@@ -41,7 +41,10 @@ def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:
 
 
 def run_benchmarks(
-    cache_dir: str = ".benchmark_cache", verbose: bool = True
+    cache_dir: str = ".benchmark_cache",
+    verbose: bool = True,
+    selected_algorithms: Optional[List[dict]] = None,
+    selected_datasets: Optional[List[dict]] = None,
 ) -> Dict[str, Any]:
     """Run all benchmarks, with caching based on algorithm and dataset versions.
 
@@ -66,8 +69,14 @@ def run_benchmarks(
     results = []
     print("\nRunning benchmarks for all dataset-algorithm combinations...")
 
+    # Use selected datasets/algorithms or fall back to all
+    datasets_to_run = selected_datasets if selected_datasets is not None else datasets
+    algorithms_to_run = (
+        selected_algorithms if selected_algorithms is not None else algorithms
+    )
+
     # Run benchmarks for each dataset and algorithm combination
-    for dataset in datasets:
+    for dataset in datasets_to_run:
         dataset_tags = dataset.get("tags", [])
         print(f"\n*** Dataset: {dataset['name']} (tags: {dataset_tags}) ***")
 
@@ -76,7 +85,7 @@ def run_benchmarks(
         original_size = None
         dtype = None
 
-        for algorithm in algorithms:
+        for algorithm in algorithms_to_run:
             alg_name = algorithm["name"]
             alg_tags = algorithm.get("tags", [])
 

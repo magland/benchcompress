@@ -11,9 +11,16 @@ setup(
         "zstandard",
         "simple_ans",
         "requests",
-        "lindi"
+        "lindi",
+        "brotli",
+        "click"
     ],
     python_requires=">=3.8",
+    entry_points={
+        "console_scripts": [
+            "zia-benchmark=zia_benchmark.cli:main",
+        ],
+    },
     author="Jeremy Magland",
     description="Benchmarking compression methods for integer arrays",
     long_description=open("README.md").read(),

@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: format-code
+        name: Format Code
+        entry: devel/format_code.sh
+        language: script
+        pass_filenames: false
