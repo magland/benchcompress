@@ -12,4 +12,8 @@ black "$PROJECT_ROOT/zia_benchmark/src/zia_benchmark"
 echo "Formatting TypeScript/JavaScript code..."
 cd "$PROJECT_ROOT/web-ui" && npm run format
 
+# Format C++ code
+echo "Formatting C++ code..."
+find "$PROJECT_ROOT" -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) -exec clang-format -i {} \;
+
 echo "Code formatting complete!"

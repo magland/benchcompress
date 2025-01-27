@@ -21,5 +21,16 @@ if ! npm run format:check; then
     exit 1
 fi
 
+# Check C++ code formatting
+echo "Checking C++ code formatting..."
+cpp_files=$(find "$PROJECT_ROOT" -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \))
+for file in $cpp_files; do
+    if ! clang-format --dry-run -Werror "$file" > /dev/null 2>&1; then
+        echo "C++ code is not properly formatted!"
+        echo "Please run './devel/format_code.sh' to format the code"
+        exit 1
+    fi
+done
+
 echo "All code is properly formatted!"
 exit 0
