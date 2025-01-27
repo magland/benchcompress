@@ -264,7 +264,7 @@ algorithms = [
     },
     {
         "name": "simple-ans-markov",
-        "version": "5",
+        "version": "6",
         "encode": lambda x: simple_ans_markov_encode(x),
         "decode": lambda x, dtype: simple_ans_markov_decode(x, dtype),
         "description": "ANS compression with Markov prediction for exploiting temporal correlations in the data.",

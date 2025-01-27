@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { ScrollToTop } from "./components/ScrollToTop";
 import Home from "./pages/Home";
 import Datasets from "./pages/Datasets";
 import Dataset from "./pages/Dataset";
@@ -40,6 +41,7 @@ function App() {
 
   return (
     <BrowserRouter basename="/zia">
+      <ScrollToTop />
       <div
         style={{
           paddingTop: "5rem",

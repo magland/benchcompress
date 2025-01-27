@@ -1,19 +1,16 @@
-import { BenchmarkTable } from "../components/benchmark/table/BenchmarkTable";
-import { BenchmarkData } from "../types";
-import { useSearchParams } from "react-router-dom";
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { BenchmarkTable } from "../components/benchmark/table/BenchmarkTable";
 import { TagFilter } from "../components/TagFilter";
 import { useTagFilter } from "../hooks/useTagFilter";
+import { BenchmarkData } from "../types";
 
 interface HomeProps {
   benchmarkData: BenchmarkData | null;
 }
 
 function Home({ benchmarkData }: HomeProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const selectedDataset = searchParams.get("dataset") || "";
-  const selectedAlgorithm = searchParams.get("algorithm") || "";
-
+  const navigate = useNavigate();
   // Set up tag filtering for datasets
   const {
     selectedTags: selectedDatasetTags,
@@ -30,31 +27,20 @@ function Home({ benchmarkData }: HomeProps) {
     toggleTag: toggleAlgorithmTag,
   } = useTagFilter(benchmarkData?.algorithms || []);
 
-  // Filter benchmark results based on selected dataset/algorithm and tags
+  // Filter benchmark results based on selected tags
   const filteredResults = useMemo(() => {
     if (!benchmarkData) return [];
 
     let filtered = benchmarkData.results;
 
-    // Filter by selected dataset/algorithm
-    if (selectedDataset) {
-      filtered = filtered.filter(
-        (result) => result.dataset === selectedDataset,
-      );
-    } else if (selectedDatasetTags.length > 0) {
-      // Only apply dataset tag filtering if no specific dataset is selected
+    if (selectedDatasetTags.length > 0) {
       const datasetNames = filteredDatasets.map((d) => d.name);
       filtered = filtered.filter((result) =>
         datasetNames.includes(result.dataset),
       );
     }
 
-    if (selectedAlgorithm) {
-      filtered = filtered.filter(
-        (result) => result.algorithm === selectedAlgorithm,
-      );
-    } else if (selectedAlgorithmTags.length > 0) {
-      // Only apply algorithm tag filtering if no specific algorithm is selected
+    if (selectedAlgorithmTags.length > 0) {
       const algorithmNames = filteredAlgorithms.map((a) => a.name);
       filtered = filtered.filter((result) =>
         algorithmNames.includes(result.algorithm),
@@ -64,8 +50,6 @@ function Home({ benchmarkData }: HomeProps) {
     return filtered;
   }, [
     benchmarkData,
-    selectedDataset,
-    selectedAlgorithm,
     selectedDatasetTags,
     selectedAlgorithmTags,
     filteredDatasets,
@@ -107,14 +91,10 @@ function Home({ benchmarkData }: HomeProps) {
               <label htmlFor="dataset-select">Dataset:</label>
               <select
                 id="dataset-select"
-                value={selectedDataset}
+                value={undefined}
                 onChange={(e) => {
                   if (e.target.value) {
-                    setSearchParams({ dataset: e.target.value });
-                  } else {
-                    setSearchParams(
-                      selectedAlgorithm ? { algorithm: selectedAlgorithm } : {},
-                    );
+                    navigate(`/dataset/${e.target.value}`);
                   }
                 }}
                 style={{
@@ -138,14 +118,10 @@ function Home({ benchmarkData }: HomeProps) {
               <label htmlFor="algorithm-select">Algorithm:</label>
               <select
                 id="algorithm-select"
-                value={selectedAlgorithm}
+                value={undefined}
                 onChange={(e) => {
                   if (e.target.value) {
-                    setSearchParams({ algorithm: e.target.value });
-                  } else {
-                    setSearchParams(
-                      selectedDataset ? { dataset: selectedDataset } : {},
-                    );
+                    navigate(`/algorithm/${e.target.value}`);
                   }
                 }}
                 style={{
@@ -170,23 +146,18 @@ function Home({ benchmarkData }: HomeProps) {
           <div
             style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
           >
-            {!selectedDataset && (
-              <TagFilter
-                availableTags={availableDatasetTags}
-                selectedTags={selectedDatasetTags}
-                onTagToggle={toggleDatasetTag}
-                label="Filter datasets"
-              />
-            )}
-
-            {!selectedAlgorithm && (
-              <TagFilter
-                availableTags={availableAlgorithmTags}
-                selectedTags={selectedAlgorithmTags}
-                onTagToggle={toggleAlgorithmTag}
-                label="Filter algorithms"
-              />
-            )}
+            <TagFilter
+              availableTags={availableDatasetTags}
+              selectedTags={selectedDatasetTags}
+              onTagToggle={toggleDatasetTag}
+              label="Filter datasets"
+            />
+            <TagFilter
+              availableTags={availableAlgorithmTags}
+              selectedTags={selectedAlgorithmTags}
+              onTagToggle={toggleAlgorithmTag}
+              label="Filter algorithms"
+            />
           </div>
         </div>
 

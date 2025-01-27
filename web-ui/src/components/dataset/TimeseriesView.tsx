@@ -115,7 +115,7 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
       const zoomCenter = xRange.min + (xRange.max - xRange.min) * xRatio;
 
       // Calculate new range
-      const zoomFactor = e.deltaY > 0 ? 1.02 : 1 / 1.02;
+      const zoomFactor = e.deltaY > 0 ? 1.1 : 1 / 1.1;
       const shape = client.getShape();
 
       // Ensure we don't zoom out beyond data bounds
