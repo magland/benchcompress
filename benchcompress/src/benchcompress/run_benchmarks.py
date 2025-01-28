@@ -35,6 +35,8 @@ def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:
         return False
     if "markov_prediction" in algorithm_tags and "continuous" not in dataset_tags:
         return False
+    if "zero_rle" in algorithm_tags and "sparse" not in dataset_tags:
+        return False
     return True
 
 

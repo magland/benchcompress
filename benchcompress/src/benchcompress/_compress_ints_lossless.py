@@ -7,7 +7,7 @@ def compress_ints_lossless(x, *, method: str = "zstd") -> bytes:
             - "zstd": Zstandard compression (default)
             - "zlib": zlib compression
             - "lzma": LZMA compression
-            - "simple_ans": Simple Asymmetric Numeral Systems
+            - "ANS": Asymmetric Numeral Systems
 
     Returns:
         Compressed bytes
@@ -25,7 +25,7 @@ def compress_ints_lossless(x, *, method: str = "zstd") -> bytes:
         import lzma
 
         return lzma.compress(x.tobytes(), preset=9)
-    elif method == "simple_ans":
+    elif method == "ANS":
         from simple_ans import ans_encode
 
         encoding = ans_encode(x)

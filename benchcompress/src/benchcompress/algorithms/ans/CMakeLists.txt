@@ -36,4 +36,4 @@ pybind11_add_module(get_run_lengths_cpp_ext get_run_lengths.cpp)
 
 # Install all modules
 install(TARGETS markov_reconstruct_cpp_ext markov_predict_cpp_ext get_run_lengths_cpp_ext
-        DESTINATION benchcompress/algorithms/simple_ans)
+        DESTINATION benchcompress/algorithms/ans)

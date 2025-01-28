@@ -44,12 +44,12 @@ setup(
         "pybind11>=2.11.1"
     ],
     ext_modules=[
-        CMakeExtension("benchcompress.algorithms.simple_ans.markov_reconstruct_cpp_ext",
-                      sourcedir="src/benchcompress/algorithms/simple_ans"),
-        CMakeExtension("benchcompress.algorithms.simple_ans.markov_predict_cpp_ext",
-                      sourcedir="src/benchcompress/algorithms/simple_ans"),
-        CMakeExtension("benchcompress.algorithms.simple_ans.get_run_lengths_cpp_ext",
-                      sourcedir="src/benchcompress/algorithms/simple_ans")
+        CMakeExtension("benchcompress.algorithms.ans.markov_reconstruct_cpp_ext",
+                      sourcedir="src/benchcompress/algorithms/ans"),
+        CMakeExtension("benchcompress.algorithms.ans.markov_predict_cpp_ext",
+                      sourcedir="src/benchcompress/algorithms/ans"),
+        CMakeExtension("benchcompress.algorithms.ans.get_run_lengths_cpp_ext",
+                      sourcedir="src/benchcompress/algorithms/ans")
     ],
     cmdclass={
         "build_ext": CMakeBuild,
