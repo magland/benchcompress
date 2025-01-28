@@ -106,6 +106,68 @@ def _create_filtered_version(X: np.ndarray) -> np.ndarray:
     return X2
 
 
+def _create_sparse_version(X: np.ndarray) -> np.ndarray:
+    """Create sparse version of a dataset using activity-based suppression.
+
+    Args:
+        X: Input signal array
+
+    Returns:
+        Sparse signal array with suppressed low-activity regions
+    """
+    v = 0.25  # step size for quantization
+    lowcut = 300
+    highcut = 6000
+    sampling_frequency = 30000
+
+    # Bandpass filter
+    X_filt = bandpass_filter(
+        X - np.median(X),
+        sampling_frequency=sampling_frequency,
+        lowcut=lowcut,
+        highcut=highcut,
+    )
+
+    # Normalize by noise level
+    noise_level = estimate_noise_level(X_filt, sampling_frequency=sampling_frequency)
+    X_filt_normalized = X_filt / noise_level
+
+    # Activity detection
+    def sliding_max(x: np.ndarray, delta: int) -> np.ndarray:
+        y = np.zeros_like(x)
+        for i in range(len(x)):
+            y[i] = np.max(x[max(0, i - delta) : min(len(x), i + delta + 1)])
+        return y
+
+    def smoothed(x: np.ndarray, delta: int) -> np.ndarray:
+        y = np.zeros_like(x)
+        for i in range(len(x)):
+            y[i] = np.mean(x[max(0, i - delta) : min(len(x), i + delta + 1)])
+        return y
+
+    # Activity detection parameters
+    activity_threshold = [3, 6]  # [min, max] thresholds for activity detection
+
+    # Detect activity regions
+    Y = sliding_max(np.abs(X_filt_normalized), 50)
+    Y = smoothed(Y, 20)
+    Y = np.minimum(
+        1,
+        np.maximum(
+            0,
+            (Y - activity_threshold[0])
+            / (activity_threshold[1] - activity_threshold[0]),
+        ),
+    )
+
+    # Apply suppression
+    Y_scaled = X_filt_normalized * Y
+    X3b = Y_scaled / v
+    X3 = np.round(X3b).astype(np.int16)
+
+    return X3
+
+
 datasets = [
     {
         "name": "real-000876-ch45",
@@ -171,6 +233,42 @@ datasets = [
             ).flatten()
         ),
         "tags": ["continuous", "neurophysiology", "filtered"],
+        "source_file": SOURCE_FILE,
+    },
+    {
+        "name": "real-000876-ch45-sparse",
+        "version": "1",
+        "description": "Sparse version of real-000876-ch45. Activity-based suppression applied.",
+        "create": lambda: _create_sparse_version(
+            _load_real_000876(
+                num_samples=500_000, num_channels=1, start_channel=45
+            ).flatten()
+        ),
+        "tags": ["continuous", "neurophysiology", "filtered", "sparse"],
+        "source_file": SOURCE_FILE,
+    },
+    {
+        "name": "real-000409-ch101-sparse",
+        "version": "1",
+        "description": "Sparse version of real-000409-ch101. Activity-based suppression applied.",
+        "create": lambda: _create_sparse_version(
+            _load_real_000409(
+                num_samples=500_000, num_channels=1, start_channel=101
+            ).flatten()
+        ),
+        "tags": ["continuous", "neurophysiology", "filtered", "sparse"],
+        "source_file": SOURCE_FILE,
+    },
+    {
+        "name": "real-001290-ch0-sparse",
+        "version": "1",
+        "description": "Sparse version of real-001290-ch0. Activity-based suppression applied.",
+        "create": lambda: _create_sparse_version(
+            _load_real_001290(
+                num_samples=500_000, num_channels=1, start_channel=0
+            ).flatten()
+        ),
+        "tags": ["continuous", "neurophysiology", "filtered", "sparse"],
         "source_file": SOURCE_FILE,
     },
 ]
