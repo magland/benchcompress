@@ -82,3 +82,17 @@ pre-commit install
 ```
 
 After this setup, code will be automatically formatted when you make a commit.
+
+# Theory
+
+For independently and identically distributed (i.i.d.) discrete data, where each sample is drawn from a discrete probability distribution (e.g., Bernoulli sampling or quantized Gaussian noise), the theoretical compression ratio is determined by the Shannon entropy formula:
+$$
+H(X) = -\sum_{i} p(x_i) \log p(x_i).
+$$
+Here, $p(x_i)$ represents the probability of occurrence of the $i$-th symbol $x_i$ in the discrete distribution.
+
+In practice, achieving this theoretical compression ratio often requires sophisticated encoding techniques. While arithmetic encoding provides one such method, it is challenging to implement and can be computationally inefficient. A more modern and efficient alternative is Asymmetric Numeric Systems (ANS), which closely approaches the theoretical limit and is incorporated into state-of-the-art compressors such as ZStandard. However, these algorithms are primarily optimized for structured data types, such as text, rather than for scientific numerical data.
+
+In our benchmarks, we evaluate a simple implementation of ANS using a Python package we developed, called \texttt{simple\_ans}. As anticipated, ANS demonstrates superior performance when compressing i.i.d. samples from a discrete distribution. However, its efficiency diminishes when handling more structured data, such as continuous signals (e.g., voltage traces in electrophysiology).
+
+Applying delta encoding partially mitigates this limitation by leveraging the continuity properties of the data through differencing. This preprocessing step enhances ANS performance, though it still falls short of the compression achieved by methods like ZStandard. Additional preprocessing techniques, such as linear Markov predictive modeling (where the residual error after prediction is compressed instead of the original signal), further improve ANS performance. In these scenarios, the residual data is smaller and exhibits reduced correlation, enabling ANS to achieve better compression results relative to other methods.

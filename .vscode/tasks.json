@@ -2,6 +2,17 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Compile Paper",
+      "type": "shell",
+      "command": "./paper/compile.sh",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "Generate Posts Index",
       "type": "shell",
       "command": "./devel/generate_posts_index.sh",
