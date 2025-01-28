@@ -48,7 +48,7 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
             ]}
             layout={{
               width: 800,
-              height: 400,
+              // important not to specify height to allow it to be based on content
               margin: { t: 5, r: 30, l: 250, b: 30 },
               xaxis: { title: "Ratio" },
               dragmode: false,
@@ -71,7 +71,7 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
             ]}
             layout={{
               width: 800,
-              height: 400,
+              // important not to specify height to allow it to be based on content
               margin: { t: 5, r: 30, l: 250, b: 30 },
               xaxis: { title: "MB/s" },
             }}
@@ -93,7 +93,7 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
             ]}
             layout={{
               width: 800,
-              height: 400,
+              // important not to specify height to allow it to be based on content
               margin: { t: 5, r: 30, l: 250, b: 30 },
               xaxis: { title: "MB/s" },
             }}

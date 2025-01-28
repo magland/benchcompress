@@ -79,6 +79,8 @@ export default function Home({ benchmarkData }: HomeProps) {
     algorithm?.name || null,
   );
 
+  console.log("chartData", chartData);
+
   // Set up tag filtering for datasets
   const {
     selectedTags: datasetTags,
