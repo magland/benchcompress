@@ -314,9 +314,6 @@ def simple_ans_markov_sparse_encode(x: np.ndarray) -> bytes:
     header_bytes = np.array(header, dtype=np.float64).tobytes()
     header_size = np.uint32(len(header_bytes))
 
-    print(f"Elapsed 5: {time.time() - timer}")
-    timer = time.time()
-
     return (
         header_size.tobytes() + header_bytes + encoded.bitstream + run_lengths.tobytes()
     )

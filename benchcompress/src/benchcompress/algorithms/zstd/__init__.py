@@ -101,6 +101,7 @@ algorithms = [
         "encode": lambda x: zstd_encode(x, level=4),
         "decode": lambda x, dtype: zstd_decode(x, dtype),
         "description": "Zstandard compression at level 4 (fast compression).",
+        "tags": ["zstd"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -109,6 +110,7 @@ algorithms = [
         "encode": lambda x: zstd_encode(x, level=7),
         "decode": lambda x, dtype: zstd_decode(x, dtype),
         "description": "Zstandard compression at level 7 (balanced speed/compression).",
+        "tags": ["zstd"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -117,6 +119,7 @@ algorithms = [
         "encode": lambda x: zstd_encode(x, level=10),
         "decode": lambda x, dtype: zstd_decode(x, dtype),
         "description": "Zstandard compression at level 10 (better compression).",
+        "tags": ["zstd"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -125,6 +128,7 @@ algorithms = [
         "encode": lambda x: zstd_encode(x, level=13),
         "decode": lambda x, dtype: zstd_decode(x, dtype),
         "description": "Zstandard compression at level 13 (high compression).",
+        "tags": ["zstd"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -133,6 +137,7 @@ algorithms = [
         "encode": lambda x: zstd_encode(x, level=16),
         "decode": lambda x, dtype: zstd_decode(x, dtype),
         "description": "Zstandard compression at level 16 (very high compression).",
+        "tags": ["zstd"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -141,6 +146,7 @@ algorithms = [
         "encode": lambda x: zstd_encode(x, level=19),
         "decode": lambda x, dtype: zstd_decode(x, dtype),
         "description": "Zstandard compression at level 19 (ultra high compression).",
+        "tags": ["zstd"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -149,6 +155,7 @@ algorithms = [
         "encode": lambda x: zstd_encode(x, level=22),
         "decode": lambda x, dtype: zstd_decode(x, dtype),
         "description": "Zstandard compression at maximum level 22 (highest compression).",
+        "tags": ["zstd"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -157,7 +164,7 @@ algorithms = [
         "encode": lambda x: zstd_delta_encode(x, level=22),
         "decode": lambda x, dtype: zstd_delta_decode(x, dtype),
         "description": "Zstandard compression at level 22 with delta encoding for improved compression of sequential data.",
-        "tags": ["delta_encoding"],
+        "tags": ["zstd", "delta_encoding"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -166,7 +173,7 @@ algorithms = [
         "encode": lambda x: zstd_markov_encode(x, level=22),
         "decode": lambda x, dtype: zstd_markov_decode(x, dtype),
         "description": "Zstandard compression at level 22 with Markov prediction for exploiting temporal correlations in the data.",
-        "tags": ["markov_prediction"],
+        "tags": ["zstd", "markov_prediction"],
         "source_file": SOURCE_FILE,
     },
 ]

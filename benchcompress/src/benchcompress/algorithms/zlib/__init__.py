@@ -47,7 +47,7 @@ algorithms = [
         "encode": lambda x: zlib_encode(x, level=1),
         "decode": lambda x, dtype: zlib_decode(x, dtype),
         "description": "Zlib DEFLATE compression at level 1 (fastest).",
-        "tags": [],
+        "tags": ["zlib"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -56,7 +56,7 @@ algorithms = [
         "encode": lambda x: zlib_encode(x, level=3),
         "decode": lambda x, dtype: zlib_decode(x, dtype),
         "description": "Zlib DEFLATE compression at level 3.",
-        "tags": [],
+        "tags": ["zlib"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -65,7 +65,7 @@ algorithms = [
         "encode": lambda x: zlib_encode(x, level=5),
         "decode": lambda x, dtype: zlib_decode(x, dtype),
         "description": "Zlib DEFLATE compression at level 5 (medium).",
-        "tags": [],
+        "tags": ["zlib"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -74,7 +74,7 @@ algorithms = [
         "encode": lambda x: zlib_encode(x, level=7),
         "decode": lambda x, dtype: zlib_decode(x, dtype),
         "description": "Zlib DEFLATE compression at level 7.",
-        "tags": [],
+        "tags": ["zlib"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -83,7 +83,7 @@ algorithms = [
         "encode": lambda x: zlib_encode(x, level=9),
         "decode": lambda x, dtype: zlib_decode(x, dtype),
         "description": "Zlib DEFLATE compression at maximum level 9.",
-        "tags": [],
+        "tags": ["zlib"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -92,7 +92,7 @@ algorithms = [
         "encode": lambda x: zlib_delta_encode(x, level=9),
         "decode": lambda x, dtype: zlib_delta_decode(x, dtype),
         "description": "Zlib DEFLATE compression at level 9 with delta encoding.",
-        "tags": ["delta_encoding"],
+        "tags": ["zlib", "delta_encoding"],
         "source_file": SOURCE_FILE,
     },
 ]
