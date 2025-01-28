@@ -5,29 +5,29 @@ import { Dataset, Algorithm } from "../../types";
 interface DatasetTableProps {
   filteredDatasets: Dataset[];
   availableDatasetTags: string[];
-  datasetTags: string[];
-  toggleDatasetTag: (tag: string) => void;
+  selectedTags: string[];
+  toggleTag: (tag: string) => void;
 }
 
 interface AlgorithmTableProps {
   filteredAlgorithms: Algorithm[];
   availableAlgorithmTags: string[];
-  algorithmTags: string[];
-  toggleAlgorithmTag: (tag: string) => void;
+  selectedTags: string[];
+  toggleTag: (tag: string) => void;
 }
 
 export const DatasetTable = ({
   filteredDatasets,
   availableDatasetTags,
-  datasetTags,
-  toggleDatasetTag,
+  selectedTags,
+  toggleTag,
 }: DatasetTableProps) => (
   <div style={{ overflowX: "auto" }}>
     <div style={{ marginBottom: "1rem" }}>
       <TagFilter
         availableTags={availableDatasetTags}
-        selectedTags={datasetTags}
-        onTagToggle={toggleDatasetTag}
+        selectedTags={selectedTags}
+        onTagToggle={toggleTag}
         label="Filter datasets"
       />
     </div>
@@ -212,15 +212,15 @@ export const DatasetTable = ({
 export const AlgorithmTable = ({
   filteredAlgorithms,
   availableAlgorithmTags,
-  algorithmTags,
-  toggleAlgorithmTag,
+  selectedTags,
+  toggleTag,
 }: AlgorithmTableProps) => (
   <div style={{ overflowX: "auto" }}>
     <div style={{ marginBottom: "1rem" }}>
       <TagFilter
         availableTags={availableAlgorithmTags}
-        selectedTags={algorithmTags}
-        onTagToggle={toggleAlgorithmTag}
+        selectedTags={selectedTags}
+        onTagToggle={toggleTag}
         label="Filter algorithms"
       />
     </div>

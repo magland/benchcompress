@@ -1,4 +1,6 @@
 import { Algorithm, BenchmarkData } from "../../types";
+import "./AlgorithmContent.css";
+import { useNavigate } from "react-router-dom";
 import { BenchmarkCharts } from "../benchmark/charts/BenchmarkCharts";
 import { BenchmarkTable } from "../benchmark/table/BenchmarkTable";
 
@@ -20,6 +22,8 @@ export const AlgorithmContent = ({
   benchmarkData,
   chartData,
 }: AlgorithmContentProps) => {
+  const navigate = useNavigate();
+
   return (
     <div>
       <div style={{ marginBottom: "1.5rem" }}>
@@ -45,15 +49,9 @@ export const AlgorithmContent = ({
           <span style={{ fontWeight: "bold", fontSize: "0.9rem" }}>Tags: </span>
           {algorithm.tags.map((tag) => (
             <span
+              onClick={() => navigate(`/algorithms?tag=${tag}`)}
               key={tag}
-              style={{
-                display: "inline-block",
-                backgroundColor: "#e1e1e1",
-                padding: "2px 6px",
-                borderRadius: "3px",
-                margin: "2px",
-                fontSize: "0.8rem",
-              }}
+              className="algorithm-tag"
             >
               {tag}
             </span>

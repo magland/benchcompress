@@ -4,9 +4,10 @@ interface TaggableItem {
   tags: string[];
 }
 
-export function useTagFilter<T extends TaggableItem>(items: T[]) {
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
+export function useTagFilter<T extends TaggableItem>(
+  items: T[],
+  selectedTags: string[],
+) {
   const availableTags = useMemo(() => {
     const tagSet = new Set<string>();
     items.forEach((item) => {
@@ -22,16 +23,8 @@ export function useTagFilter<T extends TaggableItem>(items: T[]) {
     );
   }, [items, selectedTags]);
 
-  const toggleTag = (tag: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
-    );
-  };
-
   return {
-    selectedTags,
     availableTags,
     filteredItems,
-    toggleTag,
   };
 }

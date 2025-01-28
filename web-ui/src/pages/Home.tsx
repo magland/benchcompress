@@ -81,21 +81,39 @@ export default function Home({ benchmarkData }: HomeProps) {
 
   console.log("chartData", chartData);
 
-  // Set up tag filtering for datasets
+  // Get selected tags from URL
+  const searchParams = new URLSearchParams(location.search);
+  const selectedTags = searchParams.get("tag")?.split(",") || [];
+
+  // Set up tag filtering for datasets and algorithms
   const {
-    selectedTags: datasetTags,
     availableTags: availableDatasetTags,
     filteredItems: filteredDatasets,
-    toggleTag: toggleDatasetTag,
-  } = useTagFilter(benchmarkData?.datasets || []);
+  } = useTagFilter(
+    benchmarkData?.datasets || [],
+    location.pathname.includes("/datasets") ? selectedTags : [],
+  );
 
-  // Set up tag filtering for algorithms
   const {
-    selectedTags: algorithmTags,
     availableTags: availableAlgorithmTags,
     filteredItems: filteredAlgorithms,
-    toggleTag: toggleAlgorithmTag,
-  } = useTagFilter(benchmarkData?.algorithms || []);
+  } = useTagFilter(
+    benchmarkData?.algorithms || [],
+    location.pathname.includes("/algorithms") ? selectedTags : [],
+  );
+
+  // Handle tag toggling by updating URL
+  const handleTagToggle = (tag: string) => {
+    const newTags = selectedTags.includes(tag)
+      ? selectedTags.filter((t) => t !== tag)
+      : [...selectedTags, tag];
+
+    const params = new URLSearchParams();
+    if (newTags.length > 0) {
+      params.set("tag", newTags.join(","));
+    }
+    navigate({ search: params.toString() });
+  };
 
   return (
     <div>
@@ -216,15 +234,15 @@ export default function Home({ benchmarkData }: HomeProps) {
             <DatasetTable
               filteredDatasets={filteredDatasets}
               availableDatasetTags={availableDatasetTags}
-              datasetTags={datasetTags}
-              toggleDatasetTag={toggleDatasetTag}
+              selectedTags={selectedTags}
+              toggleTag={handleTagToggle}
             />
           ) : (
             <AlgorithmTable
               filteredAlgorithms={filteredAlgorithms}
               availableAlgorithmTags={availableAlgorithmTags}
-              algorithmTags={algorithmTags}
-              toggleAlgorithmTag={toggleAlgorithmTag}
+              selectedTags={selectedTags}
+              toggleTag={handleTagToggle}
             />
           )}
         </div>

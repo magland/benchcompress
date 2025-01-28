@@ -1,4 +1,6 @@
 import { Dataset, BenchmarkData } from "../../types";
+import { useNavigate } from "react-router-dom";
+import "./DatasetContent.css";
 import TimeseriesView from "./TimeseriesView";
 import { BenchmarkCharts } from "../benchmark/charts/BenchmarkCharts";
 import { BenchmarkTable } from "../benchmark/table/BenchmarkTable";
@@ -21,6 +23,7 @@ export const DatasetContent = ({
   benchmarkData,
   chartData,
 }: DatasetContentProps) => {
+  const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(1200);
 
@@ -66,14 +69,8 @@ export const DatasetContent = ({
           {dataset.tags.map((tag) => (
             <span
               key={tag}
-              style={{
-                display: "inline-block",
-                backgroundColor: "#e1e1e1",
-                padding: "2px 6px",
-                borderRadius: "3px",
-                margin: "2px",
-                fontSize: "0.8rem",
-              }}
+              className="dataset-tag"
+              onClick={() => navigate(`/datasets?tag=${tag}`)}
             >
               {tag}
             </span>

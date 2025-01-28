@@ -5,6 +5,7 @@ import { ScrollToTop } from "./components/ScrollToTop";
 import "./components/AppHeader.css";
 import Home from "./pages/Home";
 import About from "./pages/About";
+import Paper from "./pages/Paper";
 import { BenchmarkData } from "./types";
 
 function App() {
@@ -111,16 +112,28 @@ function App() {
                 </span>
               </span>
             </Link>
-            <Link
-              to="/about"
-              style={{
-                color: "#0066cc",
-                textDecoration: "none",
-                fontWeight: "500",
-              }}
-            >
-              About
-            </Link>
+            <div style={{ display: "flex", gap: "1.5rem" }}>
+              <Link
+                to="/paper"
+                style={{
+                  color: "#0066cc",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+              >
+                Paper
+              </Link>
+              <Link
+                to="/about"
+                style={{
+                  color: "#0066cc",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+              >
+                About
+              </Link>
+            </div>
           </div>
         </nav>
         <main>
@@ -148,6 +161,7 @@ function App() {
                 element={<Home benchmarkData={benchmarkData} />}
               />
               <Route path="/about" element={<About />} />
+              <Route path="/paper" element={<Paper />} />
             </Routes>
           )}
         </main>
