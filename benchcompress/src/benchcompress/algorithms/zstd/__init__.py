@@ -104,6 +104,16 @@ def zstd_markov_zrle_encode(x: np.ndarray, level: int) -> bytes:
     # Get run lengths for zero/non-zero sequences
     run_lengths = get_run_lengths(x)
 
+    # Determine run length dtype code
+    if run_lengths.dtype == np.uint8:
+        run_length_dtype_code = 0
+    elif run_lengths.dtype == np.uint16:
+        run_length_dtype_code = 1
+    elif run_lengths.dtype == np.uint32:
+        run_length_dtype_code = 2
+    else:
+        raise ValueError(f"Unsupported run length dtype: {run_lengths.dtype}")
+
     # Extract non-zero data
     non_zero_arrays = []
     array_pos = 0
@@ -130,13 +140,14 @@ def zstd_markov_zrle_encode(x: np.ndarray, level: int) -> bytes:
     initial_bytes = initial.tobytes()
     run_lengths_bytes = run_lengths.tobytes()
 
-    # Create header with lengths
+    # Create header with lengths and dtype code
     header = struct.pack(
-        "QQQQ",
+        "QQQQB",
         len(coeffs_bytes),
         len(initial_bytes),
         len(run_lengths_bytes),
         len(run_lengths),
+        run_length_dtype_code,
     )
 
     # Compress residuals
@@ -153,9 +164,9 @@ def zstd_markov_zrle_decode(x: bytes, dtype: str) -> np.ndarray:
     import struct
 
     # Extract header
-    header_size = struct.calcsize("QQQQ")
-    coeffs_len, initial_len, run_lengths_len, num_run_lengths = struct.unpack(
-        "QQQQ", x[:header_size]
+    header_size = struct.calcsize("QQQQB")
+    coeffs_len, initial_len, run_lengths_len, num_run_lengths, run_length_dtype_code = (
+        struct.unpack("QQQQB", x[:header_size])
     )
 
     # Extract components
@@ -164,8 +175,19 @@ def zstd_markov_zrle_decode(x: bytes, dtype: str) -> np.ndarray:
     pos += coeffs_len
     initial = np.frombuffer(x[pos : pos + initial_len], dtype=dtype)
     pos += initial_len
-    run_lengths = np.frombuffer(x[pos : pos + run_lengths_len], dtype=np.uint32)
+
+    # Get run lengths with proper dtype
+    if run_length_dtype_code == 0:
+        run_lengths = np.frombuffer(x[pos : pos + run_lengths_len], dtype=np.uint8)
+    elif run_length_dtype_code == 1:
+        run_lengths = np.frombuffer(x[pos : pos + run_lengths_len], dtype=np.uint16)
+    elif run_length_dtype_code == 2:
+        run_lengths = np.frombuffer(x[pos : pos + run_lengths_len], dtype=np.uint32)
+    else:
+        raise ValueError(f"Unsupported run length dtype code: {run_length_dtype_code}")
     pos += run_lengths_len
+
+    assert len(run_lengths) == num_run_lengths
 
     # Decompress residuals
     decompressor = zstd.ZstdDecompressor()
