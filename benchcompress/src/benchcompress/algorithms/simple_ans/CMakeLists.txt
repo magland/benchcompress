@@ -31,6 +31,9 @@ pybind11_add_module(markov_reconstruct_cpp_ext markov_reconstruct.cpp)
 pybind11_add_module(markov_predict_cpp_ext markov_predict.cpp)
 target_link_libraries(markov_predict_cpp_ext PRIVATE Eigen3::Eigen)
 
-# Install both modules
-install(TARGETS markov_reconstruct_cpp_ext markov_predict_cpp_ext
+# Build get_run_lengths module
+pybind11_add_module(get_run_lengths_cpp_ext get_run_lengths.cpp)
+
+# Install all modules
+install(TARGETS markov_reconstruct_cpp_ext markov_predict_cpp_ext get_run_lengths_cpp_ext
         DESTINATION benchcompress/algorithms/simple_ans)

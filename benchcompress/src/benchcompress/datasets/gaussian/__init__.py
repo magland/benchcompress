@@ -10,7 +10,7 @@ def create_gaussian(*, n_samples: int, stddev: float, seed: int) -> np.ndarray:
     return x
 
 
-tags = ["integer", "discrete", "synthetic"]
+tags = ["integer", "discrete", "synthetic", "i.i.d."]
 
 datasets = [
     {

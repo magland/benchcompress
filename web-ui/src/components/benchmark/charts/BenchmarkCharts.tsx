@@ -51,6 +51,7 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
               height: 400,
               margin: { t: 5, r: 30, l: 250, b: 30 },
               xaxis: { title: "Ratio" },
+              dragmode: false,
             }}
             config={{ displayModeBar: false }}
           />

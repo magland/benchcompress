@@ -208,7 +208,7 @@ datasets = [
                 num_samples=500_000, num_channels=1, start_channel=45
             ).flatten()
         ),
-        "tags": ["continuous", "neurophysiology", "filtered"],
+        "tags": tags + ["filtered"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -220,7 +220,7 @@ datasets = [
                 num_samples=500_000, num_channels=1, start_channel=101
             ).flatten()
         ),
-        "tags": ["continuous", "neurophysiology", "filtered"],
+        "tags": tags + ["filtered"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -232,7 +232,7 @@ datasets = [
                 num_samples=500_000, num_channels=1, start_channel=0
             ).flatten()
         ),
-        "tags": ["continuous", "neurophysiology", "filtered"],
+        "tags": tags + ["filtered"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -244,7 +244,7 @@ datasets = [
                 num_samples=500_000, num_channels=1, start_channel=45
             ).flatten()
         ),
-        "tags": ["continuous", "neurophysiology", "filtered", "sparse"],
+        "tags": tags + ["filtered", "sparse"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -256,7 +256,7 @@ datasets = [
                 num_samples=500_000, num_channels=1, start_channel=101
             ).flatten()
         ),
-        "tags": ["continuous", "neurophysiology", "filtered", "sparse"],
+        "tags": tags + ["filtered", "sparse"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -268,7 +268,7 @@ datasets = [
                 num_samples=500_000, num_channels=1, start_channel=0
             ).flatten()
         ),
-        "tags": ["continuous", "neurophysiology", "filtered", "sparse"],
+        "tags": tags + ["filtered", "sparse"],
         "source_file": SOURCE_FILE,
     },
 ]

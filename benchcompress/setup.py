@@ -47,6 +47,8 @@ setup(
         CMakeExtension("benchcompress.algorithms.simple_ans.markov_reconstruct_cpp_ext",
                       sourcedir="src/benchcompress/algorithms/simple_ans"),
         CMakeExtension("benchcompress.algorithms.simple_ans.markov_predict_cpp_ext",
+                      sourcedir="src/benchcompress/algorithms/simple_ans"),
+        CMakeExtension("benchcompress.algorithms.simple_ans.get_run_lengths_cpp_ext",
                       sourcedir="src/benchcompress/algorithms/simple_ans")
     ],
     cmdclass={

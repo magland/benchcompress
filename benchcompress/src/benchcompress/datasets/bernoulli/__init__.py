@@ -10,7 +10,7 @@ def create_bernoulli(*, n_samples: int, p: float, seed: int) -> np.ndarray:
     return x
 
 
-tags = ["binary", "integer", "discrete", "synthetic"]
+tags = ["binary", "integer", "discrete", "synthetic", "i.i.d."]
 
 datasets = [
     {
