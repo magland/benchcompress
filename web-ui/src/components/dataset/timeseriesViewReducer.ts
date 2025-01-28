@@ -13,7 +13,7 @@ export const initialState: TimeseriesViewState = {
   selectedIndex: -1,
   isDragging: false,
   lastDragX: 0,
-  xRange: { min: 0, max: 149 },
+  xRange: { min: 0, max: 999 },
 };
 
 // Action Types Union

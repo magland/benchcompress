@@ -1,12 +1,8 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ScrollToTop } from "./components/ScrollToTop";
 import Home from "./pages/Home";
-import Datasets from "./pages/Datasets";
-import Dataset from "./pages/Dataset";
-import Algorithms from "./pages/Algorithms";
-import Algorithm from "./pages/Algorithm";
 import About from "./pages/About";
 import { BenchmarkData } from "./types";
 
@@ -63,64 +59,18 @@ function App() {
             boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
           }}
         >
-          <ul
-            style={{
-              listStyle: "none",
-              padding: 0,
-              margin: 0,
-              display: "flex",
-              gap: "1.5rem",
-            }}
-          >
-            <li>
-              <Link
-                to="/home"
-                style={{
-                  color: "#0066cc",
-                  textDecoration: "none",
-                  fontWeight: "500",
-                }}
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/datasets"
-                style={{
-                  color: "#0066cc",
-                  textDecoration: "none",
-                  fontWeight: "500",
-                }}
-              >
-                Datasets
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/algorithms"
-                style={{
-                  color: "#0066cc",
-                  textDecoration: "none",
-                  fontWeight: "500",
-                }}
-              >
-                Algorithms
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/about"
-                style={{
-                  color: "#0066cc",
-                  textDecoration: "none",
-                  fontWeight: "500",
-                }}
-              >
-                About
-              </Link>
-            </li>
-          </ul>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Link
+              to="/about"
+              style={{
+                color: "#0066cc",
+                textDecoration: "none",
+                fontWeight: "500",
+              }}
+            >
+              About
+            </Link>
+          </div>
         </nav>
         <main>
           {isLoading ? (
@@ -129,41 +79,22 @@ function App() {
             <div>Error: {error}</div>
           ) : (
             <Routes>
-              <Route
-                path="/home"
-                element={<Home benchmarkData={benchmarkData} />}
-              />
-              <Route
-                path="/"
-                element={<Home benchmarkData={benchmarkData} />}
-              />
+              <Route path="/" element={<Navigate to="/datasets" replace />} />
               <Route
                 path="/datasets"
-                element={<Datasets datasets={benchmarkData?.datasets || []} />}
+                element={<Home benchmarkData={benchmarkData} />}
               />
               <Route
                 path="/algorithms"
-                element={
-                  <Algorithms algorithms={benchmarkData?.algorithms || []} />
-                }
+                element={<Home benchmarkData={benchmarkData} />}
               />
               <Route
                 path="/dataset/:datasetName"
-                element={
-                  <Dataset
-                    datasets={benchmarkData?.datasets || []}
-                    benchmarkData={benchmarkData}
-                  />
-                }
+                element={<Home benchmarkData={benchmarkData} />}
               />
               <Route
                 path="/algorithm/:algorithmName"
-                element={
-                  <Algorithm
-                    algorithms={benchmarkData?.algorithms || []}
-                    benchmarkData={benchmarkData}
-                  />
-                }
+                element={<Home benchmarkData={benchmarkData} />}
               />
               <Route path="/about" element={<About />} />
             </Routes>

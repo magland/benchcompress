@@ -91,7 +91,7 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
       const shape = client.getShape();
       dispatch({
         type: "SET_X_RANGE",
-        range: { min: 0, max: Math.min(149, shape - 1) },
+        range: { min: 0, max: Math.min(999, shape - 1) },
       });
     }
   }, [client]);
