@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ScrollToTop } from "./components/ScrollToTop";
+import "./components/AppHeader.css";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import { BenchmarkData } from "./types";
@@ -40,10 +41,8 @@ function App() {
       <ScrollToTop />
       <div
         style={{
-          paddingTop: "5rem",
-          paddingLeft: "2rem",
-          paddingRight: "2rem",
-          paddingBottom: "2rem",
+          paddingTop: "3rem",
+          padding: "3rem 2rem 2rem 2rem",
         }}
       >
         <nav
@@ -52,14 +51,66 @@ function App() {
             top: 0,
             left: 0,
             right: 0,
-            padding: "1rem 2rem",
+            padding: "0.35rem min(2rem, 4%)",
             backgroundColor: "white",
-            borderBottom: "1px solid #eaeaea",
+            // borderBottom: "1px solid #eaeaea",
             zIndex: 1000,
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            // boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
           }}
         >
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              minHeight: "32px",
+            }}
+          >
+            <Link
+              to="/datasets"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                textDecoration: "none",
+                minWidth: 0,
+                maxWidth: "calc(100% - 80px)",
+              }}
+            >
+              <img
+                src="/benchcompress/logo.svg"
+                alt="Benchcompress Logo"
+                style={{
+                  width: "28px",
+                  height: "28px",
+                  marginRight: "10px",
+                  flexShrink: 0,
+                }}
+              />
+              <span
+                style={{
+                  minWidth: 0,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "1rem",
+                    fontWeight: "500",
+                    color: "#2c2c2c",
+                  }}
+                >
+                  Benchcompress
+                </span>
+                <span className="app-header-subtitle">
+                  {" · "}
+                  <span style={{ fontSize: "1rem", color: "#777" }}>
+                    Comparing compression algorithms for numeric arrays
+                  </span>
+                </span>
+              </span>
+            </Link>
             <Link
               to="/about"
               style={{

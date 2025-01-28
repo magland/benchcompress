@@ -40,3 +40,19 @@ export interface BenchmarkData {
   algorithms: Algorithm[];
   datasets: Dataset[];
 }
+
+export interface TabItem {
+  id: string;
+  label: string;
+  route: string;
+}
+
+export interface TabsState {
+  tabs: TabItem[];
+  activeTabId: string;
+}
+
+export type TabAction =
+  | { type: "ADD_TAB"; payload: { id: string; label: string; route: string } }
+  | { type: "SET_ACTIVE_TAB"; payload: string }
+  | { type: "REORDER_TABS"; payload: { fromIndex: number; toIndex: number } };
