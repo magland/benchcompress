@@ -13,9 +13,9 @@ const About: React.FC = () => {
         style={{ fontSize: "1.1rem", lineHeight: "1.6", marginBottom: "2rem" }}
       >
         Benchcompress is a benchmarking framework for evaluating compression
-        algorithms on numeric array datasets, with a focus on scientific data.
-        It measures compression ratios and performance metrics across various
-        algorithms and datasets.
+        algorithms on numeric timeseries datasets, with a focus on scientific
+        data. It measures compression ratios and performance metrics across
+        various algorithms and datasets.
       </p>
 
       <p>

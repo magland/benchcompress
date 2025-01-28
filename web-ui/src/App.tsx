@@ -107,7 +107,8 @@ function App() {
                 <span className="app-header-subtitle">
                   {" · "}
                   <span style={{ fontSize: "1rem", color: "#777" }}>
-                    Comparing compression algorithms for numeric arrays
+                    Comparing compression algorithms for numeric time series
+                    data
                   </span>
                 </span>
               </span>

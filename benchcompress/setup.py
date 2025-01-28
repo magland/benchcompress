@@ -61,7 +61,7 @@ setup(
         ],
     },
     author="Jeremy Magland",
-    description="Benchmarking compression methods for numeric arrays",
+    description="Benchmarking compression methods for numeric time series data",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     keywords="compression, signal processing",

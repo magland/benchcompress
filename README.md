@@ -1,12 +1,12 @@
 # benchcompress
 
-A benchmarking framework for evaluating compression algorithms on numeric array datasets, with a focus on scientific data.
+A benchmarking framework for evaluating compression algorithms on numeric timeseries datasets, with a focus on scientific data.
 
 Latest benchmark results: https://magland.github.io/benchcompress/
 
 ## Overview
 
-Benchcompress is a comprehensive benchmarking framework for evaluating compression algorithms on numeric array datasets. The system follows an automated workflow:
+Benchcompress is a comprehensive benchmarking framework for evaluating compression algorithms on numeric timeseries datasets. The system follows an automated workflow:
 
 1. **Defining Components**
    - Algorithms are implemented in `benchcompress/src/benchcompress/algorithms/`
@@ -91,7 +91,7 @@ H(X) = -\sum_{i} p(x_i) \log p(x_i).
 $$
 Here, $p(x_i)$ represents the probability of occurrence of the $i$-th symbol $x_i$ in the discrete distribution.
 
-In practice, achieving this theoretical compression ratio often requires sophisticated encoding techniques. While arithmetic encoding provides one such method, it is challenging to implement and can be computationally inefficient. A more modern and efficient alternative is Asymmetric Numeric Systems (ANS), which closely approaches the theoretical limit and is incorporated into state-of-the-art compressors such as ZStandard. However, these algorithms are primarily optimized for structured data types, such as text, rather than for scientific numerical data.
+In practice, achieving this theoretical compression ratio often requires sophisticated encoding techniques. While arithmetic encoding provides one such method, it is challenging to implement and can be computationally inefficient. A more modern and efficient alternative is Asymmetric Numeric Systems (ANS), which closely approaches the theoretical limit and is incorporated into state-of-the-art compressors such as ZStandard. However, these algorithms are primarily optimized for structured data types, such as text, rather than for scientific numerical timeseries data.
 
 In our benchmarks, we evaluate a simple implementation of ANS using a Python package we developed, called \texttt{simple\_ans}. As anticipated, ANS demonstrates superior performance when compressing i.i.d. samples from a discrete distribution. However, its efficiency diminishes when handling more structured data, such as continuous signals (e.g., voltage traces in electrophysiology).
 
