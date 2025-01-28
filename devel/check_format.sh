@@ -6,7 +6,7 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 
 # Check Python code formatting
 echo "Checking Python code formatting..."
-if ! black --check "$PROJECT_ROOT/zia_benchmark/src/zia_benchmark"; then
+if ! black --check "$PROJECT_ROOT/benchcompress/src/benchcompress"; then
     echo "Python code is not properly formatted!"
     echo "Please run './devel/format_code.sh' to format the code"
     exit 1

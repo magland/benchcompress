@@ -28,7 +28,7 @@ class CMakeBuild(build_ext):
         subprocess.check_call(["cmake", "--build", "."] + build_args, cwd=self.build_temp)
 
 setup(
-    name="zia_benchmark",
+    name="benchcompress",
     version="0.1.0",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
@@ -44,10 +44,10 @@ setup(
         "pybind11>=2.11.1"
     ],
     ext_modules=[
-        CMakeExtension("zia_benchmark.algorithms.simple_ans.markov_reconstruct_cpp_ext",
-                      sourcedir="src/zia_benchmark/algorithms/simple_ans"),
-        CMakeExtension("zia_benchmark.algorithms.simple_ans.markov_predict_cpp_ext",
-                      sourcedir="src/zia_benchmark/algorithms/simple_ans")
+        CMakeExtension("benchcompress.algorithms.simple_ans.markov_reconstruct_cpp_ext",
+                      sourcedir="src/benchcompress/algorithms/simple_ans"),
+        CMakeExtension("benchcompress.algorithms.simple_ans.markov_predict_cpp_ext",
+                      sourcedir="src/benchcompress/algorithms/simple_ans")
     ],
     cmdclass={
         "build_ext": CMakeBuild,
@@ -55,7 +55,7 @@ setup(
     python_requires=">=3.8",
     entry_points={
         "console_scripts": [
-            "zia-benchmark=zia_benchmark.cli:main",
+            "benchcompress=benchcompress.cli:main",
         ],
     },
     author="Jeremy Magland",

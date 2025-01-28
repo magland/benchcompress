@@ -33,4 +33,4 @@ target_link_libraries(markov_predict_cpp_ext PRIVATE Eigen3::Eigen)
 
 # Install both modules
 install(TARGETS markov_reconstruct_cpp_ext markov_predict_cpp_ext
-        DESTINATION zia_benchmark/algorithms/simple_ans)
+        DESTINATION benchcompress/algorithms/simple_ans)

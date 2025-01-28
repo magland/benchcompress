@@ -1,16 +1,16 @@
-# zia
+# benchcompress
 
 A benchmarking framework for evaluating compression algorithms on numeric array datasets, with a focus on scientific data.
 
-Latest benchmark results: https://magland.github.io/zia/
+Latest benchmark results: https://magland.github.io/benchcompress/
 
 ## Overview
 
-Zia is a comprehensive benchmarking framework for evaluating compression algorithms on numeric array datasets. The system follows an automated workflow:
+Benchcompress is a comprehensive benchmarking framework for evaluating compression algorithms on numeric array datasets. The system follows an automated workflow:
 
 1. **Defining Components**
-   - Algorithms are implemented in `zia_benchmark/src/zia_benchmark/algorithms/`
-   - Datasets are defined in `zia_benchmark/src/zia_benchmark/datasets/`
+   - Algorithms are implemented in `benchcompress/src/benchcompress/algorithms/`
+   - Datasets are defined in `benchcompress/src/benchcompress/datasets/`
    - Each component specifies metadata like version, tags, and compatibility requirements
 
 2. **Automated Benchmarking**
@@ -27,7 +27,7 @@ Zia is a comprehensive benchmarking framework for evaluating compression algorit
    - Caching is based on algorithm and dataset versions
 
 4. **Web Interface**
-   - Interactive visualization at https://magland.github.io/zia/
+   - Interactive visualization at https://magland.github.io/benchcompress/
    - Filter and sort results by dataset or algorithm
    - Visual charts for comparing performance metrics
    - Export results to CSV for further analysis
@@ -36,19 +36,19 @@ Zia is a comprehensive benchmarking framework for evaluating compression algorit
 
 The project consists of two main components:
 
-- `zia_benchmark/`: Python package containing the core benchmarking framework, algorithms, and datasets
+- `benchcompress/`: Python package containing the core benchmarking framework, algorithms, and datasets
 - `web-ui/`: React-based web interface for visualizing benchmark results
 
 ### Local Development Setup
 
 1. Install Python dependencies:
 ```bash
-cd zia_benchmark
+cd benchcompress
 pip install -e .
 
-zia-benchmark --help
-zia-benchmark list
-zia-benchmark run --help
+benchcompress --help
+benchcompress list
+benchcompress run --help
 ```
 
 2. Install web UI dependencies:

@@ -16,10 +16,8 @@ from ._memobin import (
 
 
 system_version = "v5"
-GITHUB_ALGORITHMS_PREFIX = "https://github.com/magland/zia/blob/main/zia_benchmark/src/zia_benchmark/algorithms/"
-GITHUB_DATASETS_PREFIX = (
-    "https://github.com/magland/zia/blob/main/zia_benchmark/src/zia_benchmark/datasets/"
-)
+GITHUB_ALGORITHMS_PREFIX = "https://github.com/magland/benchcompress/blob/main/benchcompress/src/benchcompress/algorithms/"
+GITHUB_DATASETS_PREFIX = "https://github.com/magland/benchcompress/blob/main/benchcompress/src/benchcompress/datasets/"
 
 
 def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:

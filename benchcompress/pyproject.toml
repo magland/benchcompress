@@ -3,7 +3,7 @@ requires = ["scikit-build-core>=0.5.0", "pybind11>=2.11.1"]
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "zia_benchmark"
+name = "benchcompress"
 version = "0.1.0"
 description = "Benchmarking compression methods for numeric arrays"
 readme = "README.md"
@@ -26,9 +26,9 @@ dependencies = [
 
 [tool.scikit-build]
 cmake.minimum-version = "3.15"
-cmake.source-dir = "src/zia_benchmark/algorithms/simple_ans"
+cmake.source-dir = "src/benchcompress/algorithms/simple_ans"
 cmake.build-type = "Release"
-wheel.packages = ["src/zia_benchmark"]
+wheel.packages = ["src/benchcompress"]
 
 [project.scripts]
-zia-benchmark = "zia_benchmark.cli:main"
+benchcompress = "benchcompress.cli:main"

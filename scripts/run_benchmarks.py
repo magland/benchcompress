@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from zia_benchmark import run_benchmarks
+from benchcompress import run_benchmarks
 
 def format_size(size_bytes: float) -> str:
     """Format size in bytes to human readable string"""

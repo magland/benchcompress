@@ -24,14 +24,4 @@
             stroke-linecap="round"/>
     </g>
   </g>
-
-  <!-- "ZIA" text -->
-  <text x="256" y="380"
-        font-family="Arial, sans-serif"
-        font-size="72"
-        font-weight="bold"
-        text-anchor="middle"
-        fill="#1e40af">
-    ZIA
-  </text>
 </svg>

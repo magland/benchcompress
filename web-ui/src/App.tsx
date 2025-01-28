@@ -23,7 +23,7 @@ function App() {
         setIsLoading(true);
         setError(null);
         const response = await axios.get(
-          "https://raw.githubusercontent.com/magland/zia/benchmark-results/benchmark_results/results.json",
+          "https://raw.githubusercontent.com/magland/benchcompress/benchmark-results/benchmark_results/results.json",
         );
         setBenchmarkData(response.data);
       } catch (error) {
@@ -40,7 +40,7 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter basename="/zia">
+    <BrowserRouter basename="/benchcompress">
       <ScrollToTop />
       <div
         style={{

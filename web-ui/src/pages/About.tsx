@@ -7,20 +7,20 @@ const About: React.FC = () => {
 
   return (
     <div style={{ maxWidth: "800px", margin: "0 auto" }}>
-      <h1>About Zia</h1>
+      <h1>About Benchcompress</h1>
 
       <p
         style={{ fontSize: "1.1rem", lineHeight: "1.6", marginBottom: "2rem" }}
       >
-        Zia is a benchmarking framework for evaluating compression algorithms on
-        numeric array datasets, with a focus on scientific data. It measures
-        compression ratios and performance metrics across various algorithms and
-        datasets.
+        Benchcompress is a benchmarking framework for evaluating compression
+        algorithms on numeric array datasets, with a focus on scientific data.
+        It measures compression ratios and performance metrics across various
+        algorithms and datasets.
       </p>
 
       <p>
         <a
-          href="https://github.com/magland/zia"
+          href="https://github.com/magland/benchcompress"
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: "#0066cc" }}

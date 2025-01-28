@@ -1,17 +1,17 @@
 # %%
 import numpy as np
-from zia_benchmark._filters import bandpass_filter, highpass_filter
-from zia_benchmark._compress_ints_lossless import compress_ints_lossless
-from zia_benchmark.datasets import datasets
+from benchcompress._filters import bandpass_filter, highpass_filter
+from benchcompress._compress_ints_lossless import compress_ints_lossless
+from benchcompress.datasets import datasets
 # %%
 import numpy as np
 
 # %%
 import numpy as np
-from zia_benchmark._filters import bandpass_filter, highpass_filter
-from zia_benchmark._data_loaders import load_real_000876, load_real_000409, load_real_001290
-from zia_benchmark._compress_ints_lossless import compress_ints_lossless
-from zia_benchmark._analysis import linear_fit, compute_entropy_per_sample, estimate_noise_level
+from benchcompress._filters import bandpass_filter, highpass_filter
+from benchcompress._data_loaders import load_real_000876, load_real_000409, load_real_001290
+from benchcompress._compress_ints_lossless import compress_ints_lossless
+from benchcompress._analysis import linear_fit, compute_entropy_per_sample, estimate_noise_level
 import matplotlib.pyplot as plt
 
 # %%
