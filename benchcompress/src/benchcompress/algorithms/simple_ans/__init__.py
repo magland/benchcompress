@@ -290,6 +290,8 @@ def simple_ans_markov_sparse_encode(x: np.ndarray) -> bytes:
         run_length_dtype_code = 0
     elif run_lengths.dtype == np.uint16:
         run_length_dtype_code = 1
+    elif run_lengths.dtype == np.uint32:
+        run_length_dtype_code = 2
     else:
         raise ValueError(f"Unsupported run length dtype: {run_lengths.dtype}")
 
@@ -365,6 +367,8 @@ def simple_ans_markov_sparse_decode(x: bytes, dtype: str) -> np.ndarray:
         run_lengths = np.frombuffer(x[bitstream_end:], dtype=np.uint8)
     elif run_length_dtype_code == 1:
         run_lengths = np.frombuffer(x[bitstream_end:], dtype=np.uint16)
+    elif run_length_dtype_code == 2:
+        run_lengths = np.frombuffer(x[bitstream_end:], dtype=np.uint32)
     else:
         raise ValueError(f"Unsupported run length dtype code: {run_length_dtype_code}")
 
