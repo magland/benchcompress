@@ -33,11 +33,11 @@ def print_actual_compression_ratios(X):
     buf_zstd = compress_ints_lossless(X, method='zstd')
     buf_zlib = compress_ints_lossless(X, method='zlib')
     buf_lzma = compress_ints_lossless(X, method='lzma')
-    buf_ans = compress_ints_lossless(X, method='simple_ans')
+    buf_ans = compress_ints_lossless(X, method='ans')
     print(f'Zstd compression ratio: {len(X) * X.itemsize / len(buf_zstd):.2f}')
     print(f'Zlib compression ratio: {len(X) * X.itemsize / len(buf_zlib):.2f}')
     print(f'Lzma compression ratio: {len(X) * X.itemsize / len(buf_lzma):.2f}')
-    print(f'simple_ans compression ratio: {len(X) * X.itemsize / len(buf_ans):.2f}')
+    print(f'ANS compression ratio: {len(X) * X.itemsize / len(buf_ans):.2f}')
 
 def get_marcovian_prediction_residual(X, M):
     sequences = np.array([X[i:i+M] for i in range(len(X) - 2 * M + 1)])

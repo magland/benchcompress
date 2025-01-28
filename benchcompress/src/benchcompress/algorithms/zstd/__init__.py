@@ -1,6 +1,7 @@
 import numpy as np
-from ..simple_ans.markov_reconstruct import markov_reconstruct as markov_reconstruct_cpp
-from ..simple_ans.markov_predict import markov_predict as markov_predict_cpp
+from ..ans.markov_reconstruct import markov_reconstruct as markov_reconstruct_cpp
+from ..ans.markov_predict import markov_predict as markov_predict_cpp
+from ..ans.get_run_lengths import get_run_lengths
 
 
 SOURCE_FILE = "zstd/__init__.py"
@@ -94,6 +95,104 @@ def zstd_markov_decode(x: bytes, dtype: str) -> np.ndarray:
     return output
 
 
+def zstd_markov_zrle_encode(x: np.ndarray, level: int) -> bytes:
+    import zstandard as zstd
+    import struct
+
+    assert x.ndim == 1
+
+    # Get run lengths for zero/non-zero sequences
+    run_lengths = get_run_lengths(x)
+
+    # Extract non-zero data
+    non_zero_arrays = []
+    array_pos = 0
+    i = 0
+    while i < len(run_lengths):
+        non_zero_len = int(run_lengths[i])
+        if non_zero_len > 0:
+            non_zero_arrays.append(x[array_pos : array_pos + non_zero_len])
+            array_pos += non_zero_len
+        i += 1
+        if i < len(run_lengths):
+            array_pos += int(run_lengths[i])  # Skip zeros
+            i += 1
+
+    non_zero_data = np.concatenate(non_zero_arrays)
+
+    # Apply Markov prediction on non-zero data
+    coeffs, initial, resid = markov_predict_cpp(
+        non_zero_data, M=6, num_training_samples=10000
+    )
+
+    # Convert data to bytes
+    coeffs_bytes = coeffs.tobytes()
+    initial_bytes = initial.tobytes()
+    run_lengths_bytes = run_lengths.tobytes()
+
+    # Create header with lengths
+    header = struct.pack(
+        "QQQQ",
+        len(coeffs_bytes),
+        len(initial_bytes),
+        len(run_lengths_bytes),
+        len(run_lengths),
+    )
+
+    # Compress residuals
+    resid_bytes = resid.tobytes()
+    compressor = zstd.ZstdCompressor(level=level)
+    compressed_resid = compressor.compress(resid_bytes)
+
+    # Combine all parts
+    return header + coeffs_bytes + initial_bytes + run_lengths_bytes + compressed_resid
+
+
+def zstd_markov_zrle_decode(x: bytes, dtype: str) -> np.ndarray:
+    import zstandard as zstd
+    import struct
+
+    # Extract header
+    header_size = struct.calcsize("QQQQ")
+    coeffs_len, initial_len, run_lengths_len, num_run_lengths = struct.unpack(
+        "QQQQ", x[:header_size]
+    )
+
+    # Extract components
+    pos = header_size
+    coeffs = np.frombuffer(x[pos : pos + coeffs_len], dtype=np.float32)
+    pos += coeffs_len
+    initial = np.frombuffer(x[pos : pos + initial_len], dtype=dtype)
+    pos += initial_len
+    run_lengths = np.frombuffer(x[pos : pos + run_lengths_len], dtype=np.uint32)
+    pos += run_lengths_len
+
+    # Decompress residuals
+    decompressor = zstd.ZstdDecompressor()
+    resid_buf = decompressor.decompress(x[pos:])
+    resid = np.frombuffer(resid_buf, dtype=dtype)
+
+    # Reconstruct non-zero data
+    non_zero_data = markov_reconstruct_cpp(coeffs, initial, resid)
+
+    # Reconstruct full array using run lengths
+    non_zero_pos = 0
+    i = 0
+    segments = []
+    while i < len(run_lengths):
+        non_zero_len = int(run_lengths[i])
+        if non_zero_len > 0:
+            segment = non_zero_data[non_zero_pos : non_zero_pos + non_zero_len]
+            segments.append(segment)
+            non_zero_pos += non_zero_len
+        i += 1
+        if i < len(run_lengths):
+            segments.append(np.zeros(int(run_lengths[i]), dtype=non_zero_data.dtype))
+            i += 1
+
+    return np.concatenate(segments)
+
+
 algorithms = [
     {
         "name": "zstd-4",
@@ -174,6 +273,15 @@ algorithms = [
         "decode": lambda x, dtype: zstd_markov_decode(x, dtype),
         "description": "Zstandard compression at level 22 with Markov prediction for exploiting temporal correlations in the data.",
         "tags": ["zstd", "markov_prediction"],
+        "source_file": SOURCE_FILE,
+    },
+    {
+        "name": "zstd-22-markov-zrle",
+        "version": "1",
+        "encode": lambda x: zstd_markov_zrle_encode(x, level=22),
+        "decode": lambda x, dtype: zstd_markov_zrle_decode(x, dtype),
+        "description": "Zstandard compression at level 22 with Markov prediction and zero run-length encoding for sparse data.",
+        "tags": ["zstd", "markov_prediction", "zero_rle"],
         "source_file": SOURCE_FILE,
     },
 ]
