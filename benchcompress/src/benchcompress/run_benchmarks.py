@@ -31,12 +31,13 @@ def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:
     Returns:
         True if the algorithm should be applied to the dataset
     """
-    # If algorithm has delta_encoding or markov_prediction, dataset must have continuous, timeseries, 1d
+    # If algorithm has delta_encoding or markov_prediction, dataset must have continuous, timeseries, 1d, integer
     if "delta_encoding" in algorithm_tags or "markov_prediction" in algorithm_tags:
         if (
             "continuous" not in dataset_tags
             or "timeseries" not in dataset_tags
             or "1d" not in dataset_tags
+            or "integer" not in dataset_tags
         ):
             return False
 
@@ -371,6 +372,7 @@ def run_benchmarks(
                 for j in range(len(data)):
                     if data[j] != decoded[j]:
                         print(f"Error at index {j}: {data[j]} != {decoded[j]}")
+                        break
                 raise ValueError(
                     f"Decompression verification failed for {alg_name} on {dataset['name']}"
                 )

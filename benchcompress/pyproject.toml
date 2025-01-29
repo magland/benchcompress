@@ -22,7 +22,8 @@ dependencies = [
     "click",
     "numba",
     "pybind11>=2.11.1",
-    "segyio"
+    "segyio",
+    "lz4"
 ]
 
 [tool.scikit-build]

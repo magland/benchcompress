@@ -4,6 +4,7 @@ from .zstd import algorithms as zstd_algorithms
 from .ans import algorithms as ans_algorithms
 from .lzma import algorithms as lzma_algorithms
 from .brotli import algorithms as brotli_algorithms
+from .lz4 import algorithms as lz4_algorithms
 
 algorithms = (
     bzip2_algorithms
@@ -12,4 +13,5 @@ algorithms = (
     + ans_algorithms
     + lzma_algorithms
     + brotli_algorithms
+    + lz4_algorithms
 )
