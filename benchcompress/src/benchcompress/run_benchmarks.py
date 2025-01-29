@@ -235,6 +235,7 @@ def run_benchmarks(
                     and result.get("system_version", "") == system_version
                 ):
                     print("  Using cached result:")
+                    result["cache_status"] = "cached"
                     results.append(result)
                     continue
 
@@ -392,6 +393,7 @@ def run_benchmarks(
                 "array_shape": data.shape,
                 "array_dtype": dtype,
                 "timestamp": time.time(),
+                "cache_status": "new",
             }
             results.append(result)
 

@@ -15,6 +15,7 @@ interface BenchmarkStatus {
     compression_ratio: number;
     encode_time: number;
     decode_time: number;
+    cache_status: string;
   }>;
 }
 
@@ -179,6 +180,15 @@ export default function Monitor() {
                 >
                   Decode Time (ms)
                 </th>
+                <th
+                  style={{
+                    padding: "12px",
+                    textAlign: "center",
+                    borderBottom: "2px solid #ddd",
+                  }}
+                >
+                  Cache Status
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -186,7 +196,12 @@ export default function Monitor() {
                 <tr
                   key={index}
                   style={{
-                    backgroundColor: index % 2 === 0 ? "white" : "#fafafa",
+                    backgroundColor:
+                      benchmark.cache_status === "cached"
+                        ? "#f5f5f5"
+                        : index % 2 === 0
+                          ? "white"
+                          : "#fafafa",
                   }}
                 >
                   <td
@@ -225,6 +240,17 @@ export default function Monitor() {
                     }}
                   >
                     {(benchmark.decode_time * 1000).toFixed(2)}
+                  </td>
+                  <td
+                    style={{
+                      padding: "12px",
+                      textAlign: "center",
+                      borderBottom: "1px solid #ddd",
+                      color:
+                        benchmark.cache_status === "cached" ? "#888" : "#000",
+                    }}
+                  >
+                    {benchmark.cache_status}
                   </td>
                 </tr>
               ))}
