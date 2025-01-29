@@ -5,7 +5,9 @@ import requests
 
 SOURCE_FILE = "seismic/__init__.py"
 
-tags = ["real", "seismic", "float", "continuous", "timeseries", "2d"]
+tags = ["real", "seismic", "continuous", "timeseries", "1d"]
+tags_float = tags + ["float"]
+tags_integer = tags + ["integer"]
 
 
 def _load_seismic_data() -> np.ndarray:
@@ -42,6 +44,13 @@ def _load_seismic_data() -> np.ndarray:
     # print(np.max(first_nonzero_indices)) # 1607
     X = X[:, 1700:]
 
+    return X.ravel()
+
+
+def _load_quantized_seismic_data():
+    X = _load_seismic_data()
+    step = 10000
+    X = np.round(X / step).astype(np.int32)
     return X
 
 
@@ -51,7 +60,15 @@ datasets = [
         "version": "1",
         "description": "Seismic data from Roger Revelle voyage RR1508.",
         "create": lambda: _load_seismic_data(),
-        "tags": tags,
+        "tags": tags_float,
         "source_file": SOURCE_FILE,
-    }
+    },
+    {
+        "name": "seismic-04A-04B-quantized",
+        "version": "1",
+        "description": "Seismic data from Roger Revelle voyage RR1508, quantized.",
+        "create": lambda: _load_quantized_seismic_data(),
+        "tags": tags_integer,
+        "source_file": SOURCE_FILE,
+    },
 ]

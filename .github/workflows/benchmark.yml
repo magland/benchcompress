@@ -9,6 +9,8 @@ on:
   workflow_dispatch:  # Manual trigger
   push:
     branches: [ main ]  # Run on main branch pushes
+    paths:
+      - 'benchcompress/**'  # Run only if benchmarks are updated
 
 permissions:
   contents: write

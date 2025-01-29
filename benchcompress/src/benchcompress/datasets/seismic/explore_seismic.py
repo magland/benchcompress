@@ -36,6 +36,9 @@ for j in range(X.shape[0]):
 print(np.max(first_nonzero_indices))  # 1607
 X = X[:, 1700:]
 # %%
+plt.figure(figsize=(10, 5))
+plt.plot(X.ravel()[:12000])
+# %%
 print(X.shape)  # (4101, 2051)
 print(X[0, :5])  # [-2891.2651  -2550.8093  -2744.9373   -111.93254  6441.383  ]
 # %%
