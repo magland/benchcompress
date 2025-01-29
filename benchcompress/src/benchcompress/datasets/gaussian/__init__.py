@@ -1,7 +1,18 @@
 import numpy as np
+import os
 
 
 SOURCE_FILE = "gaussian/__init__.py"
+
+
+def _load_long_description():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    md_path = os.path.join(current_dir, "gaussian.md")
+    with open(md_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+LONG_DESCRIPTION = _load_long_description()
 
 
 def create_gaussian_quantized(
@@ -39,6 +50,7 @@ datasets = [
         "description": "Rounded Gaussian integers with σ=1.",
         "tags": tags_quantized,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "gaussian-q2",
@@ -49,6 +61,7 @@ datasets = [
         "description": "Rounded Gaussian integers with σ=2.",
         "tags": tags_quantized,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "gaussian-q3",
@@ -59,6 +72,7 @@ datasets = [
         "description": "Rounded Gaussian integers with σ=3.",
         "tags": tags_quantized,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "gaussian-q5",
@@ -69,6 +83,7 @@ datasets = [
         "description": "Rounded Gaussian integers with σ=5.",
         "tags": tags_quantized,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "gaussian-q8",
@@ -79,6 +94,7 @@ datasets = [
         "description": "Rounded Gaussian integers with σ=8.",
         "tags": tags_quantized,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "gaussian-flt1",
@@ -87,5 +103,6 @@ datasets = [
         "description": "Floating point Gaussian numbers with σ=1.",
         "tags": tags_float,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
 ]

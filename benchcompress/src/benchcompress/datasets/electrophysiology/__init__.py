@@ -1,11 +1,22 @@
 import numpy as np
 import lindi
+import os
 from typing import cast
 from ..._filters import bandpass_filter
 from ..._analysis import estimate_noise_level
 
 
 SOURCE_FILE = "electrophysiology/__init__.py"
+
+
+def _load_long_description():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    md_path = os.path.join(current_dir, "electrophysiology.md")
+    with open(md_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+LONG_DESCRIPTION = _load_long_description()
 
 tags = ["real", "electrophysiology", "timeseries", "1d", "integer", "continuous"]
 
@@ -178,6 +189,7 @@ datasets = [
         ).flatten(),
         "tags": tags,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "ephys-000409-ch101",
@@ -188,6 +200,7 @@ datasets = [
         ).flatten(),
         "tags": tags,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "ephys-001290-ch0",
@@ -198,6 +211,7 @@ datasets = [
         ).flatten(),
         "tags": tags,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "ephys-000876-ch45-filtered",
@@ -210,6 +224,7 @@ datasets = [
         ),
         "tags": tags + ["filtered"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "ephys-000409-ch101-filtered",
@@ -222,6 +237,7 @@ datasets = [
         ),
         "tags": tags + ["filtered"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "ephys-001290-ch0-filtered",
@@ -234,6 +250,7 @@ datasets = [
         ),
         "tags": tags + ["filtered"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "ephys-000876-ch45-sparse",
@@ -246,6 +263,7 @@ datasets = [
         ),
         "tags": tags + ["filtered", "sparse"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "ephys-000409-ch101-sparse",
@@ -258,6 +276,7 @@ datasets = [
         ),
         "tags": tags + ["filtered", "sparse"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "ephys-001290-ch0-sparse",
@@ -270,5 +289,6 @@ datasets = [
         ),
         "tags": tags + ["filtered", "sparse"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
 ]

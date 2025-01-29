@@ -3,7 +3,18 @@ import segyio
 import os
 import requests
 
+
 SOURCE_FILE = "seismic/__init__.py"
+
+
+def _load_long_description():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    md_path = os.path.join(current_dir, "seismic.md")
+    with open(md_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+LONG_DESCRIPTION = _load_long_description()
 
 tags = ["real", "seismic", "continuous", "timeseries", "1d"]
 tags_float = tags + ["float"]
@@ -62,6 +73,7 @@ datasets = [
         "create": lambda: _load_seismic_data(),
         "tags": tags_float,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "seismic-04A-04B-quantized",
@@ -70,5 +82,6 @@ datasets = [
         "create": lambda: _load_quantized_seismic_data(),
         "tags": tags_integer,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
 ]
