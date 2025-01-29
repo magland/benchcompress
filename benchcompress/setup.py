@@ -41,7 +41,8 @@ setup(
         "lindi",
         "brotli",
         "click",
-        "pybind11>=2.11.1"
+        "pybind11>=2.11.1",
+        "segyio"
     ],
     ext_modules=[
         CMakeExtension("benchcompress.algorithms.ans.markov_reconstruct_cpp_ext",
