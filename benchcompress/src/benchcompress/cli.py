@@ -2,7 +2,7 @@
 
 import click
 from typing import List, Optional
-from .run_benchmarks import run_benchmarks
+from .run_benchmarks.run_benchmarks import run_benchmarks
 from .algorithms import algorithms
 from .datasets import datasets
 
