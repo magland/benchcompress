@@ -4,7 +4,7 @@
 
 *Last updated: January 2025*
 
-**This is a draft paper, work in progress.**
+**Early draft, work in progress.**
 
 ## Abstract
 

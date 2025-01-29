@@ -1,6 +1,51 @@
 import Plot from "react-plotly.js";
 import { useState } from "react";
 
+interface BenchmarkBarChartProps {
+  title: string;
+  data: ChartData[];
+  dataKey: keyof Pick<
+    ChartData,
+    "compression_ratio" | "encode_speed" | "decode_speed"
+  >;
+  color: string;
+  xAxisTitle: string;
+}
+
+function BenchmarkBarChart({
+  title,
+  data,
+  dataKey,
+  color,
+  xAxisTitle,
+}: BenchmarkBarChartProps) {
+  return (
+    <div style={{ margin: "0 20px 20px 0" }}>
+      <h3 style={{ marginBottom: "10px" }}>{title}</h3>
+      <Plot
+        data={[
+          {
+            type: "bar",
+            orientation: "h",
+            y: data.map((d) => d.algorithm),
+            x: data.map((d) => d[dataKey]),
+            marker: { color },
+          },
+        ]}
+        layout={{
+          width: 700,
+          height: Math.max(300, data.length * 23 + 40),
+          margin: { t: 5, r: 30, l: 200, b: 30 },
+          xaxis: { title: xAxisTitle },
+          yaxis: { automargin: true, ticksuffix: "  " },
+          dragmode: false,
+        }}
+        config={{ displayModeBar: false }}
+      />
+    </div>
+  );
+}
+
 interface ChartData {
   algorithm: string;
   compression_ratio: number;
@@ -33,73 +78,34 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
           Sort by compression ratio
         </label>
       </div>
-      <div style={{ marginBottom: "30px" }}>
-        <div style={{ marginBottom: "20px" }}>
-          <h3 style={{ marginBottom: "10px" }}>Compression Ratio</h3>
-          <Plot
-            data={[
-              {
-                type: "bar",
-                orientation: "h",
-                y: sortedData.map((d) => d.algorithm),
-                x: sortedData.map((d) => d.compression_ratio),
-                marker: { color: "#8884d8" },
-              },
-            ]}
-            layout={{
-              width: 800,
-              // important not to specify height to allow it to be based on content
-              margin: { t: 5, r: 30, l: 250, b: 30 },
-              xaxis: { title: "Ratio" },
-              dragmode: false,
-            }}
-            config={{ displayModeBar: false }}
-          />
-        </div>
-
-        <div style={{ marginBottom: "20px" }}>
-          <h3 style={{ marginBottom: "10px" }}>Encode Speed (MB/s)</h3>
-          <Plot
-            data={[
-              {
-                type: "bar",
-                orientation: "h",
-                y: sortedData.map((d) => d.algorithm),
-                x: sortedData.map((d) => d.encode_speed),
-                marker: { color: "#82ca9d" },
-              },
-            ]}
-            layout={{
-              width: 800,
-              // important not to specify height to allow it to be based on content
-              margin: { t: 5, r: 30, l: 250, b: 30 },
-              xaxis: { title: "MB/s" },
-            }}
-            config={{ displayModeBar: false }}
-          />
-        </div>
-
-        <div style={{ marginBottom: "20px" }}>
-          <h3 style={{ marginBottom: "10px" }}>Decode Speed (MB/s)</h3>
-          <Plot
-            data={[
-              {
-                type: "bar",
-                orientation: "h",
-                y: sortedData.map((d) => d.algorithm),
-                x: sortedData.map((d) => d.decode_speed),
-                marker: { color: "#ff7300" },
-              },
-            ]}
-            layout={{
-              width: 800,
-              // important not to specify height to allow it to be based on content
-              margin: { t: 5, r: 30, l: 250, b: 30 },
-              xaxis: { title: "MB/s" },
-            }}
-            config={{ displayModeBar: false }}
-          />
-        </div>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "20px",
+        }}
+      >
+        <BenchmarkBarChart
+          title="Compression Ratio"
+          data={sortedData}
+          dataKey="compression_ratio"
+          color="#8884d8"
+          xAxisTitle="Ratio"
+        />
+        <BenchmarkBarChart
+          title="Encode Speed (MB/s)"
+          data={sortedData}
+          dataKey="encode_speed"
+          color="#82ca9d"
+          xAxisTitle="MB/s"
+        />
+        <BenchmarkBarChart
+          title="Decode Speed (MB/s)"
+          data={sortedData}
+          dataKey="decode_speed"
+          color="#ff7300"
+          xAxisTitle="MB/s"
+        />
       </div>
     </div>
   );
