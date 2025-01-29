@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 import { BenchmarkData } from "../../types";
 import { BenchmarkCharts } from "../benchmark/charts/BenchmarkCharts";
 import { BenchmarkTable } from "../benchmark/table/BenchmarkTable";
@@ -56,7 +59,14 @@ export const BaseContent = ({
               {isExpanded ? "View less" : "Read more"}
             </button>
             {isExpanded && (
-              <div className="long-description">{item.long_description}</div>
+              <div className="long-description">
+                <ReactMarkdown
+                  remarkPlugins={[remarkMath]}
+                  rehypePlugins={[rehypeKatex]}
+                >
+                  {item.long_description}
+                </ReactMarkdown>
+              </div>
             )}
           </>
         )}
