@@ -6,9 +6,9 @@ Electrophysiology datasets contain recordings of electrical activity from neuron
 
 The datasets are samples from single channels within larger electrophysiology recordings available on the DANDI Archive:
 
-- Channel 45 from a session in Dandiset 000876 (https://dandiarchive.org/dandiset/000876)
-- Channel 101 from a session in Dandiset 000409 (https://dandiarchive.org/dandiset/000409)
-- Channel 0 from a session in Dandiset 001290 (https://dandiarchive.org/dandiset/001290)
+- Channel 45 from a session in [Dandiset 000876](https://dandiarchive.org/dandiset/000876)
+- Channel 101 from a session in [Dandiset 000409](https://dandiarchive.org/dandiset/000409)
+- Channel 0 from a session in [Dandiset 001290](https://dandiarchive.org/dandiset/001290)
 
 ## Dataset Variants
 
