@@ -466,4 +466,18 @@ def run_benchmarks(
             info["source_file"] = GITHUB_DATASETS_PREFIX + dataset["source_file"]
         dataset_info.append(info)
 
+    # Upload final benchmark status
+    if memobin_api_key and upload_enabled:
+        try:
+            upload_benchmark_status(
+                memobin_api_key,
+                "All datasets",
+                "All algorithms",
+                results,
+                total_benchmarks,
+                start_time,
+            )
+        except Exception as e:
+            print(f"  Warning: Failed to upload final status to memobin: {str(e)}")
+
     return {"results": results, "algorithms": algorithm_info, "datasets": dataset_info}
