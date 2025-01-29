@@ -15,7 +15,7 @@ from ._memobin import (
 )
 
 
-system_version = "v5"
+system_version = "v6"
 GITHUB_ALGORITHMS_PREFIX = "https://github.com/magland/benchcompress/blob/main/benchcompress/src/benchcompress/algorithms/"
 GITHUB_DATASETS_PREFIX = "https://github.com/magland/benchcompress/blob/main/benchcompress/src/benchcompress/datasets/"
 
@@ -80,11 +80,6 @@ def run_benchmarks(
     for dataset in datasets_to_run:
         dataset_tags = dataset.get("tags", [])
         print(f"\n*** Dataset: {dataset['name']} (tags: {dataset_tags}) ***")
-
-        # data will only be created if needed
-        data = None
-        original_size = None
-        dtype = None
 
         for algorithm in algorithms_to_run:
             alg_name = algorithm["name"]
@@ -158,85 +153,81 @@ def run_benchmarks(
                     continue
 
             print("  Running new benchmark...")
-            if data is None:
-                # only create data if needed
-                data = dataset["create"]()
-                dtype = str(data.dtype)
-                original_size = len(data.tobytes())
-                print(f"Created dataset: shape={data.shape}, dtype={dtype}")
-                print(f"Original size: {original_size:,} bytes")
+            data = dataset["create"]()
+            dtype = str(data.dtype)
+            original_size = len(data.tobytes())
+            print(f"Created dataset: shape={data.shape}, dtype={dtype}")
+            print(f"Original size: {original_size:,} bytes")
 
-                # Upload dataset to memobin if enabled
-                memobin_api_key = os.environ.get("MEMOBIN_API_KEY")
-                upload_enabled = os.environ.get("UPLOAD_TO_MEMOBIN") == "1"
-                if memobin_api_key and upload_enabled:
-                    try:
-                        # Upload array metadata as JSON
-                        dataset_url_json = construct_dataset_url(
-                            dataset["name"], dataset["version"], "json"
+            # Upload dataset to memobin if enabled
+            memobin_api_key = os.environ.get("MEMOBIN_API_KEY")
+            upload_enabled = os.environ.get("UPLOAD_TO_MEMOBIN") == "1"
+            if memobin_api_key and upload_enabled:
+                try:
+                    # Upload array metadata as JSON
+                    dataset_url_json = construct_dataset_url(
+                        dataset["name"], dataset["version"], "json"
+                    )
+                    if not exists_in_memobin(dataset_url_json):
+                        if verbose:
+                            print("  Uploading dataset metadata to memobin...")
+                        metadata = {"dtype": str(data.dtype), "shape": data.shape}
+                        upload_to_memobin(
+                            metadata,
+                            dataset_url_json,
+                            memobin_api_key,
+                            content_type="application/json",
                         )
-                        if not exists_in_memobin(dataset_url_json):
-                            if verbose:
-                                print("  Uploading dataset metadata to memobin...")
-                            metadata = {"dtype": str(data.dtype), "shape": data.shape}
-                            upload_to_memobin(
-                                metadata,
-                                dataset_url_json,
-                                memobin_api_key,
-                                content_type="application/json",
-                            )
-                            if verbose:
-                                print("  Successfully uploaded metadata")
+                        if verbose:
+                            print("  Successfully uploaded metadata")
 
-                        # Upload raw .dat format
-                        dataset_url_raw = construct_dataset_url(
-                            dataset["name"], dataset["version"], "dat"
+                    # Upload raw .dat format
+                    dataset_url_raw = construct_dataset_url(
+                        dataset["name"], dataset["version"], "dat"
+                    )
+                    if not exists_in_memobin(dataset_url_raw):
+                        if verbose:
+                            print("  Uploading dataset (raw) to memobin...")
+                        upload_to_memobin(
+                            data.tobytes(),
+                            dataset_url_raw,
+                            memobin_api_key,
+                            content_type="application/octet-stream",
                         )
-                        if not exists_in_memobin(dataset_url_raw):
-                            if verbose:
-                                print("  Uploading dataset (raw) to memobin...")
-                            upload_to_memobin(
-                                data.tobytes(),
-                                dataset_url_raw,
-                                memobin_api_key,
-                                content_type="application/octet-stream",
-                            )
-                            if verbose:
-                                print("  Successfully uploaded raw dataset")
+                        if verbose:
+                            print("  Successfully uploaded raw dataset")
 
-                        # Upload .npy format
-                        dataset_url_npy = construct_dataset_url(
-                            dataset["name"], dataset["version"], "npy"
-                        )
-                        if not exists_in_memobin(dataset_url_npy):
-                            if verbose:
-                                print("  Uploading dataset (npy) to memobin...")
-                            # Save array to a temporary .npy file
-                            temp_npy = os.path.join(cache_dir, "temp.npy")
-                            np.save(temp_npy, data)
-                            with open(temp_npy, "rb") as f:
-                                npy_bytes = f.read()
-                            os.remove(temp_npy)  # Clean up temp file
+                    # Upload .npy format
+                    dataset_url_npy = construct_dataset_url(
+                        dataset["name"], dataset["version"], "npy"
+                    )
+                    if not exists_in_memobin(dataset_url_npy):
+                        if verbose:
+                            print("  Uploading dataset (npy) to memobin...")
+                        # Save array to a temporary .npy file
+                        temp_npy = os.path.join(cache_dir, "temp.npy")
+                        np.save(temp_npy, data)
+                        with open(temp_npy, "rb") as f:
+                            npy_bytes = f.read()
+                        os.remove(temp_npy)  # Clean up temp file
 
-                            upload_to_memobin(
-                                npy_bytes,
-                                dataset_url_npy,
-                                memobin_api_key,
-                                content_type="application/octet-stream",
-                            )
-                            if verbose:
-                                print("  Successfully uploaded npy dataset")
-                    except Exception as e:
-                        print(
-                            f"  Warning: Failed to upload dataset to memobin: {str(e)}"
+                        upload_to_memobin(
+                            npy_bytes,
+                            dataset_url_npy,
+                            memobin_api_key,
+                            content_type="application/octet-stream",
                         )
+                        if verbose:
+                            print("  Successfully uploaded npy dataset")
+                except Exception as e:
+                    print(f"  Warning: Failed to upload dataset to memobin: {str(e)}")
 
             assert data is not None
             assert isinstance(data, np.ndarray)
             assert isinstance(original_size, int)
             assert isinstance(dtype, str)
 
-            def run_timed_trials(operation, *args) -> Tuple[float, float]:
+            def run_timed_trials(operation, *args) -> Tuple[float, float, Any]:
                 """Run multiple trials of an operation until total time exceeds 1 second.
                 Returns (median_time, mb_per_sec)"""
                 assert data is not None
@@ -245,20 +236,22 @@ def run_benchmarks(
                 total_time = 0
                 array_size_mb = data.nbytes / (1024 * 1024)  # Convert to MB
 
+                ret = None
                 while total_time < 1.0:
                     start_time = time.perf_counter()
-                    _ = operation(*args)  # Execute operation but discard result
+                    ret = operation(*args)  # Execute operation but discard result
                     trial_time = time.perf_counter() - start_time
                     times.append(trial_time)
                     total_time += trial_time
 
                 median_time = median(times)
                 mb_per_sec = array_size_mb / median_time
-                return median_time, mb_per_sec
+                return median_time, mb_per_sec, ret
 
             # Measure encoding with multiple trials
-            encode_time, encode_mb_per_sec = run_timed_trials(algorithm["encode"], data)
-            encoded = algorithm["encode"](data)  # One final encode to get the result
+            encode_time, encode_mb_per_sec, encoded = run_timed_trials(
+                algorithm["encode"], data
+            )
             compressed_size = len(encoded)
             compression_ratio = original_size / compressed_size
             print("  Compression complete:")
@@ -269,10 +262,9 @@ def run_benchmarks(
 
             print("  Verifying decompression...")
             # Measure decoding with multiple trials
-            decode_time, decode_mb_per_sec = run_timed_trials(
-                algorithm["decode"], encoded, dtype
+            decode_time, decode_mb_per_sec, decoded = run_timed_trials(
+                algorithm["decode"], encoded, dtype, data.shape
             )
-            decoded = algorithm["decode"](encoded, dtype)  # One final decode to verify
             print(f"    Decode time: {decode_time*1000:.2f}ms")
             print(f"    Decode throughput: {decode_mb_per_sec:.2f} MB/s")
 

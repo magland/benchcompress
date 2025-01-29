@@ -59,7 +59,7 @@ def validate_datasets(ctx, param, value):
 
 @click.group()
 def cli():
-    """Benchmark compression algorithms for numeric timeseries data"""
+    """Benchmark compression algorithms for scientific data arrays"""
     pass
 
 

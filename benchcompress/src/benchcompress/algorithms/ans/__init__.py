@@ -13,7 +13,6 @@ SOURCE_FILE = "ans/__init__.py"
 def ans_encode(x: np.ndarray) -> bytes:
     from simple_ans import ans_encode
 
-    assert x.ndim == 1
     encoded = ans_encode(x)
     if x.dtype == np.uint8:
         dtype_code = 0
@@ -43,7 +42,7 @@ def ans_encode(x: np.ndarray) -> bytes:
     return header_size.tobytes() + header_bytes + encoded.bitstream
 
 
-def ans_decode(x: bytes, dtype: str) -> np.ndarray:
+def ans0_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
     from simple_ans import ans_decode, EncodedSignal
 
     header_size = np.frombuffer(x[:4], dtype=np.uint32)[0]
@@ -73,13 +72,14 @@ def ans_decode(x: bytes, dtype: str) -> np.ndarray:
         symbol_values=symbol_values.astype(dtype),
         bitstream=bitstream,
     )
-    return ans_decode(encoded)
+    return ans_decode(encoded).reshape(shape)
 
 
 def ans_delta_encode(x: np.ndarray) -> bytes:
     from simple_ans import ans_encode
 
     assert x.ndim == 1
+
     y = np.diff(x)
     # Encode just the differences
     encoded = ans_encode(y)
@@ -113,8 +113,10 @@ def ans_delta_encode(x: np.ndarray) -> bytes:
     return header_size.tobytes() + header_bytes + encoded.bitstream
 
 
-def ans_delta_decode(x: bytes, dtype: str) -> np.ndarray:
+def ans_delta_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
     from simple_ans import ans_decode, EncodedSignal
+
+    assert len(shape) == 1
 
     header_size = np.frombuffer(x[:4], dtype=np.uint32)[0]
     header = np.frombuffer(x[4 : 4 + header_size], dtype=np.int64)
@@ -155,6 +157,7 @@ def ans_markov_encode(x: np.ndarray) -> bytes:
     from simple_ans import ans_encode
 
     assert x.ndim == 1
+
     coeffs, initial, resid = markov_predict_cpp(x, M=6, num_training_samples=10000)
     # Encode just the differences
     encoded = ans_encode(resid)
@@ -191,8 +194,10 @@ def ans_markov_encode(x: np.ndarray) -> bytes:
     return header_size.tobytes() + header_bytes + encoded.bitstream
 
 
-def ans_markov_decode(x: bytes, dtype: str) -> np.ndarray:
+def ans_markov_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
     from simple_ans import ans_decode, EncodedSignal
+
+    assert len(shape) == 1
 
     header_size = np.frombuffer(x[:4], dtype=np.uint32)[0]
     header = np.frombuffer(x[4 : 4 + header_size], dtype=np.float64)
@@ -321,8 +326,10 @@ def ans_markov_sparse_encode(x: np.ndarray) -> bytes:
     )
 
 
-def ans_markov_sparse_decode(x: bytes, dtype: str) -> np.ndarray:
+def ans_markov_sparse_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
     from simple_ans import ans_decode, EncodedSignal
+
+    assert len(shape) == 1
 
     header_size = np.frombuffer(x[:4], dtype=np.uint32)[0]
     header = np.frombuffer(x[4 : 4 + header_size], dtype=np.float64)
@@ -432,7 +439,7 @@ algorithms = [
         "name": "ANS",
         "version": "3",
         "encode": lambda x: ans_encode(x),
-        "decode": lambda x, dtype: ans_decode(x, dtype),
+        "decode": lambda x, dtype, shape: ans0_decode(x, dtype, shape),
         "description": "ANS compression via simple_ans for efficient data compression.",
         "tags": ["ANS"],
         "source_file": SOURCE_FILE,
@@ -441,27 +448,27 @@ algorithms = [
         "name": "ANS-delta",
         "version": "3",
         "encode": lambda x: ans_delta_encode(x),
-        "decode": lambda x, dtype: ans_delta_decode(x, dtype),
+        "decode": lambda x, dtype, shape: ans_delta_decode(x, dtype, shape),
         "description": "ANS compression via simple_ans with delta encoding for improved compression of sequential data.",
-        "tags": ["ANS", "delta_encoding"],
+        "tags": ["ANS", "delta_encoding", "1d"],
         "source_file": SOURCE_FILE,
     },
     {
         "name": "ANS-markov",
         "version": "6",
         "encode": lambda x: ans_markov_encode(x),
-        "decode": lambda x, dtype: ans_markov_decode(x, dtype),
+        "decode": lambda x, dtype, shape: ans_markov_decode(x, dtype, shape),
         "description": "ANS compression via simple_ans with Markov prediction for exploiting temporal correlations in the data.",
-        "tags": ["ANS", "markov_prediction"],
+        "tags": ["ANS", "markov_prediction", "1d"],
         "source_file": SOURCE_FILE,
     },
     {
         "name": "ANS-markov-zrle",
         "version": "6",
         "encode": lambda x: ans_markov_sparse_encode(x),
-        "decode": lambda x, dtype: ans_markov_sparse_decode(x, dtype),
+        "decode": lambda x, dtype, shape: ans_markov_sparse_decode(x, dtype, shape),
         "description": "ANS compression via simple_ans with Markov prediction and zero run-length encoding for sparse data.",
-        "tags": ["ANS", "markov_prediction", "zero_rle"],
+        "tags": ["ANS", "markov_prediction", "zero_rle", "1d"],
         "source_file": SOURCE_FILE,
     },
 ]

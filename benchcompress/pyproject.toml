@@ -5,7 +5,7 @@ build-backend = "scikit_build_core.build"
 [project]
 name = "benchcompress"
 version = "0.1.0"
-description = "Benchmarking compression methods for numeric timeseries data"
+description = "Benchmarking compression methods for integer timeseries data"
 readme = "README.md"
 requires-python = ">=3.8"
 authors = [

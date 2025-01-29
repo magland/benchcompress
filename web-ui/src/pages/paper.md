@@ -1,4 +1,4 @@
-# Benchmarking Compression Algorithms for Numeric Scientific Data
+# Benchmarking Compression Algorithms for Scientific Data Arrays
 
 *Jeremy Magland, Center for Computational Mathematics, Flatiron Institute*
 
@@ -8,7 +8,7 @@
 
 ## Abstract
 
-*Benchcompress* is a benchmarking framework designed to evaluate the performance of various compression algorithms on numeric timeseries datasets, with a particular focus on scientific data. The framework automates the benchmarking process, measuring compression ratio, encoding throughput, and decoding throughput for each algorithm-dataset pair. Results are verified through decompression and comparison with the original data, ensuring accuracy and reliability. The benchmark results are stored and visualized through an interactive web interface, allowing users to filter, sort, and explore the data. This paper presents the design, implementation, and preliminary results of Benchcompress, highlighting its utility in identifying optimal compression techniques for scientific datasets.
+*Benchcompress* is a benchmarking framework designed to evaluate the performance of various compression algorithms on scientific data arrays. The framework automates the benchmarking process, measuring compression ratio, encoding throughput, and decoding throughput for each algorithm-dataset pair. Results are verified through decompression and comparison with the original data, ensuring accuracy and reliability. The benchmark results are stored and visualized through an interactive web interface, allowing users to filter, sort, and explore the data. This paper presents the design, implementation, and preliminary results of Benchcompress, highlighting its utility in identifying optimal compression techniques for scientific datasets.
 
 ## Introduction
 
@@ -37,7 +37,7 @@ H_{\text{Bernoulli, p=0.5}} = -0.5 \log_2 0.5 - 0.5 \log_2 0.5 = 1
 $$
 bits per sample. This means that the optimal compression ratio for such a dataset is 8, assuming the samples are stored as 8-bit integers. On the other hand, if $p\neq 0.5$, the entropy becomes lower and we can achieve compression at a rate of less than 1 bit per sample (e.g., for $p=0.1$, the entropy is around 0.47 bits per sample, so the compression ratio would be around 17).
 
-In practice, achieving this theoretical compression ratio requires sophisticated encoding techniques. Arithmetic encoding [ref] is one such method, but it is challenging to implement and can be computationally inefficient. A more modern and efficient alternative is Asymmetric Numeric Systems (ANS) [ref], which closely approaches the theoretical limit and is incorporated into state-of-the-art compressors such as ZStandard [ref]. However, these algorithms are primarily optimized for structured data types, such as text, rather than for scientific numeric data.
+In practice, achieving this theoretical compression ratio requires sophisticated encoding techniques. Arithmetic encoding [ref] is one such method, but it is challenging to implement and can be computationally inefficient. A more modern and efficient alternative is Asymmetric Numeric Systems (ANS) [ref], which closely approaches the theoretical limit and is incorporated into state-of-the-art compressors such as ZStandard [ref]. However, these algorithms are primarily optimized for structured data types, such as text, rather than for numeric scientific data.
 
 In our benchmarks, we evaluate a simple implementation of ANS using a Python package we developed, called `simple_ans`. As anticipated, ANS demonstrates superior performance when compressing i.i.d. samples from a discrete distribution. However, its efficiency diminishes when handling more structured data, such as continuous signals (e.g., voltage traces in electrophysiology).
 

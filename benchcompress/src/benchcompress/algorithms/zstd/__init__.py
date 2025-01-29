@@ -11,6 +11,7 @@ def zstd_delta_encode(x: np.ndarray, level: int) -> bytes:
     import zstandard as zstd
 
     assert x.ndim == 1
+
     y = np.diff(x)
     y = np.insert(y, 0, x[0])
     buf = y.tobytes()
@@ -19,8 +20,10 @@ def zstd_delta_encode(x: np.ndarray, level: int) -> bytes:
     return compressed
 
 
-def zstd_delta_decode(x: bytes, dtype: str) -> np.ndarray:
+def zstd_delta_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
     import zstandard as zstd
+
+    assert len(shape) == 1
 
     decompressor = zstd.ZstdDecompressor()
     buf = decompressor.decompress(x)
@@ -31,20 +34,19 @@ def zstd_delta_decode(x: bytes, dtype: str) -> np.ndarray:
 def zstd_encode(x: np.ndarray, level: int) -> bytes:
     import zstandard as zstd
 
-    assert x.ndim == 1
     buf = x.tobytes()
     compressor = zstd.ZstdCompressor(level=level)
     compressed = compressor.compress(buf)
     return compressed
 
 
-def zstd_decode(x: bytes, dtype: str) -> np.ndarray:
+def zstd_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
     import zstandard as zstd
 
     decompressor = zstd.ZstdDecompressor()
     buf = decompressor.decompress(x)
     y = np.frombuffer(buf, dtype=dtype)
-    return y
+    return y.reshape(shape)
 
 
 def zstd_markov_encode(x: np.ndarray, level: int) -> bytes:
@@ -70,9 +72,11 @@ def zstd_markov_encode(x: np.ndarray, level: int) -> bytes:
     return header + coeffs_bytes + initial_bytes + compressed_resid
 
 
-def zstd_markov_decode(x: bytes, dtype: str) -> np.ndarray:
+def zstd_markov_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
     import zstandard as zstd
     import struct
+
+    assert len(shape) == 1
 
     # Extract header
     header_size = struct.calcsize("QQ")
@@ -159,9 +163,11 @@ def zstd_markov_zrle_encode(x: np.ndarray, level: int) -> bytes:
     return header + coeffs_bytes + initial_bytes + run_lengths_bytes + compressed_resid
 
 
-def zstd_markov_zrle_decode(x: bytes, dtype: str) -> np.ndarray:
+def zstd_markov_zrle_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
     import zstandard as zstd
     import struct
+
+    assert len(shape) == 1
 
     # Extract header
     header_size = struct.calcsize("QQQQB")
@@ -220,7 +226,7 @@ algorithms = [
         "name": "zstd-4",
         "version": "1",
         "encode": lambda x: zstd_encode(x, level=4),
-        "decode": lambda x, dtype: zstd_decode(x, dtype),
+        "decode": lambda x, dtype, shape: zstd_decode(x, dtype, shape),
         "description": "Zstandard compression at level 4 (fast compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
@@ -229,7 +235,7 @@ algorithms = [
         "name": "zstd-7",
         "version": "1",
         "encode": lambda x: zstd_encode(x, level=7),
-        "decode": lambda x, dtype: zstd_decode(x, dtype),
+        "decode": lambda x, dtype, shape: zstd_decode(x, dtype, shape),
         "description": "Zstandard compression at level 7 (balanced speed/compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
@@ -238,7 +244,7 @@ algorithms = [
         "name": "zstd-10",
         "version": "1",
         "encode": lambda x: zstd_encode(x, level=10),
-        "decode": lambda x, dtype: zstd_decode(x, dtype),
+        "decode": lambda x, dtype, shape: zstd_decode(x, dtype, shape),
         "description": "Zstandard compression at level 10 (better compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
@@ -247,7 +253,7 @@ algorithms = [
         "name": "zstd-13",
         "version": "1",
         "encode": lambda x: zstd_encode(x, level=13),
-        "decode": lambda x, dtype: zstd_decode(x, dtype),
+        "decode": lambda x, dtype, shape: zstd_decode(x, dtype, shape),
         "description": "Zstandard compression at level 13 (high compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
@@ -256,7 +262,7 @@ algorithms = [
         "name": "zstd-16",
         "version": "1",
         "encode": lambda x: zstd_encode(x, level=16),
-        "decode": lambda x, dtype: zstd_decode(x, dtype),
+        "decode": lambda x, dtype, shape: zstd_decode(x, dtype, shape),
         "description": "Zstandard compression at level 16 (very high compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
@@ -265,7 +271,7 @@ algorithms = [
         "name": "zstd-19",
         "version": "1",
         "encode": lambda x: zstd_encode(x, level=19),
-        "decode": lambda x, dtype: zstd_decode(x, dtype),
+        "decode": lambda x, dtype, shape: zstd_decode(x, dtype, shape),
         "description": "Zstandard compression at level 19 (ultra high compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
@@ -274,7 +280,7 @@ algorithms = [
         "name": "zstd-22",
         "version": "1",
         "encode": lambda x: zstd_encode(x, level=22),
-        "decode": lambda x, dtype: zstd_decode(x, dtype),
+        "decode": lambda x, dtype, shape: zstd_decode(x, dtype, shape),
         "description": "Zstandard compression at maximum level 22 (highest compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
@@ -283,27 +289,27 @@ algorithms = [
         "name": "zstd-22-delta",
         "version": "1",
         "encode": lambda x: zstd_delta_encode(x, level=22),
-        "decode": lambda x, dtype: zstd_delta_decode(x, dtype),
+        "decode": lambda x, dtype, shape: zstd_delta_decode(x, dtype, shape),
         "description": "Zstandard compression at level 22 with delta encoding for improved compression of sequential data.",
-        "tags": ["zstd", "delta_encoding"],
+        "tags": ["zstd", "delta_encoding", "1d"],
         "source_file": SOURCE_FILE,
     },
     {
         "name": "zstd-22-markov",
         "version": "1",
         "encode": lambda x: zstd_markov_encode(x, level=22),
-        "decode": lambda x, dtype: zstd_markov_decode(x, dtype),
+        "decode": lambda x, dtype, shape: zstd_markov_decode(x, dtype, shape),
         "description": "Zstandard compression at level 22 with Markov prediction for exploiting temporal correlations in the data.",
-        "tags": ["zstd", "markov_prediction"],
+        "tags": ["zstd", "markov_prediction", "1d"],
         "source_file": SOURCE_FILE,
     },
     {
         "name": "zstd-22-markov-zrle",
         "version": "1",
         "encode": lambda x: zstd_markov_zrle_encode(x, level=22),
-        "decode": lambda x, dtype: zstd_markov_zrle_decode(x, dtype),
+        "decode": lambda x, dtype, shape: zstd_markov_zrle_decode(x, dtype, shape),
         "description": "Zstandard compression at level 22 with Markov prediction and zero run-length encoding for sparse data.",
-        "tags": ["zstd", "markov_prediction", "zero_rle"],
+        "tags": ["zstd", "markov_prediction", "zero_rle", "1d"],
         "source_file": SOURCE_FILE,
     },
 ]
