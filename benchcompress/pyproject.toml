@@ -21,7 +21,8 @@ dependencies = [
     "brotli",
     "click",
     "numba",
-    "pybind11>=2.11.1"
+    "pybind11>=2.11.1",
+    "segyio"
 ]
 
 [tool.scikit-build]

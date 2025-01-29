@@ -32,18 +32,6 @@ setup(
     version="0.1.0",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
-    install_requires=[
-        "numpy",
-        "scipy",
-        "zstandard",
-        "simple_ans",
-        "requests",
-        "lindi",
-        "brotli",
-        "click",
-        "pybind11>=2.11.1",
-        "segyio"
-    ],
     ext_modules=[
         CMakeExtension("benchcompress.algorithms.ans.markov_reconstruct_cpp_ext",
                       sourcedir="src/benchcompress/algorithms/ans"),

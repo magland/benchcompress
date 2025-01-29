@@ -30,13 +30,24 @@ def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:
     Returns:
         True if the algorithm should be applied to the dataset
     """
-    # If algorithm has delta_encoding tag, dataset must have continuous tag
-    if "delta_encoding" in algorithm_tags and "continuous" not in dataset_tags:
-        return False
-    if "markov_prediction" in algorithm_tags and "continuous" not in dataset_tags:
-        return False
-    if "zero_rle" in algorithm_tags and "sparse" not in dataset_tags:
-        return False
+    # If algorithm has delta_encoding or markov_prediction, dataset must have continuous, timeseries, 1d
+    if "delta_encoding" in algorithm_tags or "markov_prediction" in algorithm_tags:
+        if (
+            "continuous" not in dataset_tags
+            or "timeseries" not in dataset_tags
+            or "1d" not in dataset_tags
+        ):
+            return False
+
+    # If algorithm has zero_rle, dataset must have sparse, timeseries, 1d
+    if "zero_rle" in algorithm_tags:
+        if (
+            "sparse" not in dataset_tags
+            or "timeseries" not in dataset_tags
+            or "1d" not in dataset_tags
+        ):
+            return False
+
     return True
 
 
