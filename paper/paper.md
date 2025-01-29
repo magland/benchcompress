@@ -17,14 +17,17 @@
 ## Theory
 
 For independently and identically distributed (i.i.d.) discrete data, where each sample is drawn from a discrete probability distribution (e.g., Bernoulli sampling or quantized Gaussian noise), the theoretical compressed size in bits per sample is determined by the Shannon entropy formula:
+
 $$
 H(X) = -\sum_{i} p(x_i) \log_2 p(x_i).
 $$
 
 Here, $p(x_i)$ represents the probability of occurrence of the $i$-th symbol $x_i$ in the discrete distribution. So for example, if we have a Bernoulli distribution with $p=0.5$, the entropy is
+
 $$
 H_{\text{Bernoulli, p=0.5}} = -0.5 \log_2 0.5 - 0.5 \log_2 0.5 = 1
 $$
+
 bits per sample. This means that the optimal compression ratio for such a dataset is 8, assuming the samples are stored as 8-bit integers. On the other hand, if $p\neq 0.5$, the entropy becomes lower and we can achieve compression at a rate of less than 1 bit per sample (e.g., for $p=0.1$, the entropy is around 0.47 bits per sample, so the compression ratio would be around 17).
 
 In practice, achieving this theoretical compression ratio requires sophisticated encoding techniques. Arithmetic encoding [ref] is one such method, but it is challenging to implement and can be computationally inefficient. A more modern and efficient alternative is Asymmetric Numeric Systems (ANS) [ref], which closely approaches the theoretical limit and is incorporated into state-of-the-art compressors such as ZStandard [ref]. However, these algorithms are primarily optimized for structured data types, such as text, rather than for numeric scientific data.
