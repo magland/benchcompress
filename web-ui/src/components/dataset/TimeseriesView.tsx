@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useReducer, useState, useCallback } from "react";
+import TimeseriesNavigationBar from "./TimeseriesNavigationBar";
 import { SupportedTypedArray } from "../../hooks/TimeseriesDataClient";
 import { useTimeseriesDataClient } from "../../hooks/useTimeseriesDataClient";
 import { Dataset } from "../../types";
@@ -310,7 +311,18 @@ const TimeseriesView: React.FC<TimeseriesViewProps> = ({
   };
 
   return (
-    <div style={{ position: "relative", width, height: height + 30 }}>
+    <div style={{ position: "relative", width, height: height + 50 }}>
+      <div style={{ marginBottom: 10, height: 20 }}>
+        <TimeseriesNavigationBar
+          width={width}
+          height={20}
+          totalRange={{ min: 0, max: client ? client.getShape() - 1 : 999 }}
+          viewRange={xRange}
+          onViewRangeChange={(range) =>
+            dispatch({ type: "SET_X_RANGE", range })
+          }
+        />
+      </div>
       {showHint && (
         <div
           style={{

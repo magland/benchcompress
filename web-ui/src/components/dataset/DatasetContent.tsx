@@ -1,21 +1,18 @@
 import { Dataset, BenchmarkData } from "../../types";
-import { useNavigate } from "react-router-dom";
-import "./DatasetContent.css";
-import TimeseriesView from "./TimeseriesView";
-import { BenchmarkCharts } from "../benchmark/charts/BenchmarkCharts";
-import { BenchmarkTable } from "../benchmark/table/BenchmarkTable";
 import { useEffect, useRef, useState } from "react";
-type ChartData = Array<{
-  algorithm: string;
-  compression_ratio: number;
-  encode_speed: number;
-  decode_speed: number;
-}>;
+import TimeseriesView from "./TimeseriesView";
+import { BaseContent } from "../shared/BaseContent";
+import "../shared/ContentStyles.css";
 
 interface DatasetContentProps {
   dataset: Dataset;
   benchmarkData: BenchmarkData | null;
-  chartData: ChartData;
+  chartData: Array<{
+    algorithm: string;
+    compression_ratio: number;
+    encode_speed: number;
+    decode_speed: number;
+  }>;
 }
 
 export const DatasetContent = ({
@@ -23,7 +20,6 @@ export const DatasetContent = ({
   benchmarkData,
   chartData,
 }: DatasetContentProps) => {
-  const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(1200);
 
@@ -43,142 +39,59 @@ export const DatasetContent = ({
     };
   }, []);
 
-  return (
-    <div>
-      <div style={{ marginBottom: "1.5rem" }}>
-        <p style={{ fontSize: "0.9rem", lineHeight: "1.5" }}>
-          {dataset.description}
-        </p>
+  const downloadSection =
+    dataset.data_url_npy || dataset.data_url_raw ? (
+      <div>
+        <span className="metadata-label">Download: </span>
+        <span style={{ display: "inline-flex", gap: "0.5rem" }}>
+          {dataset.data_url_npy && (
+            <a
+              href={dataset.data_url_npy}
+              download={`${dataset.name}-${dataset.version}.npy`}
+              className="download-link"
+            >
+              NPY
+            </a>
+          )}
+          {dataset.data_url_raw && (
+            <a
+              href={dataset.data_url_raw}
+              download={`${dataset.name}-${dataset.version}.dat`}
+              className="download-link"
+            >
+              RAW
+            </a>
+          )}
+        </span>
       </div>
+    ) : null;
+
+  const timeseriesSection = (
+    <div className="content-container">
       <div
+        ref={containerRef}
         style={{
-          marginBottom: "1.5rem",
-          display: "flex",
-          gap: "2rem",
-          flexWrap: "wrap",
+          width: "100%",
+          height: "300px",
+          backgroundColor: "#f5f5f5",
+          borderRadius: "4px",
+          padding: "1rem",
         }}
       >
-        <div>
-          <span style={{ fontWeight: "bold", fontSize: "0.9rem" }}>
-            Version:{" "}
-          </span>
-          <span style={{ fontSize: "0.9rem" }}>{dataset.version}</span>
-        </div>
-        <div>
-          <span style={{ fontWeight: "bold", fontSize: "0.9rem" }}>Tags: </span>
-          {dataset.tags.map((tag) => (
-            <span
-              key={tag}
-              className="dataset-tag"
-              onClick={() => navigate(`/datasets?tag=${tag}`)}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-        <div>
-          <span style={{ fontWeight: "bold", fontSize: "0.9rem" }}>
-            Download:{" "}
-          </span>
-          <span style={{ display: "inline-flex", gap: "0.5rem" }}>
-            {dataset.data_url_npy && (
-              <a
-                href={dataset.data_url_npy}
-                download={`${dataset.name}-${dataset.version}.npy`}
-                style={{
-                  color: "#0066cc",
-                  textDecoration: "none",
-                  padding: "2px 6px",
-                  backgroundColor: "#f0f0f0",
-                  borderRadius: "4px",
-                  fontSize: "0.9rem",
-                }}
-              >
-                NPY
-              </a>
-            )}
-            {dataset.data_url_raw && (
-              <a
-                href={dataset.data_url_raw}
-                download={`${dataset.name}-${dataset.version}.dat`}
-                style={{
-                  color: "#0066cc",
-                  textDecoration: "none",
-                  padding: "2px 6px",
-                  backgroundColor: "#f0f0f0",
-                  borderRadius: "4px",
-                  fontSize: "0.9rem",
-                }}
-              >
-                RAW
-              </a>
-            )}
-          </span>
-        </div>
-        {dataset.source_file && (
-          <div>
-            <span style={{ fontWeight: "bold", fontSize: "0.9rem" }}>
-              Source:{" "}
-            </span>
-            <a
-              href={dataset.source_file}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                color: "#0066cc",
-                textDecoration: "none",
-                padding: "2px 6px",
-                backgroundColor: "#f0f0f0",
-                borderRadius: "4px",
-                fontSize: "0.9rem",
-              }}
-            >
-              View
-            </a>
-          </div>
-        )}
+        <TimeseriesView width={containerWidth} height={250} dataset={dataset} />
       </div>
-      <div style={{ marginBottom: "1.5rem" }}>
-        <div
-          ref={containerRef}
-          style={{
-            width: "100%",
-            height: "300px",
-            backgroundColor: "#f5f5f5",
-            borderRadius: "4px",
-            padding: "1rem",
-          }}
-        >
-          <TimeseriesView
-            width={containerWidth}
-            height={250}
-            dataset={dataset}
-          />
-        </div>
-      </div>
-      {benchmarkData && (
-        <>
-          <div style={{ marginBottom: "1.5rem" }}>
-            <h2
-              style={{
-                fontSize: "1.2rem",
-                fontWeight: "bold",
-                marginBottom: "0.5rem",
-              }}
-            >
-              Benchmark Results
-            </h2>
-            <BenchmarkCharts chartData={chartData} />
-          </div>
-          <div style={{ marginBottom: "1.5rem" }}>
-            <BenchmarkTable
-              results={benchmarkData.results.filter(
-                (result) => result.dataset === dataset.name,
-              )}
-            />
-          </div>
-        </>
-      )}
     </div>
+  );
+
+  return (
+    <BaseContent
+      item={dataset}
+      benchmarkData={benchmarkData}
+      chartData={chartData}
+      tagNavigationPrefix="/datasets"
+      filterKey="dataset"
+      downloadSection={downloadSection}
+      additionalContent={timeseriesSection}
+    />
   );
 };

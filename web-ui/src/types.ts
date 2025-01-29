@@ -19,6 +19,7 @@ export interface BenchmarkResult {
 export interface Algorithm {
   name: string;
   description: string;
+  long_description?: string;
   version: string;
   tags: string[];
   source_file?: string;
@@ -27,6 +28,7 @@ export interface Algorithm {
 export interface Dataset {
   name: string;
   description: string;
+  long_description?: string;
   version: string;
   tags: string[];
   source_file?: string;

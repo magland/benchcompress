@@ -1,7 +1,18 @@
 import numpy as np
+import os
 
 
 SOURCE_FILE = "bernoulli/__init__.py"
+
+
+def _load_long_description():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    md_path = os.path.join(current_dir, "bernoulli.md")
+    with open(md_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+LONG_DESCRIPTION = _load_long_description()
 
 
 def create_bernoulli(*, n_samples: int, p: float, seed: int) -> np.ndarray:
@@ -20,6 +31,7 @@ datasets = [
         "description": "Binary sequence with 10% probability of ones.",
         "tags": tags,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "bernoulli-0.2",
@@ -28,6 +40,7 @@ datasets = [
         "description": "Binary sequence with 20% probability of ones.",
         "tags": tags,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "bernoulli-0.3",
@@ -36,6 +49,7 @@ datasets = [
         "description": "Binary sequence with 30% probability of ones.",
         "tags": tags,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "bernoulli-0.4",
@@ -44,6 +58,7 @@ datasets = [
         "description": "Binary sequence with 40% probability of ones.",
         "tags": tags,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "bernoulli-0.5",
@@ -52,5 +67,6 @@ datasets = [
         "description": "Binary sequence with 50% probability of ones and 50% probability of zeros.",
         "tags": tags,
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
 ]
