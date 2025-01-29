@@ -59,3 +59,70 @@ plt.plot(X[:, 1])
 plt.figure(figsize=(10, 5))
 plt.plot(X[:, 1000])
 # %%
+# Extract the exponent part of the float32 array X as uint8
+X_exponent = ((X.view(np.uint32) >> 23) & 0xFF).astype(np.uint8)
+print(X_exponent)
+
+# %%
+import simple_ans
+
+a = simple_ans.ans_encode(X_exponent.ravel())
+# %%
+vals, counts = np.unique(X.ravel(), return_counts=True)
+print(len(vals))
+print(len(X.ravel()))
+# plt.figure(figsize=(10, 5))
+# plt.plot(vals, '.')
+
+# %%
+v = len(a.bitstream) + a.symbol_counts.nbytes + a.symbol_values.nbytes
+compression_ratio = len(X_exponent.tobytes()) / v
+print(compression_ratio)
+
+print(4 / (v / X_exponent.size + 3))
+
+steps = np.exp(np.arange(20))
+tests = []
+for step in steps:
+    X_quantized = np.round(X / step).astype(np.int32)
+    resid = X / step - X_quantized
+    resid_delta = np.diff(np.diff(resid.ravel()))
+    v = np.median(np.abs(resid_delta))
+    tests.append(v)
+
+plt.figure(figsize=(10, 5))
+plt.plot(steps, tests)
+plt.semilogx()
+
+# %%
+q_step = 10000
+X_quantized = np.round(X / q_step).astype(np.int32)
+
+# %%
+plt.figure(figsize=(10, 5))
+plt.plot(X_quantized[0])
+plt.figure(figsize=(10, 5))
+plt.plot(X[0])
+# %%
+import simple_ans
+
+a = simple_ans.ans_encode(X_quantized.ravel())
+v = len(a.bitstream) + a.symbol_counts.nbytes + a.symbol_values.nbytes
+print(len(X.tobytes()) / v)
+# %%
+import zstandard as zstd
+
+cctx = zstd.ZstdCompressor(level=13)
+compressed = cctx.compress(X_quantized.tobytes())
+v_zstd = len(compressed)
+print(len(X.tobytes()) / v_zstd)
+# %%
+X_quantized_diff = np.diff(X_quantized.ravel())
+a = simple_ans.ans_encode(X_quantized_diff)
+v = len(a.bitstream) + a.symbol_counts.nbytes + a.symbol_values.nbytes
+print(len(X.tobytes()) / v)
+# %%
+compressed = cctx.compress(X_quantized_diff.tobytes())
+v_zstd = len(compressed)
+print(len(X.tobytes()) / v_zstd)
+# %%

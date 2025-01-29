@@ -6,6 +6,7 @@ import "./components/AppHeader.css";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Paper from "./pages/Paper";
+import Monitor from "./pages/Monitor";
 import { BenchmarkData } from "./types";
 
 function App() {
@@ -124,6 +125,16 @@ function App() {
                 Paper
               </Link>
               <Link
+                to="/monitor"
+                style={{
+                  color: "#0066cc",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+              >
+                Monitor
+              </Link>
+              <Link
                 to="/about"
                 style={{
                   color: "#0066cc",
@@ -162,6 +173,7 @@ function App() {
               />
               <Route path="/about" element={<About />} />
               <Route path="/paper" element={<Paper />} />
+              <Route path="/monitor" element={<Monitor />} />
             </Routes>
           )}
         </main>

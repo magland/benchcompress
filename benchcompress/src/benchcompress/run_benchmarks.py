@@ -2,6 +2,7 @@ import time
 import json
 import os
 from typing import Dict, Any, Tuple, List, Optional
+from datetime import datetime
 import numpy as np
 from statistics import median
 from .algorithms import algorithms
@@ -56,6 +57,39 @@ def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:
     return True
 
 
+def upload_benchmark_status(
+    memobin_api_key: str,
+    current_dataset: str,
+    current_algorithm: str,
+    completed_benchmarks: List[Dict[str, Any]],
+    total_benchmarks: int,
+    start_time: float,
+) -> None:
+    """Upload current benchmark status to memobin.
+
+    Args:
+        memobin_api_key: API key for memobin authentication
+        current_dataset: Name of the current dataset being processed
+        current_algorithm: Name of the current algorithm being tested
+        completed_benchmarks: List of completed benchmark results
+        total_benchmarks: Total number of benchmarks to run
+        start_time: Timestamp when the benchmark run started
+    """
+    status = {
+        "current_dataset": current_dataset,
+        "current_algorithm": current_algorithm,
+        "completed_count": len(completed_benchmarks),
+        "total_count": total_benchmarks,
+        "progress_percentage": (len(completed_benchmarks) / total_benchmarks) * 100,
+        "elapsed_time": time.time() - start_time,
+        "last_update": datetime.now().isoformat(),
+        "completed_benchmarks": completed_benchmarks,
+    }
+
+    status_url = "https://tempory.net/f/memobin/benchmark_status/current.json"
+    upload_to_memobin(status, status_url, memobin_api_key)
+
+
 def run_benchmarks(
     cache_dir: str = ".benchmark_cache",
     verbose: bool = True,
@@ -83,6 +117,8 @@ def run_benchmarks(
 
     os.makedirs(cache_dir, exist_ok=True)
 
+    start_time = time.time()
+    last_status_upload = 0  # Track last status upload time
     results = []
     print("\nRunning benchmarks for all dataset-algorithm combinations...")
 
@@ -92,7 +128,18 @@ def run_benchmarks(
         selected_algorithms if selected_algorithms is not None else algorithms
     )
 
+    # Calculate total number of benchmarks
+    total_benchmarks = sum(
+        1
+        for dataset in datasets_to_run
+        for algorithm in algorithms_to_run
+        if is_compatible(algorithm.get("tags", []), dataset.get("tags", []))
+    )
+
     # Run benchmarks for each dataset and algorithm combination
+    memobin_api_key = os.environ.get("MEMOBIN_API_KEY")
+    upload_enabled = os.environ.get("UPLOAD_TO_MEMOBIN") == "1"
+
     for dataset in datasets_to_run:
         dataset_tags = dataset.get("tags", [])
         print(f"\n*** Dataset: {dataset['name']} (tags: {dataset_tags}) ***")
@@ -113,6 +160,26 @@ def run_benchmarks(
                 continue
 
             print(f"\nTesting algorithm: {alg_name} (tags: {alg_tags})")
+
+            # Upload current status to memobin if enabled (once per minute)
+            current_time = time.time()
+            if (
+                memobin_api_key
+                and upload_enabled
+                and (current_time - last_status_upload >= 60)
+            ):  # Check if 60 seconds have passed
+                try:
+                    upload_benchmark_status(
+                        memobin_api_key,
+                        dataset["name"],
+                        alg_name,
+                        results,
+                        total_benchmarks,
+                        start_time,
+                    )
+                    last_status_upload = current_time  # Update last upload time
+                except Exception as e:
+                    print(f"  Warning: Failed to upload status to memobin: {str(e)}")
 
             # Check if we can use cached result (unless force flag is set)
             test_dir = os.path.join(cache_dir, dataset["name"], alg_name)
