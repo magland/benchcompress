@@ -441,7 +441,7 @@ algorithms = [
         "encode": lambda x: ans_encode(x),
         "decode": lambda x, dtype, shape: ans0_decode(x, dtype, shape),
         "description": "ANS compression via simple_ans for efficient data compression.",
-        "tags": ["ANS"],
+        "tags": ["ANS", "integer"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -450,7 +450,7 @@ algorithms = [
         "encode": lambda x: ans_delta_encode(x),
         "decode": lambda x, dtype, shape: ans_delta_decode(x, dtype, shape),
         "description": "ANS compression via simple_ans with delta encoding for improved compression of sequential data.",
-        "tags": ["ANS", "delta_encoding", "1d"],
+        "tags": ["ANS", "integer", "delta_encoding", "1d"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -459,7 +459,7 @@ algorithms = [
         "encode": lambda x: ans_markov_encode(x),
         "decode": lambda x, dtype, shape: ans_markov_decode(x, dtype, shape),
         "description": "ANS compression via simple_ans with Markov prediction for exploiting temporal correlations in the data.",
-        "tags": ["ANS", "markov_prediction", "1d"],
+        "tags": ["ANS", "integer", "markov_prediction", "1d"],
         "source_file": SOURCE_FILE,
     },
     {
@@ -468,7 +468,7 @@ algorithms = [
         "encode": lambda x: ans_markov_sparse_encode(x),
         "decode": lambda x, dtype, shape: ans_markov_sparse_decode(x, dtype, shape),
         "description": "ANS compression via simple_ans with Markov prediction and zero run-length encoding for sparse data.",
-        "tags": ["ANS", "markov_prediction", "zero_rle", "1d"],
+        "tags": ["ANS", "integer", "markov_prediction", "zero_rle", "1d"],
         "source_file": SOURCE_FILE,
     },
 ]

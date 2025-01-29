@@ -48,6 +48,11 @@ def is_compatible(algorithm_tags: List[str], dataset_tags: List[str]) -> bool:
         ):
             return False
 
+    # If algorithm has integer, dataset must have integer
+    if "integer" in algorithm_tags:
+        if "integer" not in dataset_tags:
+            return False
+
     return True
 
 
