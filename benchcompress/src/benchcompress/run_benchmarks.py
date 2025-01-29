@@ -97,6 +97,9 @@ def run_benchmarks(
         dataset_tags = dataset.get("tags", [])
         print(f"\n*** Dataset: {dataset['name']} (tags: {dataset_tags}) ***")
 
+        # only create the dataset if it is needed
+        data = None
+
         for algorithm in algorithms_to_run:
             alg_name = algorithm["name"]
             alg_tags = algorithm.get("tags", [])
@@ -168,11 +171,15 @@ def run_benchmarks(
                     results.append(result)
                     continue
 
-            print("  Running new benchmark...")
-            data = dataset["create"]()
+            print(f"  Running benchmark for {alg_name} on {dataset['name']}...")
+            if data is None:
+                data = dataset["create"]()
+                print(f"Created dataset: shape={data.shape}, dtype={data.dtype}")
+            else:
+                print("Dataset already created")
             dtype = str(data.dtype)
             original_size = len(data.tobytes())
-            print(f"Created dataset: shape={data.shape}, dtype={dtype}")
+            print(f"Dataset: shape={data.shape}, dtype={dtype}")
             print(f"Original size: {original_size:,} bytes")
 
             # Upload dataset to memobin if enabled
@@ -264,7 +271,7 @@ def run_benchmarks(
                 mb_per_sec = array_size_mb / median_time
                 return median_time, mb_per_sec, ret
 
-            # Measure encoding with multiple trials
+            print("  Encoding...")
             encode_time, encode_mb_per_sec, encoded = run_timed_trials(
                 algorithm["encode"], data
             )
@@ -276,7 +283,7 @@ def run_benchmarks(
             print(f"    Encode time: {encode_time*1000:.2f}ms")
             print(f"    Encode throughput: {encode_mb_per_sec:.2f} MB/s")
 
-            print("  Verifying decompression...")
+            print("  Decoding...")
             # Measure decoding with multiple trials
             decode_time, decode_mb_per_sec, decoded = run_timed_trials(
                 algorithm["decode"], encoded, dtype, data.shape
