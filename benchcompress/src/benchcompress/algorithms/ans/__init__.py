@@ -217,9 +217,9 @@ def ans_markov_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
     pos += num_symbols
     symbol_values = header[pos : pos + num_symbols]
     pos += num_symbols
-    coeffs = header[pos : pos + num_coeffs]
+    coeffs = header[pos : pos + num_coeffs].astype(np.float32)
     pos += num_coeffs
-    initial = header[pos : pos + num_initial]
+    initial = header[pos : pos + num_initial].astype(dtype)
     pos += num_initial
     bitstream = x[4 + header_size :]
     if dtype_code == 0:
@@ -240,10 +240,9 @@ def ans_markov_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
         signal_length=int(signal_length),
         state=int(state),
         symbol_counts=symbol_counts.astype(np.uint32),
-        symbol_values=symbol_values.astype(np.int16),  # resid is always int16
+        symbol_values=symbol_values.astype(dtype),
         bitstream=bitstream,
     )
-    import time
 
     resid = ans_decode(encoded)
     output = markov_reconstruct_cpp(coeffs, initial, resid)
@@ -361,9 +360,9 @@ def ans_markov_sparse_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
     pos += num_symbols
     symbol_values = header[pos : pos + num_symbols]
     pos += num_symbols
-    coeffs = header[pos : pos + num_coeffs]
+    coeffs = header[pos : pos + num_coeffs].astype(np.float32)
     pos += num_coeffs
-    initial = header[pos : pos + num_initial]
+    initial = header[pos : pos + num_initial].astype(dtype)
     pos += num_initial
 
     bitstream_end = 4 + header_size + bitstream_length
@@ -402,7 +401,7 @@ def ans_markov_sparse_decode(x: bytes, dtype: str, shape: tuple) -> np.ndarray:
         signal_length=int(signal_length),
         state=int(state),
         symbol_counts=symbol_counts.astype(np.uint32),
-        symbol_values=symbol_values.astype(np.int16),  # resid is always int16
+        symbol_values=symbol_values.astype(dtype),
         bitstream=bitstream,
     )
 
