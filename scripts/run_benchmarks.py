@@ -1,64 +1,15 @@
 #!/usr/bin/env python3
 
 import json
+import os
 from pathlib import Path
 from benchcompress import run_benchmarks
-
-def format_size(size_bytes: float) -> str:
-    """Format size in bytes to human readable string"""
-    for unit in ['B', 'KB', 'MB', 'GB']:
-        if size_bytes < 1024:
-            return f"{size_bytes:.1f} {unit}"
-        size_bytes /= 1024
-    return f"{size_bytes:.1f} TB"
-
-def format_time(seconds: float) -> str:
-    """Format time in seconds to human readable string"""
-    if seconds < 0.001:
-        return f"{seconds * 1_000_000:.1f} µs"
-    if seconds < 1:
-        return f"{seconds * 1_000:.1f} ms"
-    return f"{seconds:.2f} s"
+from benchcompress.run_benchmarks._memobin import upload_to_memobin, construct_memobin_url
 
 def main():
     # Run benchmarks
     print("Running benchmarks...")
     results = run_benchmarks()
-
-    # Group results by dataset
-    datasets = {}
-    for result in results['results']:
-        dataset_name = result['dataset']
-        if dataset_name not in datasets:
-            datasets[dataset_name] = []
-        datasets[dataset_name].append(result)
-
-    # Print results
-    print("\nBenchmark Results:")
-    print("=================")
-
-    for dataset_name, dataset_results in sorted(datasets.items()):
-        print(f"\nDataset: {dataset_name}")
-        print("-" * (len(dataset_name) + 9))
-        print(f"Original size: {format_size(dataset_results[0]['original_size'])}")
-
-        # Sort algorithms by compression ratio
-        dataset_results.sort(key=lambda x: x['compression_ratio'], reverse=True)
-
-        # Print table header
-        print("\n{:<15} {:>12} {:>12} {:>12}".format(
-            "Algorithm", "Ratio", "Encode", "Decode"
-        ))
-        print("-" * 53)
-
-        # Print results for each algorithm
-        for result in dataset_results:
-            print("{:<15} {:>11.2f}x {:>12} {:>12}".format(
-                result['algorithm'],
-                result['compression_ratio'],
-                format_time(result['encode_time']),
-                format_time(result['decode_time'])
-            ))
 
     # Save detailed results to JSON
     output_dir = Path("benchmark_results")
@@ -69,6 +20,19 @@ def main():
         json.dump(results, f, indent=2)
 
     print(f"\nDetailed results saved to {output_file}")
+
+    # Upload results to memobin if enabled
+    memobin_api_key = os.environ.get("MEMOBIN_API_KEY")
+    upload_enabled = os.environ.get("UPLOAD_TO_MEMOBIN") == "1"
+
+    if memobin_api_key and upload_enabled:
+        try:
+            # Construct URL for the global results file
+            url = "https://tempory.net/f/memobin/benchcompress/global/results.json"
+            upload_to_memobin(results, url, memobin_api_key)
+            print("Successfully uploaded results to memobin")
+        except Exception as e:
+            print(f"Warning: Failed to upload results to memobin: {str(e)}")
 
 if __name__ == "__main__":
     main()

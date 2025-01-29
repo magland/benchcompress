@@ -22,7 +22,7 @@ function App() {
         setIsLoading(true);
         setError(null);
         const response = await axios.get(
-          "https://raw.githubusercontent.com/magland/benchcompress/benchmark-results/benchmark_results/results.json",
+          "https://tempory.net/f/memobin/benchcompress/global/results.json",
         );
         setBenchmarkData(response.data);
       } catch (error) {
