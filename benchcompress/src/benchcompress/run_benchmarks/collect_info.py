@@ -19,6 +19,7 @@ def collect_algorithm_info(algorithms: List[Dict[str, Any]]) -> List[Dict[str, A
         info = {
             "name": algorithm["name"],
             "description": algorithm.get("description", ""),
+            "long_description": algorithm.get("long_description", ""),
             "version": algorithm["version"],
             "tags": algorithm.get("tags", []),
         }
@@ -42,6 +43,7 @@ def collect_dataset_info(datasets: List[Dict[str, Any]]) -> List[Dict[str, Any]]
         info = {
             "name": dataset["name"],
             "description": dataset.get("description", ""),
+            "long_description": dataset.get("long_description", ""),
             "version": dataset["version"],
             "tags": dataset.get("tags", []),
             "data_url_raw": construct_dataset_url(
