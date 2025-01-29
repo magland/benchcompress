@@ -236,6 +236,7 @@ export default function Home({ benchmarkData }: HomeProps) {
               availableDatasetTags={availableDatasetTags}
               selectedTags={selectedTags}
               toggleTag={handleTagToggle}
+              benchmarkResults={benchmarkData?.results || []}
             />
           ) : (
             <AlgorithmTable
