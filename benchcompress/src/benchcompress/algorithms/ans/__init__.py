@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from .markov_reconstruct import (
     markov_reconstruct as markov_reconstruct_cpp,
 )
@@ -7,7 +8,18 @@ from .markov_predict import (
 )
 from .get_run_lengths import get_run_lengths
 
+
 SOURCE_FILE = "ans/__init__.py"
+
+
+def _load_long_description():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    md_path = os.path.join(current_dir, "ans.md")
+    with open(md_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+LONG_DESCRIPTION = _load_long_description()
 
 
 def ans_encode(x: np.ndarray) -> bytes:
@@ -442,6 +454,7 @@ algorithms = [
         "description": "ANS compression via simple_ans for efficient data compression.",
         "tags": ["ANS", "integer"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "ANS-delta",
@@ -451,6 +464,7 @@ algorithms = [
         "description": "ANS compression via simple_ans with delta encoding for improved compression of sequential data.",
         "tags": ["ANS", "integer", "delta_encoding", "1d"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "ANS-markov",
@@ -460,6 +474,7 @@ algorithms = [
         "description": "ANS compression via simple_ans with Markov prediction for exploiting temporal correlations in the data.",
         "tags": ["ANS", "integer", "markov_prediction", "1d"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "ANS-markov-zrle",
@@ -469,5 +484,6 @@ algorithms = [
         "description": "ANS compression via simple_ans with Markov prediction and zero run-length encoding for sparse data.",
         "tags": ["ANS", "integer", "markov_prediction", "zero_rle", "1d"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
 ]

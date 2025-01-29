@@ -1,8 +1,19 @@
 import numpy as np
 import brotli
+import os
 
 
 SOURCE_FILE = "brotli/__init__.py"
+
+
+def _load_long_description():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    md_path = os.path.join(current_dir, "brotli.md")
+    with open(md_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+LONG_DESCRIPTION = _load_long_description()
 
 
 def brotli_delta_encode(x: np.ndarray, level: int) -> bytes:
@@ -42,6 +53,7 @@ algorithms = [
         "description": "Brotli compression at level 4 (faster).",
         "tags": ["brotli"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "brotli-6",
@@ -51,6 +63,7 @@ algorithms = [
         "description": "Brotli compression at level 6 (balanced).",
         "tags": ["brotli"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "brotli-8",
@@ -60,6 +73,7 @@ algorithms = [
         "description": "Brotli compression at level 8 (better compression).",
         "tags": ["brotli"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "brotli-11",
@@ -69,6 +83,7 @@ algorithms = [
         "description": "Brotli compression at maximum level 11.",
         "tags": ["brotli"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "brotli-11-delta",
@@ -78,5 +93,6 @@ algorithms = [
         "description": "Brotli compression at level 11 with delta encoding.",
         "tags": ["brotli", "delta_encoding", "1d"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
 ]

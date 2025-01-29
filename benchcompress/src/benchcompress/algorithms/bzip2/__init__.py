@@ -1,7 +1,18 @@
 import numpy as np
+import os
 
 
 SOURCE_FILE = "bzip2/__init__.py"
+
+
+def _load_long_description():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    md_path = os.path.join(current_dir, "bzip2.md")
+    with open(md_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+LONG_DESCRIPTION = _load_long_description()
 
 
 def bzip2_encode(x: np.ndarray, level: int) -> bytes:
@@ -50,6 +61,7 @@ algorithms = [
         "description": "Bzip2 compression at level 1 (fastest).",
         "tags": ["bzip2"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "bzip2-3",
@@ -59,6 +71,7 @@ algorithms = [
         "description": "Bzip2 compression at level 3.",
         "tags": ["bzip2"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "bzip2-5",
@@ -68,6 +81,7 @@ algorithms = [
         "description": "Bzip2 compression at level 5 (medium).",
         "tags": ["bzip2"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "bzip2-7",
@@ -77,6 +91,7 @@ algorithms = [
         "description": "Bzip2 compression at level 7.",
         "tags": ["bzip2"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "bzip2-9",
@@ -86,6 +101,7 @@ algorithms = [
         "description": "Bzip2 compression at maximum level 9.",
         "tags": ["bzip2"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "bzip2-9-delta",
@@ -95,5 +111,6 @@ algorithms = [
         "description": "Bzip2 compression at level 9 with delta encoding.",
         "tags": ["bzip2", "delta_encoding", "1d"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
 ]

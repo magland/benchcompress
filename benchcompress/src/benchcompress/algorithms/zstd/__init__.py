@@ -1,10 +1,21 @@
 import numpy as np
+import os
 from ..ans.markov_reconstruct import markov_reconstruct as markov_reconstruct_cpp
 from ..ans.markov_predict import markov_predict as markov_predict_cpp
 from ..ans.get_run_lengths import get_run_lengths
 
 
 SOURCE_FILE = "zstd/__init__.py"
+
+
+def _load_long_description():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    md_path = os.path.join(current_dir, "zstd.md")
+    with open(md_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+LONG_DESCRIPTION = _load_long_description()
 
 
 def zstd_delta_encode(x: np.ndarray, level: int) -> bytes:
@@ -230,6 +241,7 @@ algorithms = [
         "description": "Zstandard compression at level 4 (fast compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zstd-7",
@@ -239,6 +251,7 @@ algorithms = [
         "description": "Zstandard compression at level 7 (balanced speed/compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zstd-10",
@@ -248,6 +261,7 @@ algorithms = [
         "description": "Zstandard compression at level 10 (better compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zstd-13",
@@ -257,6 +271,7 @@ algorithms = [
         "description": "Zstandard compression at level 13 (high compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zstd-16",
@@ -266,6 +281,7 @@ algorithms = [
         "description": "Zstandard compression at level 16 (very high compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zstd-19",
@@ -275,6 +291,7 @@ algorithms = [
         "description": "Zstandard compression at level 19 (ultra high compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zstd-22",
@@ -284,6 +301,7 @@ algorithms = [
         "description": "Zstandard compression at maximum level 22 (highest compression).",
         "tags": ["zstd"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zstd-22-delta",
@@ -293,6 +311,7 @@ algorithms = [
         "description": "Zstandard compression at level 22 with delta encoding for improved compression of sequential data.",
         "tags": ["zstd", "delta_encoding", "1d"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zstd-22-markov",
@@ -302,6 +321,7 @@ algorithms = [
         "description": "Zstandard compression at level 22 with Markov prediction for exploiting temporal correlations in the data.",
         "tags": ["zstd", "markov_prediction", "1d"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zstd-22-markov-zrle",
@@ -311,5 +331,6 @@ algorithms = [
         "description": "Zstandard compression at level 22 with Markov prediction and zero run-length encoding for sparse data.",
         "tags": ["zstd", "markov_prediction", "zero_rle", "1d"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
 ]

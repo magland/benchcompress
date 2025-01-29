@@ -1,7 +1,18 @@
 import numpy as np
+import os
 
 
 SOURCE_FILE = "zlib/__init__.py"
+
+
+def _load_long_description():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    md_path = os.path.join(current_dir, "zlib.md")
+    with open(md_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+LONG_DESCRIPTION = _load_long_description()
 
 
 def zlib_encode(x: np.ndarray, level: int) -> bytes:
@@ -50,6 +61,7 @@ algorithms = [
         "description": "Zlib DEFLATE compression at level 1 (fastest).",
         "tags": ["zlib"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zlib-3",
@@ -59,6 +71,7 @@ algorithms = [
         "description": "Zlib DEFLATE compression at level 3.",
         "tags": ["zlib"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zlib-5",
@@ -68,6 +81,7 @@ algorithms = [
         "description": "Zlib DEFLATE compression at level 5 (medium).",
         "tags": ["zlib"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zlib-7",
@@ -77,6 +91,7 @@ algorithms = [
         "description": "Zlib DEFLATE compression at level 7.",
         "tags": ["zlib"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zlib-9",
@@ -86,6 +101,7 @@ algorithms = [
         "description": "Zlib DEFLATE compression at maximum level 9.",
         "tags": ["zlib"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "zlib-9-delta",
@@ -95,5 +111,6 @@ algorithms = [
         "description": "Zlib DEFLATE compression at level 9 with delta encoding.",
         "tags": ["zlib", "delta_encoding", "1d"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
 ]

@@ -1,7 +1,18 @@
 import numpy as np
+import os
 
 
 SOURCE_FILE = "lz4/__init__.py"
+
+
+def _load_long_description():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    md_path = os.path.join(current_dir, "lz4.md")
+    with open(md_path, "r", encoding="utf-8") as f:
+        return f.read()
+
+
+LONG_DESCRIPTION = _load_long_description()
 
 
 def lz4_encode(x: np.ndarray, level: int) -> bytes:
@@ -50,6 +61,7 @@ algorithms = [
         "description": "LZ4 compression at level 0 (fastest).",
         "tags": ["lz4"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "lz4-3",
@@ -59,6 +71,7 @@ algorithms = [
         "description": "LZ4 compression at level 3 (minimum high compression).",
         "tags": ["lz4"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "lz4-10",
@@ -68,6 +81,7 @@ algorithms = [
         "description": "LZ4 compression at level 10.",
         "tags": ["lz4"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "lz4-16",
@@ -77,6 +91,7 @@ algorithms = [
         "description": "LZ4 compression at level 16 (highest compression).",
         "tags": ["lz4"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
     {
         "name": "lz4-16-delta",
@@ -86,5 +101,6 @@ algorithms = [
         "description": "LZ4 compression at level 16 with delta encoding.",
         "tags": ["lz4", "delta_encoding", "1d"],
         "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
     },
 ]
