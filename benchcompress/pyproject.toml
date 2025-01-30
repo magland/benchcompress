@@ -23,7 +23,8 @@ dependencies = [
     "numba",
     "pybind11>=2.11.1",
     "segyio",
-    "lz4"
+    "lz4",
+    "pyedflib"
 ]
 
 [tool.scikit-build]
