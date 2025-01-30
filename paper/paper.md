@@ -75,7 +75,23 @@ This predictive preprocessing step improves compression performance compared to 
 
 ## Compression Algorithms
 
-Describe the various compression methods.
+The benchmark suite evaluates a diverse set of compression algorithms, ranging from established general-purpose methods to specialized techniques.
+
+Zstandard (zstd) is a fast real-time compression algorithm developed by Facebook that provides a broad spectrum of compression levels, from fast compression (level 4) to maximum compression (level 22).
+
+LZMA (Lempel-Ziv-Markov chain Algorithm) employs a dictionary compression scheme similar to LZ77 but with sophisticated modeling of repeating patterns using Markov chains. It focuses on achieving high compression ratios through larger dictionary sizes and complex modeling, generally resulting in slower processing but smaller file sizes.
+
+LZ4, designed for speed, is particularly well-suited for real-time compression scenarios. It belongs to the LZ77 family of byte-oriented compression schemes and offers various compression levels, from its fastest mode (level 0) to maximum compression (level 16).
+
+Zlib, implementing the DEFLATE algorithm, combines LZ77 and Huffman coding to provide a balance between compression ratio and speed across its different compression levels (1-9).
+
+Bzip2 employs the Burrows-Wheeler transform along with Huffman coding, typically achieving better compression than traditional LZ77-based algorithms but at reduced speed.
+
+Brotli, developed by Google, combines LZ77, Huffman coding, and context modeling to provide effective general-purpose compression across multiple compression levels.
+
+We also include a custom implementation of ANS, as described above. The implementation uses the simple_ans Python package developed specifically for this project.
+
+To enhance the performance of these basic compression algorithms, we also test reversible preprocessing steps before compression. These include, where appropriate, delta encoding, linear Markov prediction, and zero run length encoding for sparse data.
 
 ## Dataset Generation
 
