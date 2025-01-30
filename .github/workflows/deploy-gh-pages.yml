@@ -2,17 +2,22 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
+    paths:
+      - 'web-ui/**'
+      - 'paper/**'
   workflow_dispatch:
 
+# Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Allow one concurrent deployment
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  group: 'pages'
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -24,10 +29,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install pandoc and pandoc-citeproc
+      - name: Install pandoc
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc pandoc-citeproc
+          sudo apt-get install -y pandoc
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -55,7 +60,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: web-ui/dist
+          path: ./web-ui/dist
 
       - name: Deploy to GitHub Pages
         id: deployment
