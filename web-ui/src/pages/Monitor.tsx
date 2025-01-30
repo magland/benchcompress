@@ -24,29 +24,26 @@ export default function Monitor() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchStatus = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        "https://tempory.net/f/memobin/benchmark_status/current.json",
+      );
+      setStatus(response.data);
+      setError(null);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to fetch status";
+      setError(message);
+      console.error("Error fetching benchmark status:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const response = await axios.get(
-          "https://tempory.net/f/memobin/benchmark_status/current.json",
-        );
-        setStatus(response.data);
-        setError(null);
-      } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Failed to fetch status";
-        setError(message);
-        console.error("Error fetching benchmark status:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Fetch immediately and then every 30 seconds
     fetchStatus();
-    const interval = setInterval(fetchStatus, 30000);
-
-    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -70,7 +67,33 @@ export default function Monitor() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Benchmark Progress</h1>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "20px",
+          marginBottom: "20px",
+        }}
+      >
+        <h1 style={{ margin: 0 }}>Benchmark Progress</h1>
+        <button
+          onClick={fetchStatus}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+          }}
+          disabled={loading}
+        >
+          {loading ? "Refreshing..." : "Refresh"}
+        </button>
+      </div>
 
       <div style={{ marginBottom: "20px" }}>
         <h2>Current Status</h2>
