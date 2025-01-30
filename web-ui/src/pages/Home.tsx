@@ -53,7 +53,21 @@ const SectionCard: React.FC<{ section: HomeSection }> = ({ section }) => {
 export default function Home() {
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
-      <h1 style={{ marginBottom: "2rem" }}>{content.title}</h1>
+      <h1
+        style={{
+          marginBottom: "2rem",
+          display: "flex",
+          alignItems: "center",
+          gap: "1rem",
+        }}
+      >
+        <img
+          src={`${import.meta.env.BASE_URL}logo.svg`}
+          alt="BenchCompress Logo"
+          style={{ width: "40px", height: "auto" }}
+        />
+        {content.title}
+      </h1>
 
       <p
         style={{ fontSize: "1.1rem", lineHeight: "1.6", marginBottom: "2rem" }}

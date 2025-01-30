@@ -1,7 +1,8 @@
 title: Welcome to Benchcompress
 description:
   Benchcompress is an open-source project for comparing compression algorithms
-  on scientific data arrays.
+  on scientific data arrays, with a special focus on electrophysiology
+  recordings.
 
 sections:
   algorithms:
