@@ -124,7 +124,7 @@ datasets = [
     },
     {
         "name": "seismic-lim-2024-01-quantized",
-        "version": "1",
+        "version": "2",
         "description": "Seismic data from the 2022 Mw 3.8 Goesan earthquake in South Korea, quantized.",
         "create": lambda: _load_quantized_lim_2024_seismic_data(),
         "tags": tags_integer,
