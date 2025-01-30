@@ -5,9 +5,9 @@ import { ScrollToTop } from "./components/ScrollToTop";
 import "./components/AppHeader.css";
 import Home from "./pages/Home";
 import BenchmarkView from "./pages/BenchmarkView";
-import About from "./pages/About";
 import Paper from "./pages/Paper";
 import Monitor from "./pages/Monitor";
+import Submit from "./pages/Submit";
 import { BenchmarkData } from "./types";
 
 function App() {
@@ -40,7 +40,7 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter basename="/benchcompress">
+    <BrowserRouter basename="/benchcompress/">
       <ScrollToTop />
       <div
         style={{
@@ -154,14 +154,14 @@ function App() {
                 Monitor
               </Link>
               <Link
-                to="/about"
+                to="/submit"
                 style={{
                   color: "#0066cc",
                   textDecoration: "none",
                   fontWeight: "500",
                 }}
               >
-                About
+                Submit
               </Link>
             </div>
           </div>
@@ -190,9 +190,9 @@ function App() {
                 path="/algorithm/:algorithmName"
                 element={<BenchmarkView benchmarkData={benchmarkData} />}
               />
-              <Route path="/about" element={<About />} />
               <Route path="/paper" element={<Paper />} />
               <Route path="/monitor" element={<Monitor />} />
+              <Route path="/submit" element={<Submit />} />
             </Routes>
           )}
         </main>

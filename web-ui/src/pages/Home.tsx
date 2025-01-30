@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import yaml from "yaml";
 import contentYaml from "../content/home-content.yml?raw";
@@ -12,19 +13,25 @@ const SectionCard: React.FC<{ section: HomeSection }> = ({ section }) => {
     return (
       <div
         style={{
-          padding: "1.5rem",
+          padding: "0.75rem",
           border: "1px solid #eaeaea",
           borderRadius: "8px",
           backgroundColor: "#f9f9f9",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
         }}
       >
-        <h2 style={{ marginBottom: "1rem" }}>{section.title}</h2>
-        <p style={{ marginBottom: "1rem" }}>{section.description}</p>
+        <h2 style={{ fontSize: "1.25rem", marginBottom: "0.5rem" }}>
+          {section.title}
+        </h2>
+        <p style={{ marginBottom: "0.5rem" }}>{section.description}</p>
         <a
           href={section.link}
           target="_blank"
           rel="noopener noreferrer"
           className="soft-button"
+          style={{ marginTop: "auto", alignSelf: "flex-start" }}
         >
           {section.linkText}
         </a>
@@ -35,22 +42,66 @@ const SectionCard: React.FC<{ section: HomeSection }> = ({ section }) => {
   return (
     <div
       style={{
-        padding: "1.5rem",
+        padding: "0.75rem",
         border: "1px solid #eaeaea",
         borderRadius: "8px",
         backgroundColor: "#f9f9f9",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
       }}
     >
-      <h2 style={{ marginBottom: "1rem" }}>{section.title}</h2>
-      <p style={{ marginBottom: "1rem" }}>{section.description}</p>
-      <Link to={section.link} className="soft-button">
+      <h2 style={{ fontSize: "1.25rem", marginBottom: "0.5rem" }}>
+        {section.title}
+      </h2>
+      <p style={{ marginBottom: "0.5rem" }}>{section.description}</p>
+      <Link
+        to={section.link}
+        className="soft-button"
+        style={{ marginTop: "auto", alignSelf: "flex-start" }}
+      >
         {section.linkText}
       </Link>
     </div>
   );
 };
 
+interface BenchmarkStatus {
+  current_dataset: string;
+  current_algorithm: string;
+  completed_count: number;
+  total_count: number;
+  progress_percentage: number;
+  elapsed_time: number;
+  last_update: string;
+  completed_benchmarks: Array<{
+    dataset: string;
+    algorithm: string;
+    compression_ratio: number;
+    encode_time: number;
+    decode_time: number;
+    cache_status: string;
+  }>;
+}
+
 export default function Home() {
+  const [status, setStatus] = useState<BenchmarkStatus | null>(null);
+
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const response = await axios.get(
+          "https://tempory.net/f/memobin/benchmark_status/current.json",
+        );
+        setStatus(response.data);
+      } catch (error) {
+        console.error("Error fetching benchmark status:", error);
+      }
+    };
+
+    fetchStatus();
+  }, []);
+
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
       <h1
@@ -99,8 +150,31 @@ export default function Home() {
         style={{ textAlign: "center", color: "#666", fontSize: "0.9rem" }}
       >
         <p>
-          Last updated: {__BUILD_DATE__}
+          Last UI update: {__BUILD_DATE__}
           <br />
+          {status && (
+            <>
+              <div
+                style={{
+                  margin: "1rem 0",
+                  padding: "0.5rem",
+                  border: "1px solid #eaeaea",
+                  borderRadius: "4px",
+                  display: "inline-block",
+                }}
+              >
+                Last benchmark run:{" "}
+                {new Date(status.last_update).toLocaleString()}
+                <br />
+                Status:{" "}
+                {status.progress_percentage === 100
+                  ? "Completed"
+                  : "In Progress"}{" "}
+                ({status.completed_count}/{status.total_count} benchmarks)
+              </div>
+              <br />
+            </>
+          )}
           Released under{" "}
           <a
             href="https://github.com/magland/benchcompress/blob/main/LICENSE"

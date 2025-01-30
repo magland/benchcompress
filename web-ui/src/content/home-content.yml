@@ -26,7 +26,7 @@ sections:
     title: Research Paper
     description:
       Read the work-in-progress paper describing the methodology,
-      implementation, and findings of this compression benchmarking research.
+      implementation, and findings of this research.
     link: /paper
     linkText: Read Paper
 
@@ -47,3 +47,12 @@ sections:
     link: https://github.com/magland/benchcompress
     linkText: View on GitHub
     external: true
+
+  submit:
+    title: Submit an Algorithm or Dataset
+    description:
+      Want to contribute? Learn how to add your own compression algorithm
+      or scientific dataset to the benchmark suite. Follow the step-by-step
+      guide for preparing and submitting your contribution.
+    link: /submit
+    linkText: Submission Guide
