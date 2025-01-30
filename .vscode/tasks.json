@@ -4,7 +4,7 @@
     {
       "label": "Compile Paper",
       "type": "shell",
-      "command": "./paper/compile.sh",
+      "command": "./devel/compile_paper.sh",
       "group": "build",
       "presentation": {
         "reveal": "always",

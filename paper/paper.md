@@ -22,9 +22,15 @@ When assessing compression performance, it is important to consider not only fin
 
 To help researchers navigate these questions, we introduce Benchcompress, a benchmarking framework designed to systematically evaluate and compare compression algorithms for numeric data arrays. By automating the testing and providing tools for analysis, Benchcompress simplifies the process of identifying which methods work best for particular datasets. In the sections that follow, we describe the system in detail, outline both standard and specialized compression strategies, and present preliminary results from our benchmarks.
 
-## Indepent identically distributed samples
+## Traditional Compression Methods and Scientific Data
 
-For independently and identically distributed (i.i.d.) discrete data, where each sample is drawn from a discrete probability distribution (e.g., Bernoulli sampling or quantized Gaussian noise), the theoretical compressed size in bits per sample is determined by the Shannon entropy formula:
+Traditional compression algorithms like LZW (Lempel-Ziv-Welch), LZ77, BWT (Burrows-Wheeler Transform), and Huffman coding were originally designed for text data where patterns manifest as repeated sequences of characters or words. While these methods can compress numeric data from scientific instruments, they may not be optimal for this use case. Text compression excels at identifying exact matches of recurring patterns, whereas scientific measurements often exhibit more complex relationships between values.
+
+For example, in text compression, finding repeated instances of common words or phrases leads to efficient encoding. In contrast, scientific data arrays often contain continuous variations where measurement noise and uncertainties mean exact repetition is rare. Even when numeric values are similar, their byte-level representations may share some common bits while differing in others. This characteristic of scientific data suggests that methods explicitly accounting for numerical relationships between values may achieve better compression ratios than general-purpose algorithms.
+
+## Independent identically distributed samples
+
+Moving from text to numeric data, we begin with the fundamental case of independently and identically distributed (i.i.d.) discrete data. For such data, where each sample is drawn from a discrete probability distribution (e.g., Bernoulli sampling or quantized Gaussian noise), the theoretical compressed size in bits per sample is determined by the Shannon entropy formula:
 
 $$
 H(X) = -\sum_{i} p(x_i) \log_2 p(x_i).
@@ -40,7 +46,7 @@ bits per sample. This means that the optimal compression ratio for such a datase
 
 ## Asymmetric numeral systems
 
-In practice, achieving this theoretical compression ratio requires sophisticated encoding techniques. Arithmetic encoding [ref] is one such method, but it is challenging to implement and can be computationally inefficient. A more modern and efficient alternative is asymmetric numeral systems (ANS) [ref], which closely approaches the theoretical limit and is incorporated into state-of-the-art compressors such as ZStandard [ref]. However, these large, general-use packages are primarily optimized for structured data types, such as text, rather than for numeric scientific data. In our benchmarks, we evaluate ANS using a simple, no-frills, implementation using a Python package we developed for this purpose called `simple_ans`. As anticipated, we show that ANS demonstrates superior performance when compressing i.i.d. samples from a discrete distribution.
+In practice, achieving this theoretical compression ratio requires sophisticated encoding techniques. Arithmetic coding [@witten1987arithmetic] is one such method, but it is challenging to implement and can be computationally inefficient. A more modern and efficient alternative is asymmetric numeral systems (ANS) [@duda2013asymmetric], which closely approaches the theoretical limit and is incorporated into state-of-the-art compressors such as ZStandard [@zstd]. However, these large, general-use packages are primarily optimized for structured data types, such as text, rather than for numeric scientific data. In our benchmarks, we evaluate ANS using a simple, no-frills, implementation using a Python package we developed for this purpose called `simple_ans`. As anticipated, we show that ANS demonstrates superior performance when compressing i.i.d. samples from a discrete distribution.
 
 ## Delta encoding
 
@@ -85,3 +91,5 @@ Describe the datasets we use for benchmarking.
 ## Conclusion
 
 [Conclusion to be added]
+
+## References
