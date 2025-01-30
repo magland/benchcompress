@@ -84,6 +84,26 @@ def _load_real_001290(
     return cast(np.ndarray, ret)
 
 
+def _load_real_001259(*, num_samples: int) -> np.ndarray:
+    """Load data from DANDI dataset 001259.
+
+    Args:
+        num_samples: Number of samples to load
+
+    Returns:
+        Array of shape (num_samples, 1) containing the loaded data
+    """
+    # this one only has one channel
+    # https://neurosift.app/?p=/nwb&url=https://api.dandiarchive.org/api/assets/6fa78218-f4d4-45f3-a627-5afe4aa88c3e/download/&dandisetId=001259&dandisetVersion=draft
+    nwb_url = "https://api.dandiarchive.org/api/assets/6fa78218-f4d4-45f3-a627-5afe4aa88c3e/download/"
+    h5f = lindi.LindiH5pyFile.from_hdf5_file(nwb_url)
+    ds = h5f["/acquisition/ElectricalSeries"]
+    assert isinstance(ds, lindi.LindiH5pyDataset)
+    # this one only has one channel
+    ret = ds[:num_samples, 0]
+    return cast(np.ndarray, ret)
+
+
 def _create_filtered_version(X: np.ndarray) -> np.ndarray:
     """Create filtered version of a dataset using bandpass filtering and quantization.
 
@@ -214,6 +234,15 @@ datasets = [
         "long_description": LONG_DESCRIPTION,
     },
     {
+        "name": "ephys-001259",
+        "version": "1",
+        "description": "Raw extracellular electrophysiology recording from DANDI:001259.",
+        "create": lambda: _load_real_001259(num_samples=500_000).flatten(),
+        "tags": tags,
+        "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
+    },
+    {
         "name": "ephys-000876-ch45-filtered",
         "version": "1",
         "description": "Preprocessed version of real-000876-ch45. Bandpass filtered (300-6000 Hz).",
@@ -253,6 +282,17 @@ datasets = [
         "long_description": LONG_DESCRIPTION,
     },
     {
+        "name": "ephys-001259-filtered",
+        "version": "1",
+        "description": "Preprocessed version of real-001259. Bandpass filtered (300-6000 Hz).",
+        "create": lambda: _create_filtered_version(
+            _load_real_001259(num_samples=500_000).flatten()
+        ),
+        "tags": tags + ["filtered"],
+        "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
+    },
+    {
         "name": "ephys-000876-ch45-sparse",
         "version": "1",
         "description": "Sparse version of real-000876-ch45. Activity-based suppression applied.",
@@ -286,6 +326,17 @@ datasets = [
             _load_real_001290(
                 num_samples=500_000, num_channels=1, start_channel=0
             ).flatten()
+        ),
+        "tags": tags + ["filtered", "sparse"],
+        "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
+    },
+    {
+        "name": "ephys-001259-sparse",
+        "version": "1",
+        "description": "Sparse version of real-001259. Activity-based suppression applied.",
+        "create": lambda: _create_sparse_version(
+            _load_real_001259(num_samples=500_000).flatten()
         ),
         "tags": tags + ["filtered", "sparse"],
         "source_file": SOURCE_FILE,

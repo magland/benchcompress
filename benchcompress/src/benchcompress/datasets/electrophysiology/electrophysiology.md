@@ -9,6 +9,7 @@ The datasets are samples from single channels within larger electrophysiology re
 - Channel 45 from a session in [Dandiset 000876](https://dandiarchive.org/dandiset/000876)
 - Channel 101 from a session in [Dandiset 000409](https://dandiarchive.org/dandiset/000409)
 - Channel 0 from a session in [Dandiset 001290](https://dandiarchive.org/dandiset/001290)
+- Only channel from a session in [Dandiset 001259](https://dandiarchive.org/dandiset/001259)
 
 ## Dataset Variants
 
