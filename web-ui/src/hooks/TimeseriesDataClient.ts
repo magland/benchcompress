@@ -3,13 +3,14 @@ export type SupportedTypedArray =
   | Uint16Array
   | Uint32Array
   | Int16Array
-  | Int32Array;
+  | Int32Array
+  | Float32Array;
 
 interface ChunkCache {
   [key: number]: SupportedTypedArray;
 }
 
-type DType = "uint8" | "uint16" | "uint32" | "int16" | "int32";
+type DType = "uint8" | "uint16" | "uint32" | "int16" | "int32" | "float32";
 
 const TypedArrayConstructors = {
   uint8: Uint8Array,
@@ -17,6 +18,7 @@ const TypedArrayConstructors = {
   uint32: Uint32Array,
   int16: Int16Array,
   int32: Int32Array,
+  float32: Float32Array,
 } as const;
 
 export class TimeseriesDataClient {
