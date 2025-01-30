@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ScrollToTop } from "./components/ScrollToTop";
 import "./components/AppHeader.css";
 import Home from "./pages/Home";
+import BenchmarkView from "./pages/BenchmarkView";
 import About from "./pages/About";
 import Paper from "./pages/Paper";
 import Monitor from "./pages/Monitor";
@@ -55,9 +56,7 @@ function App() {
             right: 0,
             padding: "0.35rem min(2rem, 4%)",
             backgroundColor: "white",
-            // borderBottom: "1px solid #eaeaea",
             zIndex: 1000,
-            // boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
           }}
         >
           <div
@@ -69,7 +68,7 @@ function App() {
             }}
           >
             <Link
-              to="/datasets"
+              to="/"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -115,6 +114,26 @@ function App() {
             </Link>
             <div style={{ display: "flex", gap: "1.5rem" }}>
               <Link
+                to="/datasets"
+                style={{
+                  color: "#0066cc",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+              >
+                Datasets
+              </Link>
+              <Link
+                to="/algorithms"
+                style={{
+                  color: "#0066cc",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                }}
+              >
+                Algorithms
+              </Link>
+              <Link
                 to="/paper"
                 style={{
                   color: "#0066cc",
@@ -154,22 +173,22 @@ function App() {
             <div>Error: {error}</div>
           ) : (
             <Routes>
-              <Route path="/" element={<Navigate to="/datasets" replace />} />
+              <Route path="/" element={<Home />} />
               <Route
                 path="/datasets"
-                element={<Home benchmarkData={benchmarkData} />}
+                element={<BenchmarkView benchmarkData={benchmarkData} />}
               />
               <Route
                 path="/algorithms"
-                element={<Home benchmarkData={benchmarkData} />}
+                element={<BenchmarkView benchmarkData={benchmarkData} />}
               />
               <Route
                 path="/dataset/:datasetName"
-                element={<Home benchmarkData={benchmarkData} />}
+                element={<BenchmarkView benchmarkData={benchmarkData} />}
               />
               <Route
                 path="/algorithm/:algorithmName"
-                element={<Home benchmarkData={benchmarkData} />}
+                element={<BenchmarkView benchmarkData={benchmarkData} />}
               />
               <Route path="/about" element={<About />} />
               <Route path="/paper" element={<Paper />} />
