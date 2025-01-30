@@ -60,7 +60,7 @@ def _load_04A_04B_seismic_data() -> np.ndarray:
 
 def _load_quantized_04A_04B_seismic_data():
     X = _load_04A_04B_seismic_data()
-    step = 10
+    step = 10000
     X = np.round(X / step).astype(np.int32)
     return X
 
@@ -89,7 +89,7 @@ def _load_lim_2024_seismic_data() -> np.ndarray:
 
 def _load_quantized_lim_2024_seismic_data():
     X = _load_lim_2024_seismic_data()
-    step = 10000
+    step = 10
     X = np.round(X / step).astype(np.int32)
     return X
 
@@ -106,7 +106,7 @@ datasets = [
     },
     {
         "name": "seismic-04A-04B-quantized",
-        "version": "2",
+        "version": "3",
         "description": "Seismic data from Roger Revelle voyage RR1508, quantized.",
         "create": lambda: _load_quantized_04A_04B_seismic_data(),
         "tags": tags_integer,
@@ -124,7 +124,7 @@ datasets = [
     },
     {
         "name": "seismic-lim-2024-01-quantized",
-        "version": "2",
+        "version": "3",
         "description": "Seismic data from the 2022 Mw 3.8 Goesan earthquake in South Korea, quantized.",
         "create": lambda: _load_quantized_lim_2024_seismic_data(),
         "tags": tags_integer,
