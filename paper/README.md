@@ -2,6 +2,4 @@
 
 Contains the main paper content (paper.md) for the Benchcompress project.
 
-The paper is imported directly in the web UI via relative path:
-```typescript
-import paperContent from "../../../paper/paper.md?raw";
+For compiling and copying to the public directory, see the scripts in devel/

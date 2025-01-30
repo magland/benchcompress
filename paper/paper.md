@@ -1,14 +1,19 @@
-# Benchmarking Compression Algorithms for Scientific Data Arrays
-
-*Jeremy Magland, Center for Computational Mathematics, Flatiron Institute*
-
-*Last updated: January 2025*
+---
+title: "Benchmarking Compression Algorithms for Scientific Data Arrays"
+author: Jeremy Magland, Center for Computational Mathematics, Flatiron Institute
+date: "January 2025"
+bibliography: references.bib
+geometry:
+  - margin=1in
+---
 
 **Early draft, work in progress.**
 
 ## Abstract
 
+:::abstract
 *Benchcompress* is a benchmarking framework designed to evaluate the performance of various compression algorithms on scientific data arrays, with a special focus on electrophysiology traces. The framework automates the benchmarking process, measuring compression ratio, encoding throughput, and decoding throughput for each algorithm-dataset pair. Results are verified through decompression and comparison with the original data, ensuring accuracy. The benchmark results are stored and visualized through an interactive web interface, allowing users to filter, sort, and explore the data. This paper presents the design, implementation, and preliminary results of Benchcompress, highlighting its utility in identifying optimal compression techniques for scientific datasets.
+:::
 
 ## Introduction
 
