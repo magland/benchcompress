@@ -143,26 +143,6 @@ function App() {
               >
                 Paper
               </Link>
-              <Link
-                to="/monitor"
-                style={{
-                  color: "#0066cc",
-                  textDecoration: "none",
-                  fontWeight: "500",
-                }}
-              >
-                Monitor
-              </Link>
-              <Link
-                to="/submit"
-                style={{
-                  color: "#0066cc",
-                  textDecoration: "none",
-                  fontWeight: "500",
-                }}
-              >
-                Submit
-              </Link>
             </div>
           </div>
         </nav>
