@@ -95,7 +95,7 @@ To enhance the performance of these basic compression algorithms, we also test r
 
 ## Datasets
 
-Our benchmark suite combines synthetic test cases and real scientific measurements to evaluate compression performance across diverse scenarios. The synthetic datasets include Bernoulli sequences with varying probabilities (p=0.1 to 0.5) providing well-defined theoretical entropy bounds, and Gaussian-distributed data in both quantized integer and floating-point formats with different standard deviations (σ=1 to 8).
+Our benchmark suite combines synthetic test cases and real scientific measurements to evaluate compression performance across diverse scenarios. The synthetic datasets include Bernoulli sequences with varying probabilities (p=0.1 to 0.5) providing well-defined theoretical entropy bounds, and Gaussian-distributed data in both quantized integer and floating-point formats with different standard deviations ($\sigma=1$ to $8$).
 
 For real-world data, we draw from multiple sources in neuroscience and geophysics. Extracellular electrophysiology samples from the DANDI Archive [@dandi_archive] are provided in three forms: raw 30 kHz recordings, bandpass filtered (300-6000 Hz) and normalized traces, and sparse versions using activity-based suppression. We also include intracranial EEG data from OpenNeuro dataset ds005592 [@markiewicz2021openneuro], consisting of concatenated recordings from ten channels as 32-bit floating-point voltage measurements.
 
@@ -115,7 +115,9 @@ Results are presented through an interactive web interface where users can explo
 
 ## Results
 
-[Preliminary results to be added]
+We first report on compression ratio performance, and then we will move on to encoding and decoding speeds.
+
+For the synthetic datasets that involve i.i.d. samples, ANS demonstrates superior compression performance compared to other algorithms, achieving compression ratios close to the theoretical entropy bounds. For example, in the Bernoulli sequence with $p=0.1$ ([https://magland.github.io/benchcompress/dataset/bernoulli-0.1](https://magland.github.io/benchcompress/dataset/bernoulli-0.1)), ANS achieves a compression ratio of ~16.9 whereas the next best algorithms (bzip2, lzma, btrotli-11, zstd-19, and zstd-22) achieve ratios around 13.9. Zlib struggles for this dataset, with a compression ratio of only ~12.2 at the highest compression level (9), and much lower values for lower levels. Brotli and Zstandard at the lower compression levels also perform poorly (for example ~9.6 for zstd-7). The results show a similar trend for the other Bernoulli datasets with different probabilities, but the spread is less pronounced as the entropy increases. The story is similar for the quantized Gaussian datasets, with ANS outperforming the other algorithms, especially for lower standard deviations (e.g., $\sigma=3$, [https://magland.github.io/benchcompress/dataset/gaussian-q3](https://magland.github.io/benchcompress/dataset/gaussian-q3)).
 
 ## Discussion
 
