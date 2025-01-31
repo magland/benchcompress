@@ -50,7 +50,7 @@ def _load_bold_data(*, slice_indices: Optional[List[int]] = None) -> np.ndarray:
     data = data.astype(np.int16)
 
     if slice_indices is not None:
-        data = data[:, :, :, slice_indices]
+        data = data[:, :, slice_indices, :]
 
     # Now we are going to convert to 1d array, and we make sure that the time dimension varies the fastest
     data = data.ravel()
@@ -61,7 +61,7 @@ def _load_bold_data(*, slice_indices: Optional[List[int]] = None) -> np.ndarray:
 datasets = [
     {
         "name": "fmri-ds005880",
-        "version": "1",
+        "version": "2",
         "description": "Middle 15 slices from BOLD fMRI recording from ds005880 OpenNeuro dataset.",
         "create": lambda: _load_bold_data(slice_indices=list(range(15, 30))),
         "tags": tags,
