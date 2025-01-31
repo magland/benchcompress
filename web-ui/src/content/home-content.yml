@@ -1,0 +1,58 @@
+title: Welcome to Benchcompress
+description:
+  Benchcompress is an open-source project for comparing compression algorithms
+  on scientific data arrays, with a special focus on electrophysiology
+  recordings.
+
+sections:
+  algorithms:
+    title: Algorithms
+    description:
+      Explore the supported compression algorithms, including traditional methods
+      like zlib and modern approaches like ANS.
+    link: /algorithms
+    linkText: View Algorithms
+
+  datasets:
+    title: Datasets
+    description:
+      Explore the curated collection of scientific datasets, including
+      electrophysiology recordings, seismic data, and more. See the performance
+      of the various compression algorithms on each dataset.
+    link: /datasets
+    linkText: View Datasets
+
+  paper:
+    title: Research Paper
+    description:
+      Read the work-in-progress paper describing the methodology,
+      implementation, and findings of this research.
+    link: /paper
+    linkText: Read Paper
+
+  monitor:
+    title: Live Monitor
+    description:
+      The benchmarking runs automatically in a GitHub Actions workflow. Track
+      current progress, view completed benchmarks, and monitor performance
+      metrics as they are generated.
+    link: /monitor
+    linkText: View Monitor
+
+  source:
+    title: Source Code
+    description:
+      Explore the GitHub repository to view the source code, contribute to the
+      project, or run your own benchmarks locally.
+    link: https://github.com/magland/benchcompress
+    linkText: View on GitHub
+    external: true
+
+  submit:
+    title: Submit an Algorithm or Dataset
+    description:
+      Want to contribute? Learn how to add your own compression algorithm
+      or scientific dataset to the benchmark suite. Follow the step-by-step
+      guide for preparing and submitting your contribution.
+    link: /submit
+    linkText: Submission Guide

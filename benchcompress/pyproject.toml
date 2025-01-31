@@ -1,0 +1,38 @@
+[build-system]
+requires = ["scikit-build-core>=0.5.0", "pybind11>=2.11.1"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "benchcompress"
+version = "0.1.0"
+description = "Benchmarking compression methods for integer timeseries data"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [
+    { name = "Jeremy Magland" }
+]
+dependencies = [
+    "numpy",
+    "scipy",
+    "zstandard",
+    "simple_ans",
+    "requests",
+    "lindi",
+    "brotli",
+    "click",
+    "numba",
+    "pybind11>=2.11.1",
+    "segyio",
+    "lz4",
+    "pyedflib",
+    "nibabel"
+]
+
+[tool.scikit-build]
+cmake.minimum-version = "3.15"
+cmake.source-dir = "src/benchcompress/algorithms/ans"
+cmake.build-type = "Release"
+wheel.packages = ["src/benchcompress"]
+
+[project.scripts]
+benchcompress = "benchcompress.cli:main"

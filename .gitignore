@@ -1,0 +1,11 @@
+*.out
+benchmark_results
+.benchmark_cache
+__pycache__
+*.dat
+*.npy
+*.segy
+*.mat
+*.edf
+*.zip
+data
