@@ -1,14 +1,12 @@
 import {
   flexRender,
   getCoreRowModel,
-  useReactTable,
   getSortedRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
 import { BenchmarkResult } from "../../../types";
-import { columns } from "./columns";
-import { BenchmarkCharts } from "../charts/BenchmarkCharts";
 import { exportToCsv } from "../export/csvExport";
-import { useBenchmarkChartData } from "../../../hooks/useBenchmarkChartData";
+import { columns } from "./columns";
 
 interface BenchmarkTableProps {
   results: BenchmarkResult[];
@@ -22,12 +20,8 @@ export function BenchmarkTable({ results }: BenchmarkTableProps) {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  const chartData = useBenchmarkChartData(results, "", "");
-
   return (
     <div className="table-container">
-      {chartData.length > 0 && <BenchmarkCharts chartData={chartData} />}
-
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

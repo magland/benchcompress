@@ -11,8 +11,9 @@ export function useBenchmarkChartData(
       return results
         .filter((row) => row.dataset === selectedDataset)
         .map((row) => ({
-          algorithm: row.algorithm,
+          algorithmOrDataset: row.algorithm,
           compression_ratio: row.compression_ratio,
+          reference_compression_ratio: null,
           encode_speed: row.encode_mb_per_sec,
           decode_speed: row.decode_mb_per_sec,
         }));
@@ -20,8 +21,13 @@ export function useBenchmarkChartData(
       return results
         .filter((row) => row.algorithm === selectedAlgorithm)
         .map((row) => ({
-          algorithm: row.dataset,
+          algorithmOrDataset: row.dataset,
           compression_ratio: row.compression_ratio,
+          reference_compression_ratio: Math.max(
+            ...results
+              .filter((r) => r.dataset === row.dataset)
+              .map((r) => r.compression_ratio),
+          ),
           encode_speed: row.encode_mb_per_sec,
           decode_speed: row.decode_mb_per_sec,
         }));

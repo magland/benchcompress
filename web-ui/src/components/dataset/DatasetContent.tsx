@@ -8,8 +8,9 @@ interface DatasetContentProps {
   dataset: Dataset;
   benchmarkData: BenchmarkData | null;
   chartData: Array<{
-    algorithm: string;
+    algorithmOrDataset: string;
     compression_ratio: number;
+    reference_compression_ratio: number | null;
     encode_speed: number;
     decode_speed: number;
   }>;
@@ -92,6 +93,7 @@ export const DatasetContent = ({
       filterKey="dataset"
       downloadSection={downloadSection}
       additionalContent={timeseriesSection}
+      showSortByCompressionRatio={true}
     />
   );
 };

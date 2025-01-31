@@ -101,6 +101,8 @@ For real-world data, we draw from multiple sources in neuroscience and geophysic
 
 The marine seismic dataset, collected during the Roger Revelle voyage RR1508 [@gorman_2023_8152964], provides both original floating-point measurements and quantized integer versions from a gas hydrate system survey.
 
+Finally, we include a sample of functional MRI data [@ds005880] consisting of 16-bit integer BOLD signal time series, representing neural activity patterns as 3D brain volumes over time.
+
 ## System Architecture
 
 The framework is implemented primarily in Python for the core benchmarking functionality and TypeScript/React for the web interface. Performance-critical components, such as the Markov prediction algorithm, are implemented in C++ with Python bindings.
@@ -115,9 +117,13 @@ Results are presented through an interactive web interface where users can explo
 
 ## Results
 
+*NOTE: There are no figures in this section because the reader is expected to browse the results interactively on the Benchcompress website. But eventually we can include some curated figures here.*
+
 We first report on compression ratio performance, and then we will move on to encoding and decoding speeds.
 
 For the synthetic datasets that involve i.i.d. samples, ANS demonstrates superior compression performance compared to other algorithms, achieving compression ratios close to the theoretical entropy bounds. For example, in the Bernoulli sequence with $p=0.1$ ([https://magland.github.io/benchcompress/dataset/bernoulli-0.1](https://magland.github.io/benchcompress/dataset/bernoulli-0.1)), ANS achieves a compression ratio of ~16.9 whereas the next best algorithms (bzip2, lzma, btrotli-11, zstd-19, and zstd-22) achieve ratios around 13.9. Zlib struggles for this dataset, with a compression ratio of only ~12.2 at the highest compression level (9), and much lower values for lower levels. Brotli and Zstandard at the lower compression levels also perform poorly (for example ~9.6 for zstd-7). The results show a similar trend for the other Bernoulli datasets with different probabilities, but the spread is less pronounced as the entropy increases. The story is similar for the quantized Gaussian datasets, with ANS outperforming the other algorithms, especially for lower standard deviations (e.g., $\sigma=3$, [https://magland.github.io/benchcompress/dataset/gaussian-q3](https://magland.github.io/benchcompress/dataset/gaussian-q3)).
+
+
 
 ## Discussion
 

@@ -1,5 +1,5 @@
-import Plot from "react-plotly.js";
 import { useState } from "react";
+import Plot from "react-plotly.js";
 
 interface BenchmarkBarChartProps {
   title: string;
@@ -27,10 +27,40 @@ function BenchmarkBarChart({
           {
             type: "bar",
             orientation: "h",
-            y: data.map((d) => d.algorithm),
+            y: data.map((d) => d.algorithmOrDataset),
             x: data.map((d) => d[dataKey]),
             marker: { color },
+            name: title,
           },
+          ...(dataKey === "compression_ratio" &&
+          data.some((d) => d.reference_compression_ratio !== null)
+            ? [
+                ...data
+                  .filter((d) => d.reference_compression_ratio !== null)
+                  .flatMap((d) => [
+                    {
+                      type: "scatter" as const,
+                      mode: "lines" as const,
+                      y: [d.algorithmOrDataset, d.algorithmOrDataset],
+                      x: [0, d.reference_compression_ratio],
+                      line: { color: "#aaaaaa", width: 1 },
+                      showlegend: false,
+                      hoverinfo: "skip" as const,
+                    },
+                    {
+                      type: "scatter" as const,
+                      mode: "markers" as const,
+                      y: [d.algorithmOrDataset],
+                      x: [d.reference_compression_ratio],
+                      marker: { color: "#aaaaaa", size: 8 },
+                      name: "Best Compression",
+                      hovertemplate: "Best: %{x:.2f}<extra></extra>",
+                      showlegend:
+                        d.algorithmOrDataset === data[0].algorithmOrDataset, // Only show legend for first point
+                    },
+                  ]),
+              ]
+            : []),
         ]}
         layout={{
           width: 700,
@@ -47,18 +77,27 @@ function BenchmarkBarChart({
 }
 
 interface ChartData {
-  algorithm: string;
+  algorithmOrDataset: string;
   compression_ratio: number;
+  reference_compression_ratio: number | null; // the highest compression ratio for the dataset (if algorithmOrDataset is a dataset)
   encode_speed: number;
   decode_speed: number;
 }
 
 interface BenchmarkChartsProps {
   chartData: ChartData[];
+  showSortByCompressionRatio?: boolean;
 }
 
-export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
-  const [sortByRatio, setSortByRatio] = useState(true);
+export function BenchmarkCharts({
+  chartData,
+  showSortByCompressionRatio,
+}: BenchmarkChartsProps) {
+  const [sortByRatio, setSortByRatio] = useState(
+    showSortByCompressionRatio ? true : false,
+  );
+
+  console.log("--- showSortByCompressionRatio", showSortByCompressionRatio);
 
   if (!chartData.length) return null;
 
@@ -68,16 +107,18 @@ export function BenchmarkCharts({ chartData }: BenchmarkChartsProps) {
 
   return (
     <div>
-      <div style={{ marginBottom: "10px" }}>
-        <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <input
-            type="checkbox"
-            checked={sortByRatio}
-            onChange={(e) => setSortByRatio(e.target.checked)}
-          />
-          Sort by compression ratio
-        </label>
-      </div>
+      {showSortByCompressionRatio && (
+        <div style={{ marginBottom: "10px" }}>
+          <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <input
+              type="checkbox"
+              checked={sortByRatio}
+              onChange={(e) => setSortByRatio(e.target.checked)}
+            />
+            Sort by compression ratio
+          </label>
+        </div>
+      )}
       <div
         style={{
           display: "flex",

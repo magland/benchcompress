@@ -6,8 +6,9 @@ interface AlgorithmContentProps {
   algorithm: Algorithm;
   benchmarkData: BenchmarkData | null;
   chartData: Array<{
-    algorithm: string;
+    algorithmOrDataset: string;
     compression_ratio: number;
+    reference_compression_ratio: number | null;
     encode_speed: number;
     decode_speed: number;
   }>;
@@ -25,6 +26,7 @@ export const AlgorithmContent = ({
       chartData={chartData}
       tagNavigationPrefix="/algorithms"
       filterKey="algorithm"
+      showSortByCompressionRatio={false}
     />
   );
 };

@@ -21,8 +21,9 @@ interface BaseContentProps {
   item: BaseItem;
   benchmarkData: BenchmarkData | null;
   chartData: Array<{
-    algorithm: string;
+    algorithmOrDataset: string;
     compression_ratio: number;
+    reference_compression_ratio: number | null;
     encode_speed: number;
     decode_speed: number;
   }>;
@@ -30,6 +31,7 @@ interface BaseContentProps {
   filterKey: "dataset" | "algorithm";
   downloadSection?: React.ReactNode;
   additionalContent?: React.ReactNode;
+  showSortByCompressionRatio?: boolean;
 }
 
 export const BaseContent = ({
@@ -40,6 +42,7 @@ export const BaseContent = ({
   filterKey,
   downloadSection,
   additionalContent,
+  showSortByCompressionRatio,
 }: BaseContentProps) => {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -108,7 +111,10 @@ export const BaseContent = ({
         <>
           <div className="benchmark-section">
             <h2 className="benchmark-title">Benchmark Results</h2>
-            <BenchmarkCharts chartData={chartData} />
+            <BenchmarkCharts
+              chartData={chartData}
+              showSortByCompressionRatio={showSortByCompressionRatio}
+            />
           </div>
           <div className="benchmark-section">
             <BenchmarkTable
