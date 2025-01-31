@@ -15,7 +15,9 @@ def _load_long_description():
 
 LONG_DESCRIPTION = _load_long_description()
 
-tags = ["real", "ecephys", "ieeg", "timeseries", "1d", "float", "continuous"]
+tags = ["real", "ecephys", "ieeg", "timeseries", "1d", "continuous"]
+tags_float = tags + ["float"]
+tags_integer = tags + ["integer"]
 
 
 def _load_ieeg_openneuro_005592() -> np.ndarray:
@@ -49,14 +51,35 @@ def _load_ieeg_openneuro_005592() -> np.ndarray:
     return concatenated
 
 
+def _load_quantized_ieeg_openneuro_005592() -> np.ndarray:
+    """Load and quantize data from OpenNeuro dataset 005592.
+
+    Returns:
+        Array containing quantized data from first 10 channels concatenated
+    """
+    X = _load_ieeg_openneuro_005592()
+    step = 1
+    X = np.round(X / step).astype(np.int32)
+    return X
+
+
 datasets = [
     {
         "name": "ieeg-005592",
         "version": "1",
         "description": "iEEG recording from OpenNeuro dataset ds005592, first 10 channels concatenated.",
         "create": lambda: _load_ieeg_openneuro_005592(),
-        "tags": tags,
+        "tags": tags_float,
         "source_file": SOURCE_FILE,
         "long_description": LONG_DESCRIPTION,
-    }
+    },
+    {
+        "name": "ieeg-005592-quantized",
+        "version": "1",
+        "description": "iEEG recording from OpenNeuro dataset ds005592, first 10 channels concatenated, quantized.",
+        "create": lambda: _load_quantized_ieeg_openneuro_005592(),
+        "tags": tags_integer,
+        "source_file": SOURCE_FILE,
+        "long_description": LONG_DESCRIPTION,
+    },
 ]
