@@ -24,7 +24,8 @@ dependencies = [
     "pybind11>=2.11.1",
     "segyio",
     "lz4",
-    "pyedflib"
+    "pyedflib",
+    "nibabel"
 ]
 
 [tool.scikit-build]
