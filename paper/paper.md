@@ -93,13 +93,25 @@ We also include a custom implementation of ANS, as described above. The implemen
 
 To enhance the performance of these basic compression algorithms, we also test reversible preprocessing steps before compression. These include, where appropriate, delta encoding, linear Markov prediction, and zero run length encoding for sparse data.
 
-## Dataset Generation
+## Datasets
 
-Describe the datasets we use for benchmarking.
+Our benchmark suite combines synthetic test cases and real scientific measurements to evaluate compression performance across diverse scenarios. The synthetic datasets include Bernoulli sequences with varying probabilities (p=0.1 to 0.5) providing well-defined theoretical entropy bounds, and Gaussian-distributed data in both quantized integer and floating-point formats with different standard deviations (σ=1 to 8).
 
-## Implementation
+For real-world data, we draw from multiple sources in neuroscience and geophysics. Extracellular electrophysiology samples from the DANDI Archive [@dandi_archive] are provided in three forms: raw 30 kHz recordings, bandpass filtered (300-6000 Hz) and normalized traces, and sparse versions using activity-based suppression. We also include intracranial EEG data from OpenNeuro dataset ds005592 [@markiewicz2021openneuro], consisting of concatenated recordings from ten channels as 32-bit floating-point voltage measurements.
 
-[To be added]
+The marine seismic dataset, collected during the Roger Revelle voyage RR1508 [@gorman_2023_8152964], provides both original floating-point measurements and quantized integer versions from a gas hydrate system survey.
+
+## System Architecture
+
+The framework is implemented primarily in Python for the core benchmarking functionality and TypeScript/React for the web interface. Performance-critical components, such as the Markov prediction algorithm, are implemented in C++ with Python bindings.
+
+The system is organized around two primary registries in an open-source repository: compression algorithms and test datasets. Both are defined through Python modules, enabling the scientific community to contribute through GitHub pull requests. Each algorithm specifies encoding and decoding functions along with tags indicating its capabilities, while datasets specify generation parameters and tags describing their characteristics like data type, dimensionality, and properties (continuous, sparse, etc.).
+
+The tag system manages algorithm-dataset compatibility. For example, algorithms with delta encoding or Markov prediction tags require datasets marked as continuous integer time series, while those using zero run-length encoding are matched with sparse datasets. This ensures algorithms are only tested on appropriate dataset types.
+
+The benchmarking process runs automatically through GitHub Actions when changes are pushed to the main branch. For compatible algorithm-dataset pairs, the system measures compression ratio and processing speeds, verifying results through decompression. A cloud-based caching system prevents redundant benchmark runs, only re-evaluating when components change.
+
+Results are presented through an interactive web interface where users can explore dynamically generated visualizations comparing compression ratios and processing speeds across different algorithms and datasets. The interface supports filtering by dataset characteristics and algorithm properties, enabling focused analysis of specific use cases.
 
 ## Results
 
