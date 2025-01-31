@@ -10,6 +10,7 @@ interface BenchmarkBarChartProps {
   >;
   color: string;
   xAxisTitle: string;
+  normalize?: boolean;
 }
 
 function BenchmarkBarChart({
@@ -18,7 +19,19 @@ function BenchmarkBarChart({
   dataKey,
   color,
   xAxisTitle,
+  normalize,
 }: BenchmarkBarChartProps) {
+  const normalizedData =
+    normalize && dataKey === "compression_ratio"
+      ? data.map((d) => ({
+          ...d,
+          compression_ratio: d.reference_compression_ratio
+            ? d.compression_ratio / d.reference_compression_ratio
+            : d.compression_ratio,
+          reference_compression_ratio: d.reference_compression_ratio ? 1 : null,
+        }))
+      : data;
+
   return (
     <div style={{ margin: "0 20px 20px 0" }}>
       <h3 style={{ marginBottom: "10px" }}>{title}</h3>
@@ -27,15 +40,19 @@ function BenchmarkBarChart({
           {
             type: "bar",
             orientation: "h",
-            y: data.map((d) => d.algorithmOrDataset),
-            x: data.map((d) => d[dataKey]),
+            y: normalizedData.map((d) => d.algorithmOrDataset),
+            x: normalizedData.map((d) => d[dataKey]),
             marker: { color },
             name: title,
+            hovertemplate:
+              normalize && dataKey === "compression_ratio"
+                ? "%{x:.3f}×<extra></extra>"
+                : "%{x:.2f}<extra></extra>",
           },
           ...(dataKey === "compression_ratio" &&
-          data.some((d) => d.reference_compression_ratio !== null)
+          normalizedData.some((d) => d.reference_compression_ratio !== null)
             ? [
-                ...data
+                ...normalizedData
                   .filter((d) => d.reference_compression_ratio !== null)
                   .flatMap((d) => [
                     {
@@ -43,7 +60,7 @@ function BenchmarkBarChart({
                       mode: "lines" as const,
                       y: [d.algorithmOrDataset, d.algorithmOrDataset],
                       x: [0, d.reference_compression_ratio],
-                      line: { color: "#aaaaaa", width: 1 },
+                      line: { color, width: 1 },
                       showlegend: false,
                       hoverinfo: "skip" as const,
                     },
@@ -54,9 +71,12 @@ function BenchmarkBarChart({
                       x: [d.reference_compression_ratio],
                       marker: { color: "#aaaaaa", size: 8 },
                       name: "Best Compression",
-                      hovertemplate: "Best: %{x:.2f}<extra></extra>",
+                      hovertemplate: normalize
+                        ? "Best: 1.000×<extra></extra>"
+                        : "Best: %{x:.2f}<extra></extra>",
                       showlegend:
-                        d.algorithmOrDataset === data[0].algorithmOrDataset, // Only show legend for first point
+                        d.algorithmOrDataset ===
+                        normalizedData[0].algorithmOrDataset,
                     },
                   ]),
               ]
@@ -87,17 +107,18 @@ interface ChartData {
 interface BenchmarkChartsProps {
   chartData: ChartData[];
   showSortByCompressionRatio?: boolean;
+  showNormalizeByReference?: boolean;
 }
 
 export function BenchmarkCharts({
   chartData,
   showSortByCompressionRatio,
+  showNormalizeByReference,
 }: BenchmarkChartsProps) {
   const [sortByRatio, setSortByRatio] = useState(
     showSortByCompressionRatio ? true : false,
   );
-
-  console.log("--- showSortByCompressionRatio", showSortByCompressionRatio);
+  const [normalize, setNormalize] = useState(false);
 
   if (!chartData.length) return null;
 
@@ -119,6 +140,18 @@ export function BenchmarkCharts({
           </label>
         </div>
       )}
+      {showNormalizeByReference && (
+        <div style={{ marginBottom: "10px" }}>
+          <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <input
+              type="checkbox"
+              checked={normalize}
+              onChange={(e) => setNormalize(e.target.checked)}
+            />
+            Normalize to best compression
+          </label>
+        </div>
+      )}
       <div
         style={{
           display: "flex",
@@ -131,7 +164,8 @@ export function BenchmarkCharts({
           data={sortedData}
           dataKey="compression_ratio"
           color="#8884d8"
-          xAxisTitle="Ratio"
+          xAxisTitle={normalize ? "Fraction of Best Compression" : "Ratio"}
+          normalize={normalize}
         />
         <BenchmarkBarChart
           title="Encode Speed (MB/s)"

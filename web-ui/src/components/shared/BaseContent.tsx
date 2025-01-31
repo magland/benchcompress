@@ -32,6 +32,7 @@ interface BaseContentProps {
   downloadSection?: React.ReactNode;
   additionalContent?: React.ReactNode;
   showSortByCompressionRatio?: boolean;
+  showNormalizeByReference?: boolean;
 }
 
 export const BaseContent = ({
@@ -43,6 +44,7 @@ export const BaseContent = ({
   downloadSection,
   additionalContent,
   showSortByCompressionRatio,
+  showNormalizeByReference,
 }: BaseContentProps) => {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -114,6 +116,7 @@ export const BaseContent = ({
             <BenchmarkCharts
               chartData={chartData}
               showSortByCompressionRatio={showSortByCompressionRatio}
+              showNormalizeByReference={showNormalizeByReference}
             />
           </div>
           <div className="benchmark-section">

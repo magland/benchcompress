@@ -27,6 +27,7 @@ export const AlgorithmContent = ({
       tagNavigationPrefix="/algorithms"
       filterKey="algorithm"
       showSortByCompressionRatio={false}
+      showNormalizeByReference={true}
     />
   );
 };
