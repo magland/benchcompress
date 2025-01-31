@@ -22,8 +22,9 @@ function App() {
       try {
         setIsLoading(true);
         setError(null);
+        const cacheBust = Math.random().toString(36).substring(2, 15);
         const response = await axios.get(
-          "https://tempory.net/f/memobin/benchcompress/global/results.json",
+          `https://tempory.net/f/memobin/benchcompress/global/results.json?cachebust=${cacheBust}`,
         );
         setBenchmarkData(response.data);
       } catch (error) {

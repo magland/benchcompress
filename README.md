@@ -67,9 +67,10 @@ npm run dev
 
 ### Code Formatting
 
-This project uses pre-commit hooks to automatically format code before each commit. The formatting includes:
+This project uses pre-commit hooks to automatically check format code before each commit. The formatting includes:
 - Python code formatting using black
 - TypeScript/JavaScript code formatting using npm scripts
+- C++ code formatting using clang-format
 
 To set up the pre-commit hooks after cloning the repository:
 
@@ -83,4 +84,6 @@ pip install pre-commit
 pre-commit install
 ```
 
-After this setup, code will be automatically formatted when you make a commit.
+After this setup, code will be automatically checked for formatting when you make a commit.
+
+Running `./devel/format_code.sh` which will format all code in the repository.
