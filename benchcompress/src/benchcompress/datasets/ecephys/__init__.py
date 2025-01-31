@@ -6,19 +6,19 @@ from ..._filters import bandpass_filter
 from ..._analysis import estimate_noise_level
 
 
-SOURCE_FILE = "electrophysiology/__init__.py"
+SOURCE_FILE = "ecephys/__init__.py"
 
 
 def _load_long_description():
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    md_path = os.path.join(current_dir, "electrophysiology.md")
+    md_path = os.path.join(current_dir, "ecephys.md")
     with open(md_path, "r", encoding="utf-8") as f:
         return f.read()
 
 
 LONG_DESCRIPTION = _load_long_description()
 
-tags = ["real", "electrophysiology", "timeseries", "1d", "integer", "continuous"]
+tags = ["real", "ecephys", "timeseries", "1d", "integer", "continuous"]
 
 
 def _load_real_000876(
@@ -202,7 +202,7 @@ def _create_sparse_version(X: np.ndarray) -> np.ndarray:
 
 datasets = [
     {
-        "name": "ephys-000876-ch45",
+        "name": "ecephys-000876-ch45",
         "version": "1",
         "description": "Raw extracellular electrophysiology recording from DANDI:000876.",
         "create": lambda: _load_real_000876(
@@ -213,7 +213,7 @@ datasets = [
         "long_description": LONG_DESCRIPTION,
     },
     {
-        "name": "ephys-000409-ch101",
+        "name": "ecephys-000409-ch101",
         "version": "1",
         "description": "Raw extracellular electrophysiology recording from DANDI:000409.",
         "create": lambda: _load_real_000409(
@@ -224,7 +224,7 @@ datasets = [
         "long_description": LONG_DESCRIPTION,
     },
     {
-        "name": "ephys-001290-ch0",
+        "name": "ecephys-001290-ch0",
         "version": "1",
         "description": "Raw extracellular electrophysiology recording from DANDI:001290.",
         "create": lambda: _load_real_001290(
@@ -236,7 +236,7 @@ datasets = [
     },
     # embargoed
     # {
-    #     "name": "ephys-001259",
+    #     "name": "ecephys-001259",
     #     "version": "1",
     #     "description": "Raw extracellular electrophysiology recording from DANDI:001259.",
     #     "create": lambda: _load_real_001259(num_samples=500_000).flatten(),
@@ -245,7 +245,7 @@ datasets = [
     #     "long_description": LONG_DESCRIPTION,
     # },
     {
-        "name": "ephys-000876-ch45-filtered",
+        "name": "ecephys-000876-ch45-filtered",
         "version": "1",
         "description": "Preprocessed version of real-000876-ch45. Bandpass filtered (300-6000 Hz).",
         "create": lambda: _create_filtered_version(
@@ -258,7 +258,7 @@ datasets = [
         "long_description": LONG_DESCRIPTION,
     },
     {
-        "name": "ephys-000409-ch101-filtered",
+        "name": "ecephys-000409-ch101-filtered",
         "version": "1",
         "description": "Preprocessed version of real-000409-ch101. Bandpass filtered (300-6000 Hz).",
         "create": lambda: _create_filtered_version(
@@ -271,7 +271,7 @@ datasets = [
         "long_description": LONG_DESCRIPTION,
     },
     {
-        "name": "ephys-001290-ch0-filtered",
+        "name": "ecephys-001290-ch0-filtered",
         "version": "1",
         "description": "Preprocessed version of real-001290-ch0. Bandpass filtered (300-6000 Hz).",
         "create": lambda: _create_filtered_version(
@@ -285,7 +285,7 @@ datasets = [
     },
     # embargoed
     # {
-    #     "name": "ephys-001259-filtered",
+    #     "name": "ecephys-001259-filtered",
     #     "version": "1",
     #     "description": "Preprocessed version of real-001259. Bandpass filtered (300-6000 Hz).",
     #     "create": lambda: _create_filtered_version(
@@ -296,7 +296,7 @@ datasets = [
     #     "long_description": LONG_DESCRIPTION,
     # },
     {
-        "name": "ephys-000876-ch45-sparse",
+        "name": "ecephys-000876-ch45-sparse",
         "version": "1",
         "description": "Sparse version of real-000876-ch45. Activity-based suppression applied.",
         "create": lambda: _create_sparse_version(
@@ -309,7 +309,7 @@ datasets = [
         "long_description": LONG_DESCRIPTION,
     },
     {
-        "name": "ephys-000409-ch101-sparse",
+        "name": "ecephys-000409-ch101-sparse",
         "version": "1",
         "description": "Sparse version of real-000409-ch101. Activity-based suppression applied.",
         "create": lambda: _create_sparse_version(
@@ -322,7 +322,7 @@ datasets = [
         "long_description": LONG_DESCRIPTION,
     },
     {
-        "name": "ephys-001290-ch0-sparse",
+        "name": "ecephys-001290-ch0-sparse",
         "version": "1",
         "description": "Sparse version of real-001290-ch0. Activity-based suppression applied.",
         "create": lambda: _create_sparse_version(
@@ -336,7 +336,7 @@ datasets = [
     },
     # embargoed
     # {
-    #     "name": "ephys-001259-sparse",
+    #     "name": "ecephys-001259-sparse",
     #     "version": "1",
     #     "description": "Sparse version of real-001259. Activity-based suppression applied.",
     #     "create": lambda: _create_sparse_version(

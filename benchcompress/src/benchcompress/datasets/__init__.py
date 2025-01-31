@@ -1,13 +1,13 @@
 from .bernoulli import datasets as bernoulli_datasets
 from .gaussian import datasets as gaussian_datasets
-from .electrophysiology import datasets as real_datasets
+from .ecephys import datasets as ecephys_datasets
 from .seismic import datasets as seismic_datasets
 from .ieeg import datasets as ieeg_datasets
 
 datasets_list = [
     bernoulli_datasets,
     gaussian_datasets,
-    real_datasets,
+    ecephys_datasets,
     seismic_datasets,
     ieeg_datasets,
 ]

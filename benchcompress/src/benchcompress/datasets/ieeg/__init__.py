@@ -15,7 +15,7 @@ def _load_long_description():
 
 LONG_DESCRIPTION = _load_long_description()
 
-tags = ["real", "electrophysiology", "ieeg", "timeseries", "1d", "float", "continuous"]
+tags = ["real", "ecephys", "ieeg", "timeseries", "1d", "float", "continuous"]
 
 
 def _load_ieeg_openneuro_005592() -> np.ndarray:

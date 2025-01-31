@@ -1,6 +1,6 @@
-# Electrophysiology Dataset
+# Extracellular Electrophysiology Dataset
 
-Electrophysiology datasets contain recordings of electrical activity from neurons in the brain. These recordings are made using microelectrodes that detect the small voltage changes produced by neurons when they fire action potentials (spikes).
+Extracellular Electrophysiology datasets contain recordings of electrical activity from neurons in the brain. These recordings are made using microelectrodes that detect the small voltage changes produced by neurons when they fire action potentials (spikes).
 
 ## Data Sources
 
